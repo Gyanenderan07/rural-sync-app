@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vercel Rural Data Collector</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .app-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); width: 100%; max-width: 420px; }
+        h2 { text-align: center; color: #2c3e50; margin-top: 0; }
+        .badge { padding: 12px; border-radius: 6px; font-weight: bold; text-align: center; margin-bottom: 20px; font-size: 14px; }
+        .online { background: #e2f0d9; color: #385723; border: 1px solid #b4c6e7; }
+        .offline { background: #fce4d6; color: #c65911; border: 1px solid #f8cbad; }
+        textarea { width: 100%; height: 120px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; resize: none; font-size: 15px; margin-bottom: 15px; }
+        button { width: 100%; background: #1a73e8; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        button:hover { background: #1557b0; }
+        .storage-box { background: #f8fafc; border: 1px dashed #cbd5e1; padding: 12px; border-radius: 6px; margin-top: 20px; text-align: center; font-size: 14px; color: #64748b; }
+        #counter { font-weight: bold; color: white; background: #ef4444; padding: 2px 8px; border-radius: 10px; margin-left: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="app-card">
+    <h2>🌾 Rural Sync Client</h2>
+    <div id="network-badge" class="badge online">Checking Internet...</div>
+    
+    <form id="sync-form">
+        <textarea id="data-payload" placeholder="Type report details here (e.g., Rainfall level, Crop data)..." required></textarea>
+        <button type="submit">Submit Data</button>
+    </form>
+    
+    <div class="storage-box">
+        📦 Offline Storage Queue: <span id="counter">0</span>
+    </div>
+</div>
+
+<script>
+    // Critical Vercel Rule: Live-la `/api/sync` relative domain endpoint directly map aagidum
+    const SERVER_ENDPOINT = '/api/sync';
+    let indexedDatabase;
+
+    // 1. Setup Browser Local IndexedDB Database
+    const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 1);
+
+    dbOpenRequest.onupgradeneeded = (e) => {
+        let db = e.target.result;
+        db.createObjectStore('reportsStore', { keyPath: 'id' });
+    };
+
+    dbOpenRequest.onsuccess = (e) => {
+        indexedDatabase = e.target.result;
+        refreshQueueCount();
+        executeCloudSynchronization();
+    };
+
+    // 2. Continuous Network Listener
+    function updateNetworkInterface() {
+        const badge = document.getElementById('network-badge');
+        if (navigator.onLine) {
+            badge.textContent = "🟢 ONLINE - Cloud Mode Active";
+            badge.className = "badge online";
+            executeCloudSynchronization();
+        } else {
+            badge.textContent = "🔴 OFFLINE - Local Device Mode";
+            badge.className = "badge offline";
+        }
+    }
+    window.addEventListener('online', updateNetworkInterface);
+    window.addEventListener('offline', updateNetworkInterface);
+    updateNetworkInterface();
+
+    // 3. Form Submission (Saves data instantly to Client DB)
+    document.getElementById('sync-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const textPayload = document.getElementById('data-payload').value;
+
+        const record = {
+            id: crypto.randomUUID(), // Unique Idempotency Key
+            reportData: textPayload,
+            timestamp: new Date().toISOString()
+        };
+
+        const tx = indexedDatabase.transaction('reportsStore', 'readwrite');
+        tx.objectStore('reportsStore').add(record);
+
+        tx.oncomplete = () => {
+            document.getElementById('data-payload').value = ''; // Input box-ah clear pannuthu
+            refreshQueueCount();
+            if (navigator.onLine) {
+                executeCloudSynchronization();
+            } else {
+                console.log("Offline data saved locally in browser cache.");
+            }
+        };
+    });
+
+    // 4. Background Serverless Synchronization Engine
+    async function executeCloudSynchronization() {
+        if (!navigator.onLine || !indexedDatabase) return;
+
+        const tx = indexedDatabase.transaction('reportsStore', 'readonly');
+        const store = tx.objectStore('reportsStore');
+        const fetchAllQuery = store.getAll();
+
+        fetchAllQuery.onsuccess = async () => {
+            const recordsQueue = fetchAllQuery.result;
+            if (recordsQueue.length === 0) return;
+
+            console.log(`Pushing ${recordsQueue.length} items to Vercel Serverless Function...`);
+
+            try {
+                const cloudResponse = await fetch(SERVER_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(recordsQueue)
+                });
+
+                const responseData = await cloudResponse.json();
+
+                if (responseData.success) {
+                    // Clear matched IDs from local IndexedDB
+                    const deleteTx = indexedDatabase.transaction('reportsStore', 'readwrite');
+                    const deleteStore = deleteTx.objectStore('reportsStore');
+                    
+                    responseData.syncedIds.forEach(id => deleteStore.delete(id));
+
+                    deleteTx.oncomplete = () => {
+                        refreshQueueCount();
+                        console.log("Local Queue cleaned. Sync successful.");
+                    };
+                }
+            } catch (networkError) {
+                console.error("Cloud functions are currently unreachable.", networkError);
+            }
+        };
+    }
+
+    // UI Helper to refresh local database size counter
+    function refreshQueueCount() {
+        if (!indexedDatabase) return;
+        const tx = indexedDatabase.transaction('reportsStore', 'readonly');
+        const countQuery = tx.objectStore('reportsStore').count();
+        countQuery.onsuccess = () => {
+            document.getElementById('counter').textContent = countQuery.result;
+        };
+    }
+</script>
+
+</body>
+</html>
