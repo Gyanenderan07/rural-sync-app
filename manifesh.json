@@ -1,0 +1,9 @@
+{
+  "name": "Rural Sync Offline App",
+  "short_name": "RuralSync",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f0f4f8",
+  "theme_color": "#1a73e8",
+  "orientation": "portrait"
+}

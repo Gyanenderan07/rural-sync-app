@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vercel Rural Data Collector</title>
+    <link rel="manifest" href="/manifest.json">
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
         .app-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); width: 100%; max-width: 420px; }
@@ -35,7 +36,6 @@
 </div>
 
 <script>
-    // Critical Vercel Rule: Live-la `/api/sync` relative domain endpoint directly map aagidum
     const SERVER_ENDPOINT = '/api/sync';
     let indexedDatabase;
 
@@ -75,7 +75,7 @@
         const textPayload = document.getElementById('data-payload').value;
 
         const record = {
-            id: crypto.randomUUID(), // Unique Idempotency Key
+            id: crypto.randomUUID(), 
             reportData: textPayload,
             timestamp: new Date().toISOString()
         };
@@ -84,12 +84,10 @@
         tx.objectStore('reportsStore').add(record);
 
         tx.oncomplete = () => {
-            document.getElementById('data-payload').value = ''; // Input box-ah clear pannuthu
+            document.getElementById('data-payload').value = ''; 
             refreshQueueCount();
             if (navigator.onLine) {
                 executeCloudSynchronization();
-            } else {
-                console.log("Offline data saved locally in browser cache.");
             }
         };
     });
@@ -106,8 +104,6 @@
             const recordsQueue = fetchAllQuery.result;
             if (recordsQueue.length === 0) return;
 
-            console.log(`Pushing ${recordsQueue.length} items to Vercel Serverless Function...`);
-
             try {
                 const cloudResponse = await fetch(SERVER_ENDPOINT, {
                     method: 'POST',
@@ -118,7 +114,6 @@
                 const responseData = await cloudResponse.json();
 
                 if (responseData.success) {
-                    // Clear matched IDs from local IndexedDB
                     const deleteTx = indexedDatabase.transaction('reportsStore', 'readwrite');
                     const deleteStore = deleteTx.objectStore('reportsStore');
                     
@@ -135,7 +130,6 @@
         };
     }
 
-    // UI Helper to refresh local database size counter
     function refreshQueueCount() {
         if (!indexedDatabase) return;
         const tx = indexedDatabase.transaction('reportsStore', 'readonly');
@@ -143,6 +137,15 @@
         countQuery.onsuccess = () => {
             document.getElementById('counter').textContent = countQuery.result;
         };
+    }
+
+    // NEW: REGISTER SERVICE WORKER (For absolute offline website loading)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then((reg) => console.log('🚀 Service Worker Registered!', reg.scope))
+                .catch((err) => console.error('❌ Service Worker Registration Failed:', err));
+        });
     }
 </script>
 
