@@ -1,16 +1,16 @@
 // sw.js
-const CACHE_NAME = 'rural-sync-cache-v2';
+const CACHE_NAME = 'rural-sync-cache-v3';
+// REMOVED manifest.json from this list to prevent crash
 const ASSETS_TO_CACHE = [
   '/',
-  '/index.html',
-  '/manifest.json'
+  '/index.html'
 ];
 
-// 1. Install Phase - Cache Core UI files
+// 1. Install Phase - Cache Core UI files safely
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('📦 UI Assets cached locally inside browser storage.');
+      console.log('📦 Core UI Assets cached safely!');
       return cache.addAll(ASSETS_TO_CACHE);
     })
   );
@@ -33,16 +33,14 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// 3. Fetch Phase - Intercept network requests and load from cache if offline
+// 3. Fetch Phase - Load from cache if offline
 self.addEventListener('fetch', (event) => {
-  // Sync API data dynamic, so absolute-ah network bypass pannanum
-  if (event.request.url.includes('/api/sync')) {
-    return; 
+  if (event.request.url.includes('/api/sync') || event.request.url.includes('manifest.json')) {
+    return; // Bypass dynamic API & missing manifest file
   }
 
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      // Net irundha network vazhiya edukum, illana cache response tharum
       return cachedResponse || fetch(event.request).catch(() => {
         return caches.match('/index.html');
       });
