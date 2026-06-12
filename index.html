@@ -1,47 +1,377 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vercel Rural Data Collector</title>
+    <title>RuralSync — Enterprise Edge Client</title>
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="data:,">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .app-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); width: 100%; max-width: 420px; }
-        h2 { text-align: center; color: #2c3e50; margin-top: 0; }
-        .badge { padding: 12px; border-radius: 6px; font-weight: bold; text-align: center; margin-bottom: 20px; font-size: 14px; }
-        .online { background: #e2f0d9; color: #385723; border: 1px solid #b4c6e7; }
-        .offline { background: #fce4d6; color: #c65911; border: 1px solid #f8cbad; }
-        textarea { width: 100%; height: 120px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; resize: none; font-size: 15px; margin-bottom: 15px; }
-        button { width: 100%; background: #1a73e8; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        button:hover { background: #1557b0; }
-        .storage-box { background: #f8fafc; border: 1px dashed #cbd5e1; padding: 12px; border-radius: 6px; margin-top: 20px; text-align: center; font-size: 14px; color: #64748b; }
-        #counter { font-weight: bold; color: white; background: #ef4444; padding: 2px 8px; border-radius: 10px; margin-left: 5px; }
+        :root {
+            --bg-gradient: radial-gradient(120% 120% at 50% 10%, #0b0f19 0%, #04060a 100%);
+            --glass-bg: rgba(13, 20, 35, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.07);
+            --accent-primary: #00ddff;
+            --accent-glow: rgba(0, 221, 255, 0.15);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 40px 20px;
+        }
+
+        /* Cinematic Background Grid Lines Effect */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Ambient Premium Glow Blobs */
+        .glow-blob {
+            position: fixed;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            top: -100px; right: -100px;
+            z-index: -1;
+            filter: blur(40px);
+            animation: floatGlow 12s infinite alternate ease-in-out;
+        }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-50px, 30px) scale(1.1); }
+        }
+
+        /* Container Layout */
+        .app-container {
+            width: 100%;
+            max-width: 960px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: revealPage 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes revealPage {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Navigation Header Section */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo-section h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-section span {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 3px 8px;
+            border-radius: 20px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        /* Real-time Cinematic Connectivity Badge */
+        .badge {
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .online {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
+        }
+
+        .offline {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.1);
+        }
+
+        .badge-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Responsive Dashboard Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Premium Glass Card Design */
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 28px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 221, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Form Engineering Design */
+        textarea {
+            width: 100%;
+            height: 140px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 16px;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 15px;
+            line-height: 1.5;
+            resize: none;
+            outline: none;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        textarea:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 15px var(--accent-glow);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, #0077ff 0%, #00ddff 100%);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 15px rgba(0, 119, 255, 0.3);
+        }
+
+        button:hover {
+            transform: scale(1.01);
+            box-shadow: 0 6px 20px rgba(0, 221, 255, 0.4);
+        }
+
+        /* DATA MONITOR PIPELINE GLASS ENGINE */
+        .pipeline-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+        }
+
+        .info-label { font-size: 13px; color: var(--text-muted); }
+        .info-value { font-size: 13px; font-weight: 600; color: var(--text-main); }
+        .tech-mono { font-family: 'JetBrains Mono', monospace; color: var(--accent-primary); }
+
+        /* Real-time Dynamic Queue Viewer Console */
+        .queue-terminal {
+            background: #04060b;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 16px;
+            height: 180px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #38bdf8;
+        }
+
+        .queue-placeholder {
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 60px;
+            font-style: italic;
+        }
+
+        .console-entry {
+            border-left: 2px solid var(--accent-primary);
+            padding-left: 8px;
+            margin-bottom: 8px;
+            animation: consoleSlide 0.3s ease-out;
+        }
+
+        @keyframes consoleSlide {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Custom Modern Scrollbars */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
     </style>
 </head>
 <body>
 
-<div class="app-card">
-    <h2>🌾 Rural Sync Client</h2>
-    <div id="network-badge" class="badge online">Checking Internet...</div>
+<div class="glow-blob"></div>
+
+<div class="app-container">
     
-    <form id="sync-form">
-        <textarea id="data-payload" placeholder="Type report details here (e.g., Rainfall level, Crop data)..." required></textarea>
-        <button type="submit">Submit Data</button>
-    </form>
-    
-    <div class="storage-box">
-        📦 Offline Storage Queue: <span id="counter">0</span>
+    <header>
+        <div class="logo-section">
+            <h1>RuralSync <span>InStep v2.1</span></h1>
+        </div>
+        <div id="network-badge" class="badge online">
+            <div class="badge-dot"></div>
+            <span id="badge-text">Initializing Edge Engine...</span>
+        </div>
+    </header>
+
+    <div class="dashboard-grid">
+        
+        <div class="glass-card">
+            <div class="card-title">
+                📊 Data Collection Console
+            </div>
+            <form id="sync-form">
+                <textarea id="data-payload" placeholder="Enter remote rural structural matrix logs (e.g., Water telemetry, localized agricultural harvest data logs)..." required></textarea>
+                <button type="submit">Deploy Transaction to Edge</button>
+            </form>
+        </div>
+
+        <div class="glass-card">
+            <div class="card-title">
+                ⚙️ Internal Architecture Data Pipeline
+            </div>
+            
+            <div class="pipeline-container">
+                <div class="info-row">
+                    <span class="info-label">Storage Architecture Hardware:</span>
+                    <span class="info-value tech-mono">Client Browser Storage</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Underlying Target Engine API:</span>
+                    <span class="info-value tech-mono" style="color: #f43f5e;">IndexedDB (Structured Local DB)</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Active Storage Key Database:</span>
+                    <span class="info-value tech-mono">VercelOfflineQueueDB</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Local Memory Database Store Name:</span>
+                    <span class="info-value tech-mono">reportsStore</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Pending Sync Payload Queue Size:</span>
+                    <span class="info-value tech-mono" id="counter" style="color: #ef4444; font-weight: 700; font-size: 14px;">0</span>
+                </div>
+            </div>
+        </div>
+
+    </div> <div class="glass-card" style="margin-top: 24px;">
+        <div class="card-title">
+            🖥️ Live Client Store Payload Telemetry Logs (Enga, Enna store aaguthu nu Live Display)
+        </div>
+        <div class="queue-terminal" id="terminal-logger">
+            <div class="queue-placeholder" id="terminal-empty-text">No active cache tracking objects inside IndexedDB reportsStore.</div>
+        </div>
     </div>
+
 </div>
 
 <script>
     const SERVER_ENDPOINT = '/api/sync';
     let indexedDatabase;
+    const loggerConsole = document.getElementById('terminal-logger');
+    const logsEmptyText = document.getElementById('terminal-empty-text');
 
-    // 1. Setup Browser Local IndexedDB Database
+    // 1. Setup Local IndexedDB Database Structure
     const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 1);
 
     dbOpenRequest.onupgradeneeded = (e) => {
@@ -55,15 +385,17 @@
         executeCloudSynchronization();
     };
 
-    // 2. Continuous Network Listener
+    // 2. Continuous Micro-Interactive Network State Core Engine
     function updateNetworkInterface() {
         const badge = document.getElementById('network-badge');
+        const badgeText = document.getElementById('badge-text');
+        
         if (navigator.onLine) {
-            badge.textContent = "🟢 ONLINE - Cloud Mode Active";
+            badgeText.textContent = "EDGE ONLINE — Pipeline Synchronized";
             badge.className = "badge online";
             executeCloudSynchronization();
         } else {
-            badge.textContent = "🔴 OFFLINE - Local Device Mode";
+            badgeText.textContent = "EDGE OFFLINE — Local Cache Mode";
             badge.className = "badge offline";
         }
     }
@@ -71,11 +403,12 @@
     window.addEventListener('offline', updateNetworkInterface);
     updateNetworkInterface();
 
-    // 3. Form Submission (Saves data instantly to Client DB)
+    // 3. Form Transaction Processor (Saves structured objects instantly to local IndexedDB)
     document.getElementById('sync-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const textPayload = document.getElementById('data-payload').value;
 
+        // Structured transactional telemetry object architecture schema
         const record = {
             id: crypto.randomUUID(), 
             reportData: textPayload,
@@ -94,7 +427,7 @@
         };
     });
 
-    // 4. Background Serverless Synchronization Engine
+    // 4. Background Serverless Synchronizer Data Pipeline 
     async function executeCloudSynchronization() {
         if (!navigator.onLine || !indexedDatabase) return;
 
@@ -123,45 +456,61 @@
 
                     deleteTx.oncomplete = () => {
                         refreshQueueCount();
-                        console.log("Local Queue cleaned. Sync successful.");
                     };
                 }
             } catch (networkError) {
-                console.error("Cloud functions are currently unreachable.", networkError);
+                console.error("Vercel Serverless pipeline endpoint unreachable.", networkError);
             }
         };
     }
 
+    
+
+    // 5. Dynamic Telemetry Terminal Logger Mapping Engine (Displays EXPLICITLY where, what, and how data is sitting)
     function refreshQueueCount() {
         if (!indexedDatabase) return;
         const tx = indexedDatabase.transaction('reportsStore', 'readonly');
-        const countQuery = tx.objectStore('reportsStore').count();
+        const store = tx.objectStore('reportsStore');
+        
+        // Count update logic
+        const countQuery = store.count();
         countQuery.onsuccess = () => {
             document.getElementById('counter').textContent = countQuery.result;
         };
+
+        // Render detailed payload mapping inside the visual monitor console
+        const getAllQuery = store.getAll();
+        getAllQuery.onsuccess = () => {
+            const dataObjectsList = getAllQuery.result;
+            
+            // Clear current log visuals
+            loggerConsole.innerHTML = '';
+            
+            if (dataObjectsList.length === 0) {
+                loggerConsole.appendChild(logsEmptyText);
+                return;
+            }
+
+            dataObjectsList.forEach(obj => {
+                const logEntry = document.createElement('div');
+                logEntry.className = 'console-entry';
+                logEntry.innerHTML = `[LOCAL MAP TRACE - IndexedDB -> reportsStore] <br> 
+                                      <span style="color: #fff;">⚡ PAYLOAD ID:</span> ${obj.id} <br>
+                                      <span style="color: #fff;">📦 ENCODED DATA:</span> "${obj.reportData}" <br>
+                                      <span style="color: #fff;">⏰ TIMESTAMP:</span> ${obj.timestamp}`;
+                loggerConsole.appendChild(logEntry);
+            });
+        };
     }
 
-    // UPDATED: OPTIMIZED SERVICE WORKER LOGIC FOR BROWSER CONTROLLER TAKEOVER
+    // 6. Native Service Worker PWA Context Layer Takeover
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('/sw.js')
-                .then((reg) => {
-                    console.log('🚀 Ultimate SW Registered on Vercel Context!', reg.scope);
-                    
-                    // Namma system-la puthiya update push aana auto detection mechanisms
-                    reg.onupdatefound = () => {
-                        const installingWorker = reg.installing;
-                        installingWorker.onstatechange = () => {
-                            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                console.log('New content available; please refresh the browser tab.');
-                            }
-                        };
-                    };
-                })
-                .catch((err) => console.error('❌ Vercel SW Setup Failed:', err));
+                .then((reg) => console.log('🚀 Edge Service Layer Active:', reg.scope))
+                .catch((err) => console.error('❌ Edge Layer Fault:', err));
         });
 
-        // Dynamic reload listener when service worker takes total browser session control
         let isRefreshing = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {
             if (!isRefreshing) {
