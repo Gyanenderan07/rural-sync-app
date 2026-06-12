@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -139,12 +140,33 @@
         };
     }
 
-    // NEW: REGISTER SERVICE WORKER (For absolute offline website loading)
+    // UPDATED: OPTIMIZED SERVICE WORKER LOGIC FOR BROWSER CONTROLLER TAKEOVER
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('/sw.js')
-                .then((reg) => console.log('🚀 Service Worker Registered!', reg.scope))
-                .catch((err) => console.error('❌ Service Worker Registration Failed:', err));
+                .then((reg) => {
+                    console.log('🚀 Ultimate SW Registered on Vercel Context!', reg.scope);
+                    
+                    // Namma system-la puthiya update push aana auto detection mechanisms
+                    reg.onupdatefound = () => {
+                        const installingWorker = reg.installing;
+                        installingWorker.onstatechange = () => {
+                            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                console.log('New content available; please refresh the browser tab.');
+                            }
+                        };
+                    };
+                })
+                .catch((err) => console.error('❌ Vercel SW Setup Failed:', err));
+        });
+
+        // Dynamic reload listener when service worker takes total browser session control
+        let isRefreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (!isRefreshing) {
+                window.location.reload();
+                isRefreshing = true;
+            }
         });
     }
 </script>
