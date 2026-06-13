@@ -70,6 +70,7 @@
             opacity: 0;
             transform: translateY(30px);
             animation: revealPage 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative; /* Base mapping for absolute components */
         }
 
         @keyframes revealPage {
@@ -254,25 +255,51 @@
             transform: translateY(-1px);
         }
 
-        /* CINEMATIC MINIMALIST BACK LINK ACTION BUTTON STYLE */
-        .back-ui-btn {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: var(--text-muted);
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 600;
+        /* PREMIUM GLOWING CIRCULAR BACK INTERFACE CONSOLE ELEMENT */
+        .circle-back-ui-btn {
+            width: 42px;
+            height: 42px;
+            background: rgba(13, 20, 35, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
 
-        .back-ui-btn:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--text-main);
-            border-color: rgba(255, 255, 255, 0.2);
+        .circle-back-ui-btn:hover {
+            background: rgba(0, 221, 255, 0.1);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            box-shadow: 0 0 15px var(--accent-glow);
+            transform: scale(1.05);
+        }
+
+        .circle-back-ui-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: transform 0.3s ease;
+        }
+
+        .circle-back-ui-btn:hover svg {
+            transform: translateX(-2px);
+        }
+
+        /* LAYOUT PLACEMENT NODE FOR CLOUD SYSTEM CONTROL HEADER */
+        .cloud-header-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
         }
 
         .pipeline-container {
@@ -308,7 +335,6 @@
             color: #38bdf8;
         }
 
-        /* CLOUD LEDGER INTERFACE SPECIFIC STYLES */
         .cloud-table {
             width: 100%;
             border-collapse: collapse;
@@ -333,7 +359,6 @@
             color: var(--text-main);
         }
 
-        /* VIEW TRANSITION SMOOTH PANELS EFFECTS */
         .panel-hidden {
             display: none !important;
         }
@@ -418,10 +443,17 @@
 
     <div id="cloud-ledger-panel" class="panel-hidden">
         <div class="glass-card">
-            <div class="card-title">
-                <span style="color: #10b981;">☁️ Real-time Cloud Supabase Server Records Ledger</span>
+            
+            <div class="cloud-header-wrapper">
+                <button class="circle-back-ui-btn" onclick="toggleActiveDashboardPanels(false)" title="Back to Data Entry Console">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </button>
                 
-                <button class="back-ui-btn" onclick="toggleActiveDashboardPanels(false)">⬅️ Back to Data Entry Console</button>
+                <div style="font-size: 15px; font-weight: 600; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px;">
+                    ☁️ Real-time Cloud Supabase Server Records Ledger
+                </div>
             </div>
             
             <div class="queue-terminal" id="cloud-server-logger" style="height: 420px; color: #a7f3d0; background: #030712;">
@@ -433,7 +465,6 @@
 </div>
 
 <script>
-    // Live Cloud Infrastructure Supabase API Handshake Connectivity Credentials
     const SUPABASE_URL = "https://rsjyvrnxqkjtaczwectr.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzanl2cm54cWtqdGFjendlY3RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMDMwNjUsImV4cCI6MjA5Njg3OTA2NX0.YB63IkqX1Q5uFtNNxEjnyx-TFdCeN_U09vWM6zguL-o";
 
@@ -457,7 +488,6 @@
     window.addEventListener('offline', updateNetworkInterface);
     updateNetworkInterface();
 
-    // 1. Initial Browser Hardware IndexedDB Setup
     const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 1);
     dbOpenRequest.onupgradeneeded = (e) => {
         let db = e.target.result;
@@ -469,7 +499,6 @@
         executeCloudSynchronization();
     };
 
-    // 2. Transaction Form Submission Execution 
     document.getElementById('sync-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const textPayload = document.getElementById('data-payload').value;
@@ -489,7 +518,6 @@
         };
     });
 
-    // 3. Automated Advanced Serverless Cloud Sync Pipeline Engine
     async function executeCloudSynchronization() {
         if (!navigator.onLine || !indexedDatabase) return;
 
@@ -519,7 +547,6 @@
                         deleteTx.objectStore('reportsStore').delete(record.id);
                         deleteTx.oncomplete = () => {
                             refreshQueueCount();
-                            // If user is currently looking at the database ledger view, auto refresh it live
                             if (!document.getElementById('cloud-ledger-panel').classList.contains('panel-hidden')) {
                                 fetchLiveCloudDatabaseRecords();
                             }
@@ -553,7 +580,6 @@
         };
     }
 
-    // INTERFACE PANEL TOGGLE SWITCH CONTROLLER WITH AUTOMATIC FETCH HANDSHAKE LINK
     function toggleActiveDashboardPanels(showCloudLedger) {
         const primaryConsole = document.getElementById('primary-console-panel');
         const cloudLedger = document.getElementById('cloud-ledger-panel');
@@ -568,7 +594,6 @@
         }
     }
 
-    // CLOUD DATABASE INTEGRATED RECORD FETCH MATRIX 
     async function fetchLiveCloudDatabaseRecords() {
         cloudLoggerConsole.innerHTML = '<div style="color:#38bdf8;">Establishing encrypted handshake tunnel to Supabase Ledger REST API...</div>';
         
@@ -612,7 +637,6 @@
         }
     }
 
-    // Native PWA Client Worker Registration Context Layer
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('/sw.js')
