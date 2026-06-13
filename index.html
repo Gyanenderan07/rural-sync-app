@@ -160,7 +160,7 @@
         textarea {
             width: 100%; height: 150px; background: rgba(3, 5, 10, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px;
-            padding: 18px; color: var(--text-main); font-family: inherit; font-size: 15px;
+            padding: 18px; color: var(--text-core); font-family: inherit; font-size: 15px;
             line-height: 1.6; resize: none; outline: none; margin-bottom: 24px;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -364,24 +364,6 @@
     const loggerConsole = document.getElementById('terminal-logger');
     const cloudLoggerConsole = document.getElementById('cloud-server-logger');
 
-    // 🕒 HIGH ACCURACY DYNAMIC INDIAN STANDARD TIME (IST) CAPTURE STRATAGEM
-    function getIndianStandardTimestamp() {
-        const localDateObj = new Date();
-        // Calculates absolute UTC zulu ms and appends 5.5 hours calculation vector offset 
-        const istOffsetMs = 5.5 * 60 * 60 * 1000;
-        const istTimeObj = new Date(localDateObj.getTime() + (localDateObj.getTimezoneOffset() * 60 * 1000) + istOffsetMs);
-        
-        // Formats structured string block: YYYY-MM-DD HH:MM:SS IST
-        const year = istTimeObj.getFullYear();
-        const month = String(istTimeObj.getMonth() + 1).padStart(2, '0');
-        const day = String(istTimeObj.getDate()).padStart(2, '0');
-        const hours = String(istTimeObj.getHours()).padStart(2, '0');
-        const mins = String(istTimeObj.getMinutes()).padStart(2, '0');
-        const secs = String(istTimeObj.getSeconds()).padStart(2, '0');
-        
-        return `${year}-${month}-${day} ${hours}:${mins}:${secs} IST`;
-    }
-
     function updateNetworkInterface() {
         const badge = document.getElementById('network-badge');
         const badgeDot = badge.querySelector('.badge-dot');
@@ -413,8 +395,7 @@
     document.getElementById('sync-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const textPayload = document.getElementById('data-payload').value;
-        // Binds transaction packet directly to local system IST timestamp string 
-        const record = { id: crypto.randomUUID(), reportData: textPayload, timestamp: getIndianStandardTimestamp() };
+        const record = { id: crypto.randomUUID(), reportData: textPayload, timestamp: new Date().toISOString() };
 
         if (!indexedDatabase) return;
 
@@ -526,7 +507,7 @@
                     <tr>
                         <th>Transaction ID</th>
                         <th>Synchronized Payload Log</th>
-                        <th>Server Timestamp (IST)</th>
+                        <th>Server Timestamp</th>
                         <th style="text-align:center;">Action</th>
                     </tr>
                 </thead>
@@ -536,7 +517,7 @@
                 tableHTML += `<tr>
                     <td style="font-family:'JetBrains Mono', monospace; color: var(--cyber-cyan); font-size:11.5px; font-weight:500;">${row.id.substring(0,18)}...</td>
                     <td>${row.reportData}</td>
-                    <td style="color: var(--cyber-emerald); font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:500;">${row.timestamp}</td>
+                    <td style="color: var(--text-low); font-family:'JetBrains Mono', monospace; font-size:12px;">${row.timestamp.substring(0,19).replace('T',' ')}</td>
                     <td style="text-align:center;">
                         <button class="row-delete-btn" onclick="deleteCloudRecordFromServer('${row.id}')">🗑️ Erase</button>
                     </td>
