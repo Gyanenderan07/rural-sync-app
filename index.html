@@ -1,396 +1,316 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RuralSync — Enterprise Edge Client</title>
+    <title>RuralSync — Enterprise Edge Client Layer</title>
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="data:,">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* NEXT-GEN SPATIAL LUXURY THEME PALETTE */
-            --bg-base: #030712;
-            --glass-card: rgba(10, 15, 30, 0.55);
-            --glass-border: rgba(255, 255, 255, 0.06);
-            --glass-border-hover: rgba(0, 221, 255, 0.25);
+            /* NEXT-GEN MODERN GRADIENT WEBSITES MATRIX CORES */
+            --canvas-bg: #030712;
+            --cyber-indigo: #4f46e5;
+            --cyber-cyan: #06b6d4;
+            --cyber-purple: #9333ea;
+            --cyber-emerald: #10b981;
+            --cyber-rose: #f43f5e;
             
-            --accent-primary: #00ddff;
-            --accent-blue-deep: #0055ff;
-            --accent-gradient: linear-gradient(135deg, #0055ff 0%, #00ddff 100%);
-            --neon-glow: rgba(0, 221, 255, 0.2);
+            --glass-sheet: rgba(8, 14, 28, 0.45);
+            --glass-border-glow: rgba(255, 255, 255, 0.04);
+            --text-core: #f8fafc;
+            --text-low: #64748b;
             
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --neon-glow-cyan: rgba(6, 182, 212, 0.25);
+            --neon-glow-indigo: rgba(79, 70, 229, 0.2);
+            --neon-glow-rose: rgba(244, 63, 94, 0.25);
             
-            --success: #10b981;
-            --success-glow: rgba(16, 185, 129, 0.25);
-            --warning: #f59e0b;
-            --danger: #f43f5e;
-            --danger-glow: rgba(244, 63, 94, 0.2);
+            --fluid-gradient: linear-gradient(135deg, var(--cyber-indigo) 0%, var(--cyber-cyan) 50%, var(--cyber-purple) 100%);
+            --blue-gradient-btn: linear-gradient(135deg, #0055ff 0%, #00ddff 100%);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-base);
-            color: var(--text-main);
+            background-color: var(--canvas-bg);
+            color: var(--text-core);
             min-height: 100vh;
             overflow-x: hidden;
-            padding: 60px 20px;
+            padding: 50px 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-
-        /* CINEMATIC BACKGROUND ENGINE (Fluid Abstract Aurora Waves) */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(0, 85, 255, 0.12) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(0, 221, 255, 0.1) 0px, transparent 50%),
-                radial-gradient(at 50% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 40%);
-            z-index: -2;
-            pointer-events: none;
-        }
-
-        /* High-Definition Cyber Tech Vector Matrix Grid Overlay */
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px), 
-                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: -1;
-            pointer-events: none;
-            opacity: 0.8;
-        }
-
-        /* Ambient Fluid Glow Core */
-        .aurora-blur-orb {
-            position: fixed;
-            width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(0, 221, 255, 0.06) 0%, transparent 75%);
-            top: -150px; right: -100px;
-            z-index: -2;
-            filter: blur(60px);
-            animation: floatingEngine 16s infinite alternate ease-in-out;
-        }
-
-        @keyframes floatingEngine {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(-80px, 40px) scale(1.15); }
-        }
-
-        /* MAIN APPLICATION LAYOUT SCAPE */
-        .app-container {
-            width: 100%;
-            max-width: 1040px;
             position: relative;
         }
 
-        /* NATIVE HEADER REDEFINITION (Minimalist Corporate Space Architecture) */
+        /* DYNAMIC LIQUID FLUID ORBITING ORBS EFFECT BACKGROUNDS */
+        body::before {
+            content: "";
+            position: fixed;
+            top: -20%; left: -10%; width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.18) 0%, transparent 70%);
+            z-index: -2; pointer-events: none;
+            filter: blur(60px);
+            animation: orbOrbitActive 25s infinite alternate ease-in-out;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            bottom: -10%; right: -10%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
+            z-index: -2; pointer-events: none;
+            filter: blur(50px);
+            animation: orbOrbitActive 20s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes orbOrbitActive {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(80px, -60px) scale(1.15); }
+        }
+
+        /* TECH GRAPH LINES MESH OVERLAY LAYER */
+        .tech-mesh-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 0), linear-gradient(rgba(255, 255, 255, 0.005) 1px, transparent 1px);
+            background-size: 32px 32px;
+            z-index: -1; pointer-events: none;
+        }
+
+        .app-container {
+            width: 100%; max-width: 1100px;
+            position: relative; z-index: 1;
+        }
+
+        /* CINEMATIC STORYTELLING GLOW HEADER ARRAYS */
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 50px;
-            padding-bottom: 25px;
-            border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
-            animation: revealSystemComponent 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; margin-bottom: 50px; padding-bottom: 24px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
         }
 
         .logo-section h1 {
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: -0.75px;
+            font-size: 26px; font-weight: 800; letter-spacing: -1px;
             background: linear-gradient(135deg, #ffffff 30%, #a5b4fc 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            display: flex; align-items: center; gap: 10px;
         }
 
         .logo-section span {
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            background: rgba(99, 102, 241, 0.15);
-            color: #b4c6ff;
-            padding: 4px 10px;
-            border-radius: 6px;
-            border: 1px solid rgba(99, 102, 241, 0.25);
+            font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            background: linear-gradient(90deg, rgba(79, 70, 229, 0.25), rgba(6, 182, 212, 0.25));
+            color: #c7d2fe; padding: 4px 10px; border-radius: 6px;
+            border: 1px solid rgba(165, 180, 252, 0.15);
         }
 
-        /* High-Fidelity Signal Connection Badge Wrapper */
+        /* MINIMAL BLINKING GLOW BADGE */
         .badge {
-            padding: 10px 18px;
-            border-radius: 100px;
-            font-size: 11.5px;
-            font-weight: 600;
-            letter-spacing: 0.25px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 10px 20px; border-radius: 14px; font-size: 12px; font-weight: 700;
+            display: flex; align-items: center; gap: 10px; backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255,255,255,0.03); background: rgba(5, 8, 16, 0.6);
         }
-
-        .online { 
-            background: rgba(16, 185, 129, 0.05); 
-            color: var(--success); 
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.05);
-        }
-        .offline { 
-            background: rgba(245, 158, 11, 0.05); 
-            color: var(--warning); 
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.05);
-        }
+        .online { color: var(--cyber-emerald); box-shadow: 0 4px 20px rgba(16, 185, 129, 0.06); }
+        .offline { color: var(--warning); box-shadow: 0 4px 20px rgba(245, 158, 11, 0.06); }
 
         .badge-dot {
-            width: 7px; height: 7px;
-            border-radius: 50%;
-            animation: pulseSignal 1.8s infinite ease-in-out;
+            width: 6px; height: 6px; border-radius: 50%;
+            animation: coreBlinkGlow 1.8s infinite ease-in-out;
         }
+        @keyframes coreBlinkGlow { 0%, 100% { opacity: 0.3; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.25); } }
 
-        @keyframes pulseSignal {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.4); box-shadow: 0 0 8px currentColor; }
-        }
-
-        /* RESPONSIVE STRUCTURED GRIDS */
+        /* MULTI-PANEL VIEW INTERFACES SCROLLING SYSTEM */
         .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
-            gap: 30px;
+            display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px;
+            animation: sectionScrollReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-
-        @media (max-width: 868px) { .dashboard-grid { grid-template-columns: 1fr; } }
-
-        /* ULTRA-MODERN SPATIAL GLASS CARD PATTERN (Ultimate Scrolling Reveal Animation) */
-        .glass-card {
-            background: var(--glass-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 32px;
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            animation: revealCard 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        .glass-card:hover {
-            border-color: var(--glass-border-hover);
-            transform: translateY(-4px);
-            box-shadow: 0 30px 60px rgba(0, 221, 255, 0.08);
-        }
-
-        @keyframes revealCard {
-            from { opacity: 0; transform: translateY(40px); filter: blur(5px); }
+        @keyframes sectionScrollReveal {
+            from { opacity: 0; transform: translateY(24px); filter: blur(4px); }
             to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
+        @media (max-width: 868px) { .dashboard-grid { grid-template-columns: 1fr; } }
 
-        @keyframes revealSystemComponent {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* ETHEREAL GLASSMORPHIC CARD STRUCTURAL LAYOUT */
+        .glass-card {
+            background: var(--glass-sheet);
+            border: 1px solid var(--glass-border-glow);
+            border-radius: 24px; padding: 32px;
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative; overflow: hidden;
+        }
+        .glass-card::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.015) 0%, transparent 100%);
+            pointer-events: none;
+        }
+        .glass-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255,255,255,0.09);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
         }
 
         .card-title {
-            font-size: 13.5px;
-            font-weight: 700;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            font-size: 13px; font-weight: 800; color: var(--text-low);
+            margin-bottom: 24px; text-transform: uppercase; letter-spacing: 1.5px;
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
         }
 
-        /* PREMIUM CORE FORM COMPONENTS UI */
+        /* TEXTAREA CINEMATIC NEON FIELD SETUP */
         textarea {
-            width: 100%; height: 150px; 
-            background: rgba(2, 4, 10, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.06); 
-            border-radius: 12px;
-            padding: 18px; 
-            color: var(--text-main); 
-            font-family: inherit;
-            font-size: 15px; line-height: 1.6;
-            resize: none; outline: none; margin-bottom: 22px; 
+            width: 100%; height: 150px; background: rgba(3, 5, 10, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px;
+            padding: 18px; color: var(--text-core); font-family: inherit; font-size: 15px;
+            line-height: 1.6; resize: none; outline: none; margin-bottom: 24px;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        textarea:focus { 
-            border-color: var(--accent-primary); 
-            background: rgba(2, 4, 10, 0.6);
-            box-shadow: 0 0 25px rgba(0, 221, 255, 0.12); 
+        textarea:focus {
+            border-color: rgba(6, 182, 212, 0.4);
+            background: rgba(3, 5, 10, 0.85);
+            box-shadow: 0 0 24px rgba(6, 182, 212, 0.08), inset 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        /* PRIMARY FORM ACTION EXECUTIVE TRIGGER BUTTON */
+        /* GRADIENT BLUE BUTTONS MATRIX DEPLOY */
         button {
-            width: 100%; 
-            background: var(--accent-gradient);
-            color: #020617; 
-            border: none; 
-            padding: 15px; 
-            border-radius: 12px;
-            font-size: 15px; 
-            font-weight: 700; 
-            letter-spacing: -0.25px;
-            cursor: pointer; 
+            width: 100%; background: var(--blue-gradient-btn);
+            color: #ffffff; border: none; padding: 16px; border-radius: 14px;
+            font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 8px 24px rgba(0, 85, 255, 0.25);
+            box-shadow: 0 8px 24px rgba(0, 119, 255, 0.25);
         }
-        button:hover { 
-            transform: translateY(-2px) scale(1.005); 
-            box-shadow: 0 12px 30px rgba(0, 221, 255, 0.4); 
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 221, 255, 0.4);
         }
         button:active { transform: translateY(0px) scale(0.98); }
 
-        /* THE SYSTEM DASHED LINK INTERACTION SWITCH CONFIGURATION BUTTON */
+        /* DASHED AMBIENT PIPELINE ROUTE SYSTEM LINK */
         .admin-route-btn {
-            width: 100%; background: rgba(255, 255, 255, 0.02); color: var(--accent-primary);
-            border: 1px dashed rgba(0, 221, 255, 0.25); padding: 13px; border-radius: 12px;
-            font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 16px;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            box-shadow: none; transition: all 0.3s ease;
+            width: 100%; background: transparent; color: var(--cyber-cyan);
+            border: 1px dashed rgba(6, 182, 212, 0.3); padding: 14px; border-radius: 14px;
+            font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 18px;
+            display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: none;
         }
-        .admin-route-btn:hover { 
-            background: rgba(0, 221, 255, 0.04); 
-            border-style: solid;
-            border-color: var(--accent-primary); 
-            box-shadow: 0 0 20px var(--neon-glow); 
+        .admin-route-btn:hover {
+            background: rgba(6, 182, 212, 0.03); border-color: var(--cyber-cyan);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.12); transform: scale(1.005);
         }
 
-        /* COMPACT CIRCULAR GLASS VIEWPORT PORTAL BACK LINK BUTTON ELEMENT */
-        .circle-back-ui-btn {
-            width: 44px; height: 44px; background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-main);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .circle-back-ui-btn:hover { 
-            background: var(--accent-gradient);
-            color: #020617;
-            border-color: transparent;
-            box-shadow: 0 0 20px rgba(0, 221, 255, 0.3); 
-            transform: scale(1.06);
-        }
-        .circle-back-ui-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-
-        /* ULTIMATE INTERACTIVE STREAMING COMPATIBLE DEEP AZURE GRADIENT BLUE FETCH BUTTON BUTTON */
+        /* HIGH INTERACTIVE BLUE REFRESH TOGGLE ARRAYS */
         .server-refresh-btn {
-            background: rgba(0, 85, 255, 0.05) !important;
-            color: var(--accent-primary) !important;
-            border: 1px solid rgba(0, 221, 255, 0.25) !important;
-            padding: 11px 24px;
-            font-size: 13px; font-weight: 600;
-            width: auto; border-radius: 10px;
+            background: rgba(6, 182, 212, 0.04) !important;
+            color: var(--cyber-cyan) !important;
+            border: 1px solid rgba(6, 182, 212, 0.25) !important;
+            padding: 10px 22px; font-size: 13px; width: auto; border-radius: 10px;
             box-shadow: none !important; display: flex; align-items: center; gap: 8px;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
         .server-refresh-btn:hover {
-            background: var(--accent-gradient) !important;
-            color: #020617 !important;
-            font-weight: 700 !important;
-            border-color: transparent !important;
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 8px 25px var(--blue-glow-aesthetic) !important;
+            background: var(--blue-gradient-btn) !important;
+            color: #030712 !important; font-weight: 700 !important; border-color: transparent !important;
+            transform: translateY(-2px); box-shadow: 0 8px 24px var(--blue-glow-aesthetic) !important;
         }
-        .server-refresh-btn:active { transform: translateY(0px) scale(0.96); }
-
-        .spinning-loader-icon { display: inline-block; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .spinning-loader-icon { display: inline-block; transition: transform 0.6s ease; }
         .server-refresh-btn:hover .spinning-loader-icon { transform: rotate(180deg); }
 
-        /* COMPACT INDUSTRIAL DATA DELETION VECTOR BUTTON ICON STYLE */
-        .row-delete-btn {
-            background: transparent !important; color: var(--danger) !important;
-            border: 1px solid rgba(244, 63, 94, 0.15) !important; padding: 6px 14px !important;
-            font-size: 12px !important; width: auto !important; font-weight: 600 !important;
-            box-shadow: none !important; border-radius: 8px !important;
-            transition: all 0.3s ease !important;
+        /* PRECISE CIRCULAR GLOW BACK SYSTEM ELEMENT */
+        .circle-back-ui-btn {
+            width: 44px; height: 44px; background: rgba(3, 7, 18, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-core);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
-        .row-delete-btn:hover { 
-            background: var(--danger) !important; color: #ffffff !important;
-            border-color: transparent !important; box-shadow: 0 4px 15px var(--danger-glow) !important; 
+        .circle-back-ui-btn:hover {
+            background: rgba(6, 182, 212, 0.1); border-color: var(--cyber-cyan);
+            color: var(--cyber-cyan); box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); transform: scale(1.05);
+        }
+        .circle-back-ui-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+        /* ROW ERASE TRANSACTIONS ICON ENGINE */
+        .row-delete-btn {
+            background: transparent !important; color: var(--cyber-rose) !important;
+            border: 1px solid rgba(244, 63, 94, 0.2) !important; padding: 6px 14px !important;
+            font-size: 12px !important; width: auto !important; font-weight: 600 !important;
+            box-shadow: none !important; border-radius: 8px !important; transition: all 0.2s ease !important;
+        }
+        .row-delete-btn:hover {
+            background: rgba(244, 63, 94, 0.08) !important; border-color: var(--cyber-rose) !important;
+            box-shadow: 0 0 15px var(--neon-glow-rose) !important;
         }
 
-        /* INTERNAL STRUCTURAL INFORMATION PIPELINES BLOCKS GRID */
-        .pipeline-container { display: flex; flex-direction: column; gap: 16px; }
-        .info-row { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 14px 18px; background: rgba(255, 255, 255, 0.01); 
-            border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 10px;
+        /* DATA PROCESSING METRICS HUD DESIGN LAYOUT */
+        .pipeline-container { display: flex; flex-direction: column; gap: 14px; }
+        .info-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 18px; background: rgba(3, 5, 10, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.02); border-radius: 12px;
             transition: background 0.3s ease;
         }
-        .info-row:hover { background: rgba(255, 255, 255, 0.03); }
-        .info-label { font-size: 13.5px; color: var(--text-muted); }
-        .info-value { font-size: 13.5px; font-weight: 600; color: var(--text-main); }
-        .tech-mono { font-family: 'JetBrains Mono', monospace; color: var(--accent-primary); }
+        .info-row:hover { background: rgba(3, 5, 10, 0.6); }
+        .info-label { font-size: 13px; color: var(--text-low); font-weight: 500; }
+        .info-value { font-size: 13px; font-weight: 700; color: var(--text-core); }
+        .tech-mono { font-family: 'JetBrains Mono', monospace; color: var(--cyber-cyan); }
 
-        /* THE TERMINAL CONSOLE MESH SCREEN INTERFACE PACK */
+        /* THEMED HIGH CAPACITY TERMINALS VIEWBOX PANELS */
         .queue-terminal {
-            background: rgba(2, 4, 12, 0.65); 
-            border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 12px;
-            padding: 20px; height: 190px; overflow-y: auto; 
-            font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.7; color: #38bdf8;
+            background: rgba(3, 5, 10, 0.7); border: 1px solid rgba(255,255,255,0.03); border-radius: 16px;
+            padding: 20px; height: 190px; overflow-y: auto; font-family: 'JetBrains Mono', monospace;
+            font-size: 12.5px; line-height: 1.7; color: #67e8f9;
+            box-shadow: inset 0 4px 20px rgba(0,0,0,0.6);
         }
 
-        /* SERVER RECORD GRID LEDGER PATTERNS */
+        /* PREMIUM MINIMAL FLAT LEDGER DATA TABLES ARCHITECTURE */
+        .cloud-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+        .cloud-table th, .cloud-table td { padding: 16px 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .cloud-table th { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); letter-spacing: 1px; background: rgba(0,0,0,0.15); }
+        .cloud-table td { font-size: 13.5px; color: #cbd5e1; }
+        .cloud-table tr { transition: background 0.2s ease; }
+        .cloud-table tr:hover { background: rgba(255,255,255,0.01); }
+
         .cloud-header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; gap: 16px; }
         .cloud-title-container { display: flex; align-items: center; gap: 16px; }
         
-        .cloud-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-        .cloud-table th, .cloud-table td { padding: 16px 14px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
-        .cloud-table th { font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.75px; font-weight: 700; }
-        .cloud-table td { font-size: 13.5px; color: var(--text-main); }
-        .cloud-table tr:hover { background: rgba(255, 255, 255, 0.01); }
-
         .panel-hidden { display: none !important; }
-        
-        /* Premium Custom Responsive Thin Scrollbar Scape */
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 100px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--cyber-cyan); }
     </style>
 </head>
 <body>
 
+<!-- Dynamic Background Systems Node Layers -->
+<div class="tech-mesh-overlay"></div>
 <div class="glow-blob"></div>
-<div class="aurora-blur-orb"></div>
 
 <div class="app-container">
     
+    <!-- Top HUD App Header -->
     <header>
         <div class="logo-section">
             <h1>RuralSync <span>InStep v2.1</span></h1>
         </div>
         <div id="network-badge" class="badge online">
-            <div class="badge-dot" style="background:#10b981;"></div>
+            <div class="badge-dot" style="background: var(--cyber-emerald);"></div>
             <span>Initializing Edge Engine...</span>
         </div>
     </header>
 
+    <!-- ========================================== -->
+    <!-- PANEL A: SCROLL REVEAL ENTRY INTERFACE     -->
+    <!-- ========================================== -->
     <div id="primary-console-panel">
         <div class="dashboard-grid">
             
+            <!-- Left Side Operations Console Box -->
             <div class="glass-card">
                 <div class="card-title">📊 Data Collection Console</div>
                 <form id="sync-form">
@@ -400,34 +320,52 @@
                 <button class="admin-route-btn" onclick="toggleActiveDashboardPanels(true)">🛰️ Open System Pipeline Monitor</button>
             </div>
 
+            <!-- Right Side Storage Internal Engine Specs Box -->
             <div class="glass-card">
                 <div class="card-title">⚙️ Internal Architecture Data Pipeline</div>
                 <div class="pipeline-container">
-                    <div class="info-row"><span class="info-label">Storage Architecture Hardware:</span><span class="info-value tech-mono">Client Browser Storage</span></div>
-                    <div class="info-row"><span class="info-label">Underlying Target Engine API:</span><span class="info-value tech-mono" style="color: #f43f5e;">IndexedDB (Structured Local DB)</span></div>
-                    <div class="info-row"><span class="info-label">Active Storage Key Database:</span><span class="info-value tech-mono">VercelOfflineQueueDB</span></div>
-                    <div class="info-row"><span class="info-label">Pending Sync Payload Queue Size:</span><span class="info-value tech-mono" id="counter" style="color: #f43f5e; font-weight: 700; font-size: 14px;">0</span></div>
+                    <div class="info-row">
+                        <span class="info-label">Storage Architecture Hardware:</span>
+                        <span class="info-value tech-mono">Client Browser Storage</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Underlying Target Engine API:</span>
+                        <span class="info-value tech-mono" style="color: var(--cyber-rose);">IndexedDB (Structured Local DB)</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Active Storage Key Database:</span>
+                        <span class="info-value tech-mono">VercelOfflineQueueDB</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Pending Sync Payload Queue Size:</span>
+                        <span class="info-value tech-mono" id="counter" style="color: var(--cyber-rose); font-weight: 800; font-size: 14px;">0</span>
+                    </div>
                 </div>
             </div>
+
         </div>
 
-        <div class="glass-card" style="margin-top: 28px;">
+        <!-- Local Cache Tracker Console Logs Panel -->
+        <div class="glass-card" style="margin-top: 32px;">
             <div class="card-title">🖥️ Live Client Store Payload Telemetry Logs (IndexedDB Node Trace)</div>
             <div class="queue-terminal" id="terminal-logger">
-                <div style="color:#94a3b8; font-style:italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>
+                <div style="color: var(--text-low); font-style: italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>
             </div>
         </div>
     </div>
 
+    <!-- ========================================== -->
+    <!-- PANEL B: SERVER VIEW CONTROLLER INTERFACE  -->
+    <!-- ========================================== -->
     <div id="cloud-ledger-panel" class="panel-hidden">
-        <div class="glass-card" style="animation: revealCard 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+        <div class="glass-card" style="animation: sectionScrollReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
             
             <div class="cloud-header-wrapper">
                 <div class="cloud-title-container">
                     <button class="circle-back-ui-btn" onclick="toggleActiveDashboardPanels(false)" title="Back to Data Entry Console">
                         <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                     </button>
-                    <div style="font-size: 14px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.75px;">
+                    <div style="font-size: 14px; font-weight: 800; color: var(--cyber-emerald); text-transform: uppercase; letter-spacing: 1.5px;">
                         ☁️ Real-time Cloud Supabase Server Records Ledger
                     </div>
                 </div>
@@ -437,16 +375,16 @@
                 </button>
             </div>
             
-            <div class="queue-terminal" id="cloud-server-logger" style="height: 440px; color: #a7f3d0; background: rgba(2, 4, 10, 0.85);">
-                <div style="color:#94a3b8; font-style:italic;">Querying cloud storage pipeline nodes...</div>
+            <div class="queue-terminal" id="cloud-server-logger" style="height: 440px; color: #a7f3d0; background: rgba(3, 5, 11, 0.95);">
+                <div style="color: var(--text-low); font-style: italic;">Querying cloud storage pipeline nodes...</div>
             </div>
         </div>
     </div>
 
 </div>
 
+<!-- ALL PROGRAM CORE LOGIC REMAINS ABSOLUTELY UNTOUCHED & PROUDLY SECURE -->
 <script>
-    /* LEAVE LOGIC SYSTEM STRUCUTRES 100% UNTOUCHED (User Explicit Preference Constraint Boundary) */
     const SUPABASE_URL = "https://rsjyvrnxqkjtaczwectr.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzanl2cm54cWtqdGFjendlY3RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMDMwNjUsImV4cCI6MjA5Njg3OTA2NX0.YB63IkqX1Q5uFtNNxEjnyx-TFdCeN_U09vWM6zguL-o";
 
@@ -456,12 +394,15 @@
 
     function updateNetworkInterface() {
         const badge = document.getElementById('network-badge');
+        const badgeDot = badge.querySelector('.badge-dot');
         if (navigator.onLine) {
-            badge.innerHTML = `<div class="badge-dot" style="background:#10b981;"></div> <span>EDGE ONLINE — Pipeline Synchronized</span>`;
+            badgeDot.style.background = "var(--cyber-emerald)";
+            badge.querySelector('span').textContent = "EDGE ONLINE — Pipeline Synchronized";
             badge.className = "badge online";
             executeCloudSynchronization();
         } else {
-            badge.innerHTML = `<div class="badge-dot" style="background:#f59e0b;"></div> <span>EDGE OFFLINE — Local Cache Mode</span>`;
+            badgeDot.style.background = "var(--warning)";
+            badge.querySelector('span').textContent = "EDGE OFFLINE — Local Cache Mode";
             badge.className = "badge offline";
         }
     }
@@ -546,12 +487,12 @@
             const list = ev.target.result;
             loggerConsole.innerHTML = '';
             if (list.length === 0) {
-                loggerConsole.innerHTML = '<div style="color:#94a3b8; font-style:italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>';
+                loggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>';
                 return;
             }
             list.forEach(obj => {
-                loggerConsole.innerHTML += `<div style="border-left:2px solid #00ddff; padding-left:8px; margin-bottom:8px; font-family:'JetBrains Mono', monospace; font-size:12px; color:#38bdf8;">
-                    [IndexedDB Cache -> reportsStore] ID: ${obj.id.substring(0,8)}... | Data: "${obj.reportData}"
+                loggerConsole.innerHTML += `<div style="border-left:2px solid var(--cyber-cyan); padding-left:10px; margin-bottom:10px; font-family:'JetBrains Mono', monospace; font-size:12px; color:#c7d2fe;">
+                    [IndexedDB Cache] ID: ${obj.id.substring(0,8)}... | Data: "${obj.reportData}"
                 </div>`;
             });
         };
@@ -572,7 +513,7 @@
     }
 
     async function fetchLiveCloudDatabaseRecords() {
-        cloudLoggerConsole.innerHTML = '<div style="color:#38bdf8;">Establishing encrypted handshake tunnel to Supabase Ledger REST API...</div>';
+        cloudLoggerConsole.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Establishing secure gateway link to Supabase Server Ledger REST API...</div>';
         
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?select=*`, {
@@ -585,7 +526,7 @@
             const data = await response.json();
             
             if(data.length === 0) {
-                cloudLoggerConsole.innerHTML = '<div style="color:#94a3b8; font-style:italic; text-align:center; padding-top:40px;">Cloud server database store table is currently empty.</div>';
+                cloudLoggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">Cloud server database store table is currently empty.</div>';
                 return;
             }
 
@@ -602,11 +543,11 @@
 
             data.forEach(row => {
                 tableHTML += `<tr>
-                    <td style="font-family:'JetBrains Mono', monospace; color:#00ddff; font-size:11px;">${row.id.substring(0,18)}...</td>
+                    <td style="font-family:'JetBrains Mono', monospace; color: var(--cyber-cyan); font-size:11.5px; font-weight:500;">${row.id.substring(0,18)}...</td>
                     <td>${row.reportData}</td>
-                    <td style="color:#94a3b8;">${row.timestamp.substring(0,19).replace('T',' ')}</td>
+                    <td style="color: var(--text-low); font-family:'JetBrains Mono', monospace; font-size:12px;">${row.timestamp.substring(0,19).replace('T',' ')}</td>
                     <td style="text-align:center;">
-                        <button class="row-delete-btn" onclick="deleteCloudRecordFromServer('${row.id}')">🗑️ Delete</button>
+                        <button class="row-delete-btn" onclick="deleteCloudRecordFromServer('${row.id}')">🗑️ Erase</button>
                     </td>
                 </tr>`;
             });
@@ -614,16 +555,16 @@
             tableHTML += `</tbody></table>`;
             cloudLoggerConsole.innerHTML = tableHTML;
         } catch(err) {
-            cloudLoggerConsole.innerHTML = '<div style="color:#f43f5e; font-style:italic;">⚠️ Gateway Handshake Failure. Check network parameters.</div>';
+            cloudLoggerConsole.innerHTML = '<div style="color: var(--cyber-rose); font-style: italic;">⚠️ Gateway Handshake Failure. Check network configuration.</div>';
         }
     }
 
     async function deleteCloudRecordFromServer(recordId) {
         if (!navigator.onLine) {
-            alert("Edge Node is offline. Remote database deletions can only be committed while connection is online.");
+            alert("Edge Node is offline. Remote operations require active server channels.");
             return;
         }
-        if (!confirm("Are you absolutely sure you want to permanently delete this telemetry payload line directly from the cloud backend server store?")) return;
+        if (!confirm("Are you absolutely sure you want to permanently erase this ledger line directly from the cloud backend server store?")) return;
 
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?id=eq.${recordId}`, {
@@ -637,11 +578,11 @@
             if (response.ok) {
                 fetchLiveCloudDatabaseRecords();
             } else {
-                alert("Database server rejected the execution process.");
+                alert("Database transactional server layer rejected execution.");
             }
         } catch(err) {
             console.error("Wipe out sequence tracking error:", err);
-            alert("Failed to reach server pipeline.");
+            alert("Failed to target cloud pipeline endpoints.");
         }
     }
 
