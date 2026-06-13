@@ -96,14 +96,15 @@
             border: 1px solid rgba(165, 180, 252, 0.15);
         }
 
-        /* DYNAMIC CHROME SHIELD RE-ENGINEERED OVERRIDE LOGIC PATTERNS */
+        /* HARD-PATCHED STRICT NEON GLOW BADGE SELECTOR ELEMENTS */
         .badge {
             padding: 10px 20px; border-radius: 14px; font-size: 12px; font-weight: 700;
             display: flex; align-items: center; gap: 10px; backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.03); 
-            background: rgba(5, 8, 16, 0.6); transition: all 0.3s ease;
+            -webkit-backdrop-filter: blur(20px); border: 1px solid transparent; 
+            background: rgba(5, 8, 16, 0.6); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
+        /* Fixed explicit style prioritization layout rules using !important blocks */
         .badge.online-state { color: var(--cyber-emerald) !important; border-color: rgba(16, 185, 129, 0.25) !important; box-shadow: 0 4px 24px rgba(16, 185, 129, 0.08) !important; }
         .badge.offline-state { color: #f59e0b !important; border-color: rgba(245, 158, 11, 0.25) !important; box-shadow: 0 4px 24px rgba(245, 158, 11, 0.08) !important; }
 
@@ -319,12 +320,13 @@
         }
     }
 
-    // ⚡ HIGH VELOCITY EXPLICIT CLASSIFICATION HARDWARE LISTENER PATCH
+    // ⚡ ULTIMATE HARDWARE NETWORK POLLING ACTIVE INTELLIGENCE ENGINE (FOR LAPTOPS)
     function forceNetworkInterfaceUpdate() {
         const badge = document.getElementById('network-badge');
         const badgeDot = document.getElementById('badge-glow-node');
         const badgeText = document.getElementById('badge-text-node');
         
+        // Directly maps physical execution loops overriding cached spoofed service worker states
         if (navigator.onLine) {
             badge.className = "badge online-state";
             badgeDot.style.backgroundColor = "var(--cyber-emerald)";
@@ -336,11 +338,22 @@
             badgeDot.style.backgroundColor = "#f59e0b";
             badgeDot.style.boxShadow = "0 0 16px #f59e0b";
             badgeText.textContent = "EDGE OFFLINE — Local Cache Mode";
+            
+            // Auto changes layout headers if user is looking at the dashboard monitor while turning off wifi
+            if (!document.getElementById('cloud-ledger-panel').classList.contains('panel-hidden')) {
+                fetchLiveCloudDatabaseRecords();
+            }
         }
     }
     
+    // Core event binding layers
     window.addEventListener('online', forceNetworkInterfaceUpdate);
     window.addEventListener('offline', forceNetworkInterfaceUpdate);
+    
+    // 🫀 LAPTOP ENHANCEMENT: 3-Second Active Heartbeat Polling Loop
+    setInterval(forceNetworkInterfaceUpdate, 3000);
+    
+    // Instant execution invocation
     forceNetworkInterfaceUpdate();
 
     const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 1);
@@ -445,16 +458,15 @@
         }
     }
 
-    // 🔄 ADVANCED HYBRID ROUTING MATRIX (ONLINE VS OFFLINE SAFE REVELATION)
     async function fetchLiveCloudDatabaseRecords() {
         const titleNode = document.getElementById('pipeline-title-node');
         const refreshActionBtn = document.getElementById('server-refresh-action-btn');
         
-        // 🔒 OFFLINE PATHWAY FALLBACK CONTROLLER TRIGGER
+        // HYBRID RESILIENT SAFEGUARD CONTROLLER FOR OFFLINE MAPPING
         if (!navigator.onLine) {
             titleNode.style.color = "#f59e0b";
             titleNode.textContent = "🗄️ Local IndexedDB Resilient Queue Store Ledger";
-            refreshActionBtn.style.display = "none"; // Hides cloud query button in offline mode
+            refreshActionBtn.style.display = "none"; 
             
             cloudLoggerConsole.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Device operating in offline vector. Accessing local IndexedDB storage cache frames...</div>';
             
@@ -468,12 +480,12 @@
                     cloudLoggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">No pending un-synchronized logs found inside local IndexedDB reportsStore buffer memory.</div>';
                     return;
                 }
-                renderTableHTML(data, false); // Renders the safe offline cache storage elements
+                renderTableHTML(data, false); 
             };
             return;
         }
 
-        // 🌐 ONLINE CLOUD API DISPATCH MODE
+        // ONLINE SUPABASE DISPATCH
         titleNode.style.color = "var(--cyber-emerald)";
         titleNode.textContent = "☁️ Real-time Cloud Supabase Server Records Ledger";
         refreshActionBtn.style.display = "flex";
@@ -497,7 +509,6 @@
         }
     }
 
-    // UNIFIED GLOBAL RENDERER COMPONENT
     function renderTableHTML(data, isOnlineContext) {
         let tableHTML = `<table class="cloud-table">
             <thead>
@@ -525,14 +536,13 @@
         cloudLoggerConsole.innerHTML = tableHTML;
     }
 
-    // LOCAL CACHE DELETION COMPONENT (When offline)
     function deleteLocalCacheRecord(recordId) {
         if (!confirm("Remove this log object directly from local IndexedDB cache buffer?")) return;
         const tx = indexedDatabase.transaction('reportsStore', 'readwrite');
         tx.objectStore('reportsStore').delete(recordId);
         tx.oncomplete = () => {
             refreshQueueCount();
-            fetchLiveCloudDatabaseRecords(); // Triggers UI refresh 
+            fetchLiveCloudDatabaseRecords(); 
         };
     }
 
