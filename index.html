@@ -160,7 +160,7 @@
         textarea {
             width: 100%; height: 150px; background: rgba(3, 5, 10, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px;
-            padding: 18px; color: var(--text-core); font-family: inherit; font-size: 15px;
+            padding: 18px; color: var(--text-main); font-family: inherit; font-size: 15px;
             line-height: 1.6; resize: none; outline: none; margin-bottom: 24px;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -348,7 +348,7 @@
                 </button>
             </div>
             
-            <div class="queue-terminal" id="cloud-server-logger" style="height: 420px; color: #a7f3d0; background: rgba(3, 5, 11, 0.95);">
+            <div class="queue-terminal" id="cloud-server-logger" style="height: 440px; color: #a7f3d0; background: rgba(3, 5, 11, 0.95);">
                 <div style="color: var(--text-low); font-style: italic;">Querying cloud storage pipeline nodes...</div>
             </div>
         </div>
@@ -364,27 +364,22 @@
     const loggerConsole = document.getElementById('terminal-logger');
     const cloudLoggerConsole = document.getElementById('cloud-server-logger');
 
-    // HIGH PRECISION LOCAL TIME ZONE STRING COMPILER (IST / Local Offset Force Matcher)
-    function getExactLocalSystemTimestamp() {
-        const localDateObject = new Date();
-        const timezoneOffsetInMinutes = localDateObject.getTimezoneOffset();
-        const absoluteOffsetInMinutes = Math.abs(timezoneOffsetInMinutes);
+    // 🕒 HIGH ACCURACY DYNAMIC INDIAN STANDARD TIME (IST) CAPTURE STRATAGEM
+    function getIndianStandardTimestamp() {
+        const localDateObj = new Date();
+        // Calculates absolute UTC zulu ms and appends 5.5 hours calculation vector offset 
+        const istOffsetMs = 5.5 * 60 * 60 * 1000;
+        const istTimeObj = new Date(localDateObj.getTime() + (localDateObj.getTimezoneOffset() * 60 * 1000) + istOffsetMs);
         
-        const pad = (num) => String(num).padStart(2, '0');
+        // Formats structured string block: YYYY-MM-DD HH:MM:SS IST
+        const year = istTimeObj.getFullYear();
+        const month = String(istTimeObj.getMonth() + 1).padStart(2, '0');
+        const day = String(istTimeObj.getDate()).padStart(2, '0');
+        const hours = String(istTimeObj.getHours()).padStart(2, '0');
+        const mins = String(istTimeObj.getMinutes()).padStart(2, '0');
+        const secs = String(istTimeObj.getSeconds()).padStart(2, '0');
         
-        const year = localDateObject.getFullYear();
-        const month = pad(localDateObject.getMonth() + 1);
-        const date = pad(localDateObject.getDate());
-        const hours = pad(localDateObject.getHours());
-        const minutes = pad(localDateObject.getMinutes());
-        const seconds = pad(localDateObject.getSeconds());
-        
-        const offsetSign = timezoneOffsetInMinutes <= 0 ? '+' : '-';
-        const offsetHours = pad(Math.floor(absoluteOffsetInMinutes / 60));
-        const offsetMinutes = pad(absoluteOffsetInMinutes % 60);
-        
-        // Generates clean ISO string explicitly appended with device's true local timezone offset
-        return `${year}-${month}-${date}T${hours}:${minutes}:${seconds}${offsetSign}${offsetHours}:${offsetMinutes}`;
+        return `${year}-${month}-${day} ${hours}:${mins}:${secs} IST`;
     }
 
     function updateNetworkInterface() {
@@ -418,13 +413,8 @@
     document.getElementById('sync-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const textPayload = document.getElementById('data-payload').value;
-        
-        // PATCH: Swapped global ISO Zulu timestamp line with exact localized offset function mapping
-        const record = { 
-            id: crypto.randomUUID(), 
-            reportData: textPayload, 
-            timestamp: getExactLocalSystemTimestamp() 
-        };
+        // Binds transaction packet directly to local system IST timestamp string 
+        const record = { id: crypto.randomUUID(), reportData: textPayload, timestamp: getIndianStandardTimestamp() };
 
         if (!indexedDatabase) return;
 
@@ -492,7 +482,6 @@
                 return;
             }
             list.forEach(obj => {
-                // PATCH: Cleans visual trace display formatting to make timestamps highly scannable
                 loggerConsole.innerHTML += `<div style="border-left:2px solid var(--cyber-cyan); padding-left:10px; margin-bottom:10px; font-family:'JetBrains Mono', monospace; font-size:12px; color:#c7d2fe;">
                     [IndexedDB Cache] ID: ${obj.id.substring(0,8)}... | Data: "${obj.reportData}"
                 </div>`;
@@ -537,27 +526,17 @@
                     <tr>
                         <th>Transaction ID</th>
                         <th>Synchronized Payload Log</th>
-                        <th>Server Timestamp (True IST Device Time)</th>
+                        <th>Server Timestamp (IST)</th>
                         <th style="text-align:center;">Action</th>
                     </tr>
                 </thead>
                 <tbody>`;
 
-            // Sort data so the newest entries are displayed at the very top of the ledger panel
-            data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
             data.forEach(row => {
-                // PATCH: Visually parses and formats the local system timestamp row fields elegantly
-                let cleanTimeDisplay = row.timestamp.replace('T', ' ').substring(0, 19);
-                let timezoneSignMatch = row.timestamp.match(/([+-]\d{2}:\d{2})$/);
-                let offsetLabel = timezoneSignMatch ? ` (GMT${timezoneSignMatch[0]})` : '';
-
                 tableHTML += `<tr>
                     <td style="font-family:'JetBrains Mono', monospace; color: var(--cyber-cyan); font-size:11.5px; font-weight:500;">${row.id.substring(0,18)}...</td>
                     <td>${row.reportData}</td>
-                    <td style="color: #cbd5e1; font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:500;">
-                        ${cleanTimeDisplay}<span style="color:var(--cyber-emerald); font-size:11px;">${offsetLabel}</span>
-                    </td>
+                    <td style="color: var(--cyber-emerald); font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:500;">${row.timestamp}</td>
                     <td style="text-align:center;">
                         <button class="row-delete-btn" onclick="deleteCloudRecordFromServer('${row.id}')">🗑️ Erase</button>
                     </td>
