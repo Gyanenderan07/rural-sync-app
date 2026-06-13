@@ -373,6 +373,24 @@
     let indexedDatabase;
     const loggerConsole = document.getElementById('terminal-logger');
 
+    // FORCE IMMEDIATE NETWORK INTERFACE REACTION (Initializing state block bypass)
+    function updateNetworkInterface() {
+        const badge = document.getElementById('network-badge');
+        
+        if (navigator.onLine) {
+            badge.innerHTML = `<div class="badge-dot" style="background:#10b981;"></div> 🟢 EDGE ONLINE — Pipeline Synchronized`;
+            badge.className = "badge online";
+            executeCloudSynchronization();
+        } else {
+            badge.innerHTML = `<div class="badge-dot" style="background:#f59e0b;"></div> 🔴 EDGE OFFLINE — Local Cache Mode`;
+            badge.className = "badge offline";
+        }
+    }
+    window.addEventListener('online', updateNetworkInterface);
+    window.addEventListener('offline', updateNetworkInterface);
+    // Instant initial core flag trigger
+    updateNetworkInterface();
+
     // 1. Initial Browser Hardware IndexedDB Setup
     const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 1);
     dbOpenRequest.onupgradeneeded = (e) => {
@@ -390,6 +408,11 @@
         e.preventDefault();
         const textPayload = document.getElementById('data-payload').value;
         const record = { id: crypto.randomUUID(), reportData: textPayload, timestamp: new Date().toISOString() };
+
+        if (!indexedDatabase) {
+            console.error("IndexedDB engine local hardware buffer not initialized yet.");
+            return;
+        }
 
         const tx = indexedDatabase.transaction('reportsStore', 'readwrite');
         tx.objectStore('reportsStore').add(record);
@@ -414,7 +437,6 @@
 
             for (const record of recordsQueue) {
                 try {
-                    // REST HTTP Transport Handshake Tunnel to Supabase
                     const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore`, {
                         method: 'POST',
                         headers: {
@@ -427,7 +449,6 @@
                     });
 
                     if (response.ok) {
-                        // Data safely injected into Supabase Cloud. Clear local buffer node.
                         const deleteTx = indexedDatabase.transaction('reportsStore', 'readwrite');
                         deleteTx.objectStore('reportsStore').delete(record.id);
                         deleteTx.oncomplete = () => refreshQueueCount();
@@ -453,14 +474,12 @@
                 return;
             }
             list.forEach(obj => {
-                loggerConsole.innerHTML += `<div style="border-left:2px solid #00ddff; padding-left:8px; margin-bottom:8px;">
+                loggerConsole.innerHTML += `<div style="border-left:2px solid #00ddff; padding-left:8px; margin-bottom:8px; font-family:'JetBrains Mono', monospace; font-size:12px; color:#38bdf8;">
                     [IndexedDB Cache -> reportsStore] ID: ${obj.id.substring(0,8)}... | Data: "${obj.reportData}"
                 </div>`;
             });
         };
     }
-
-    window.addEventListener('online', executeCloudSynchronization);
 
     // Native PWA Client Worker Registration Context Layer
     if ('serviceWorker' in navigator) {
