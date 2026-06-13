@@ -21,10 +21,13 @@
             --text-main: #f1f5f9;
             --text-muted: #94a3b8;
             --success: #10b981;
-            --success-glow: rgba(16, 185, 129, 0.3);
             --warning: #f59e0b;
             --danger: #ef4444;
             --danger-glow: rgba(239, 68, 68, 0.15);
+            
+            /* ULTIMATE BLUE NEON DESIGN COMPONENT PARAMETERS */
+            --blue-gradient: linear-gradient(135deg, #0055ff 0%, #00ddff 100%);
+            --blue-glow-aesthetic: rgba(0, 221, 255, 0.35);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -201,11 +204,11 @@
         .circle-back-ui-btn:hover { background: rgba(0, 221, 255, 0.1); border-color: var(--accent-primary); color: var(--accent-primary); box-shadow: 0 0 15px var(--accent-glow); }
         .circle-back-ui-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
-        /* ULTIMATE INTERACTIVE DYNAMIC REFRESH BUTTON WITH GLOW NEON MATRIX */
+        /* AESTHETIC BLUE RADIAL CYBERPUNK GRADIENT FETCH BUTTON ROUTINE */
         .server-refresh-btn {
-            background: rgba(16, 185, 129, 0.04) !important;
-            color: var(--success) !important;
-            border: 1px solid rgba(16, 185, 129, 0.3) !important;
+            background: rgba(0, 221, 255, 0.03) !important;
+            color: var(--accent-primary) !important;
+            border: 1px solid rgba(0, 221, 255, 0.25) !important;
             padding: 10px 22px;
             font-size: 13px;
             width: auto;
@@ -218,18 +221,19 @@
         }
 
         .server-refresh-btn:hover {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-            color: white !important;
+            background: var(--blue-gradient) !important;
+            color: #04060a !important; /* Premium dark text overlay contrast when blue neon fills */
+            font-weight: 700 !important;
             border-color: transparent !important;
             transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 8px 24px var(--success-glow) !important;
+            box-shadow: 0 8px 24px var(--blue-glow-aesthetic) !important;
         }
 
         .server-refresh-btn:active {
             transform: translateY(0px) scale(0.96);
         }
 
-        /* Spinning animation logic trigger during interaction click */
+        /* Micro-interaction setup for icon rotation on hover link */
         .spinning-loader-icon {
             display: inline-block;
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
