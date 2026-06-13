@@ -30,7 +30,7 @@
             --neon-glow-rose: rgba(244, 63, 94, 0.25);
             
             --fluid-gradient: linear-gradient(135deg, var(--cyber-indigo) 0%, var(--cyber-cyan) 50%, var(--cyber-purple) 100%);
-            --blue-gradient-btn: linear-gradient(135deg, #0055ff 0%, #00ddff 100%);
+            --blue-gradient-btn: linear-gradient(135deg, #0077ff 0%, #00ddff 100%);
             --blue-glow-aesthetic: rgba(0, 221, 255, 0.35);
         }
 
@@ -348,7 +348,7 @@
                 </button>
             </div>
             
-            <div class="queue-terminal" id="cloud-server-logger" style="height: 440px; color: #a7f3d0; background: rgba(3, 5, 11, 0.95);">
+            <div class="queue-terminal" id="cloud-server-logger" style="height: 420px; color: #a7f3d0; background: rgba(3, 5, 11, 0.95);">
                 <div style="color: var(--text-low); font-style: italic;">Querying cloud storage pipeline nodes...</div>
             </div>
         </div>
@@ -364,22 +364,19 @@
     const loggerConsole = document.getElementById('terminal-logger');
     const cloudLoggerConsole = document.getElementById('cloud-server-logger');
 
-    // 🕒 HIGH ACCURACY DYNAMIC INDIAN STANDARD TIME (IST) CAPTURE STRATAGEM
-    function getIndianStandardTimestamp() {
-        const localDateObj = new Date();
-        // Calculates absolute UTC zulu ms and appends 5.5 hours calculation vector offset 
-        const istOffsetMs = 5.5 * 60 * 60 * 1000;
-        const istTimeObj = new Date(localDateObj.getTime() + (localDateObj.getTimezoneOffset() * 60 * 1000) + istOffsetMs);
-        
-        // Formats structured string block: YYYY-MM-DD HH:MM:SS IST
-        const year = istTimeObj.getFullYear();
-        const month = String(istTimeObj.getMonth() + 1).padStart(2, '0');
-        const day = String(istTimeObj.getDate()).padStart(2, '0');
-        const hours = String(istTimeObj.getHours()).padStart(2, '0');
-        const mins = String(istTimeObj.getMinutes()).padStart(2, '0');
-        const secs = String(istTimeObj.getSeconds()).padStart(2, '0');
-        
-        return `${year}-${month}-${day} ${hours}:${mins}:${secs} IST`;
+    // 🕒 HIGH-PRECISION ABSOLUTE SYSTEM TIME PARSER (STRICT IST FOCUS)
+    function getExactSystemIndianStandardTime() {
+        // Reads directly from host computer hardware clock layer with explicit locale configuration
+        return new Date().toLocaleString("en-IN", {
+            timeZone: "Asia/Kolkata",
+            hour12: true,
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        }).replace(/,/g, ''); // Clears default comma punctuation for sharp look (eg: "13/06/2026 14:58:42 PM")
     }
 
     function updateNetworkInterface() {
@@ -413,8 +410,8 @@
     document.getElementById('sync-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const textPayload = document.getElementById('data-payload').value;
-        // Binds transaction packet directly to local system IST timestamp string 
-        const record = { id: crypto.randomUUID(), reportData: textPayload, timestamp: getIndianStandardTimestamp() };
+        // Binds transaction packet instantly to exact client desktop system time stamp string
+        const record = { id: crypto.randomUUID(), reportData: textPayload, timestamp: getExactSystemIndianStandardTime() };
 
         if (!indexedDatabase) return;
 
@@ -526,7 +523,7 @@
                     <tr>
                         <th>Transaction ID</th>
                         <th>Synchronized Payload Log</th>
-                        <th>Server Timestamp (IST)</th>
+                        <th>System Device Time (IST)</th>
                         <th style="text-align:center;">Action</th>
                     </tr>
                 </thead>
@@ -536,7 +533,7 @@
                 tableHTML += `<tr>
                     <td style="font-family:'JetBrains Mono', monospace; color: var(--cyber-cyan); font-size:11.5px; font-weight:500;">${row.id.substring(0,18)}...</td>
                     <td>${row.reportData}</td>
-                    <td style="color: var(--cyber-emerald); font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:500;">${row.timestamp}</td>
+                    <td style="color: var(--cyber-emerald); font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:600;">${row.timestamp}</td>
                     <td style="text-align:center;">
                         <button class="row-delete-btn" onclick="deleteCloudRecordFromServer('${row.id}')">🗑️ Erase</button>
                     </td>
