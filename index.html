@@ -50,22 +50,16 @@
         }
 
         body::before {
-            content: "";
-            position: fixed;
-            top: -20%; left: -10%; width: 60vw; height: 60vw;
+            content: ""; position: fixed; top: -20%; left: -10%; width: 60vw; height: 60vw;
             background: radial-gradient(circle, rgba(79, 70, 229, 0.18) 0%, transparent 70%);
-            z-index: -2; pointer-events: none;
-            filter: blur(60px);
+            z-index: -2; pointer-events: none; filter: blur(60px);
             animation: orbOrbitActive 25s infinite alternate ease-in-out;
         }
 
         body::after {
-            content: "";
-            position: fixed;
-            bottom: -10%; right: -10%; width: 50vw; height: 50vw;
+            content: ""; position: fixed; bottom: -10%; right: -10%; width: 50vw; height: 50vw;
             background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
-            z-index: -2; pointer-events: none;
-            filter: blur(50px);
+            z-index: -2; pointer-events: none; filter: blur(50px);
             animation: orbOrbitActive 20s infinite alternate-reverse ease-in-out;
         }
 
@@ -77,14 +71,10 @@
         .tech-mesh-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 0), linear-gradient(rgba(255, 255, 255, 0.005) 1px, transparent 1px);
-            background-size: 32px 32px;
-            z-index: -1; pointer-events: none;
+            background-size: 32px 32px; z-index: -1; pointer-events: none;
         }
 
-        .app-container {
-            width: 100%; max-width: 1100px;
-            position: relative; z-index: 1;
-        }
+        .app-container { width: 100%; max-width: 1100px; position: relative; z-index: 1; }
 
         header {
             display: flex; justify-content: space-between; align-items: center;
@@ -106,22 +96,18 @@
             border: 1px solid rgba(165, 180, 252, 0.15);
         }
 
+        /* DYNAMIC CHROME SHIELD RE-ENGINEERED OVERRIDE LOGIC PATTERNS */
         .badge {
             padding: 10px 20px; border-radius: 14px; font-size: 12px; font-weight: 700;
             display: flex; align-items: center; gap: 10px; backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            border: 1px solid rgba(255,255,255,0.03); background: rgba(5, 8, 16, 0.6);
+            -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.03); 
+            background: rgba(5, 8, 16, 0.6); transition: all 0.3s ease;
         }
         
-        /* CHROMATIC GLOW SCHEMAS DETACHED LAYER */
-        .online-state { color: var(--cyber-emerald) !important; border-color: rgba(16, 185, 129, 0.25) !important; box-shadow: 0 4px 24px rgba(16, 185, 129, 0.08) !important; }
-        .offline-state { color: #f59e0b !important; border-color: rgba(245, 158, 11, 0.25) !important; box-shadow: 0 4px 24px rgba(245, 158, 11, 0.08) !important; }
+        .badge.online-state { color: var(--cyber-emerald) !important; border-color: rgba(16, 185, 129, 0.25) !important; box-shadow: 0 4px 24px rgba(16, 185, 129, 0.08) !important; }
+        .badge.offline-state { color: #f59e0b !important; border-color: rgba(245, 158, 11, 0.25) !important; box-shadow: 0 4px 24px rgba(245, 158, 11, 0.08) !important; }
 
-        .badge-dot {
-            width: 8px; height: 8px; border-radius: 50%;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            animation: coreBlinkGlow 1.6s infinite ease-in-out;
-        }
+        .badge-dot { width: 8px; height: 8px; border-radius: 50%; transition: all 0.3s ease; animation: coreBlinkGlow 1.6s infinite ease-in-out; }
         @keyframes coreBlinkGlow { 0%, 100% { opacity: 0.4; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.25); } }
 
         .dashboard-grid {
@@ -135,124 +121,74 @@
         @media (max-width: 868px) { .dashboard-grid { grid-template-columns: 1fr; } }
 
         .glass-card {
-            background: var(--glass-sheet);
-            border: 1px solid var(--glass-border-glow);
-            border-radius: 24px; padding: 32px;
-            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            background: var(--glass-sheet); border: 1px solid var(--glass-border-glow);
+            border-radius: 24px; padding: 32px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative; overflow: hidden;
         }
         .glass-card::before {
             content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.015) 0%, transparent 100%);
-            pointer-events: none;
+            background: linear-gradient(135deg, rgba(255,255,255,0.015) 0%, transparent 100%); pointer-events: none;
         }
-        .glass-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(255,255,255,0.09);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
-        }
+        .glass-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.09); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55); }
 
         .card-title {
-            font-size: 13px; font-weight: 800; color: var(--text-low);
-            margin-bottom: 24px; text-transform: uppercase; letter-spacing: 1.5px;
-            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+            font-size: 13px; font-weight: 800; color: var(--text-low); margin-bottom: 24px;
+            text-transform: uppercase; letter-spacing: 1.5px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
         }
 
         textarea {
-            width: 100%; height: 150px; background: rgba(3, 5, 10, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px;
-            padding: 18px; color: var(--text-core); font-family: inherit; font-size: 15px;
-            line-height: 1.6; resize: none; outline: none; margin-bottom: 24px;
-            transition: all 0.3s ease;
+            width: 100%; height: 150px; background: rgba(3, 5, 10, 0.6); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px; padding: 18px; color: var(--text-core); font-family: inherit; font-size: 15px; line-height: 1.6; resize: none; outline: none; margin-bottom: 24px;
         }
-        textarea:focus {
-            border-color: rgba(6, 182, 212, 0.4);
-            background: rgba(3, 5, 10, 0.85);
-            box-shadow: 0 0 24px rgba(6, 182, 212, 0.08), inset 0 2px 4px rgba(0,0,0,0.5);
-        }
+        textarea:focus { border-color: rgba(6, 182, 212, 0.4); background: rgba(3, 5, 10, 0.85); box-shadow: 0 0 24px rgba(6, 182, 212, 0.08), inset 0 2px 4px rgba(0,0,0,0.5); }
 
         button {
-            width: 100%; background: var(--blue-gradient-btn);
-            color: #ffffff; border: none; padding: 16px; border-radius: 14px;
-            font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 8px 24px rgba(0, 119, 255, 0.25);
+            width: 100%; background: var(--blue-gradient-btn); color: #ffffff; border: none; padding: 16px; border-radius: 14px;
+            font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 8px 24px rgba(0, 119, 255, 0.25);
         }
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(0, 221, 255, 0.4);
-        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0, 221, 255, 0.4); }
         button:active { transform: translateY(0px) scale(0.98); }
 
         .admin-route-btn {
-            width: 100%; background: transparent; color: var(--cyber-cyan);
-            border: 1px dashed rgba(6, 182, 212, 0.3); padding: 14px; border-radius: 14px;
-            font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 18px;
+            width: 100%; background: transparent; color: var(--cyber-cyan); border: 1px dashed rgba(6, 182, 212, 0.3);
+            padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 18px;
             display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: none;
         }
-        .admin-route-btn:hover {
-            background: rgba(6, 182, 212, 0.03); border-color: var(--cyber-cyan);
-            box-shadow: 0 0 20px rgba(6, 182, 212, 0.12); transform: scale(1.005);
-        }
+        .admin-route-btn:hover { background: rgba(6, 182, 212, 0.03); border-color: var(--cyber-cyan); box-shadow: 0 0 20px rgba(6, 182, 212, 0.12); transform: scale(1.005); }
 
         .circle-back-ui-btn {
-            width: 44px; height: 44px; background: rgba(3, 7, 18, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-core);
+            width: 44px; height: 44px; background: rgba(3, 7, 18, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-core);
             border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
-        .circle-back-ui-btn:hover {
-            background: rgba(6, 182, 212, 0.1); border-color: var(--cyber-cyan);
-            color: var(--cyber-cyan); box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); transform: scale(1.05);
-        }
+        .circle-back-ui-btn:hover { background: rgba(6, 182, 212, 0.1); border-color: var(--cyber-cyan); color: var(--cyber-cyan); box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); transform: scale(1.05); }
         .circle-back-ui-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
         .server-refresh-btn {
-            background: rgba(6, 182, 212, 0.04) !important;
-            color: var(--cyber-cyan) !important;
-            border: 1px solid rgba(6, 182, 212, 0.25) !important;
-            padding: 10px 22px; font-size: 13px; width: auto; border-radius: 10px;
-            box-shadow: none !important; display: flex; align-items: center; gap: 8px;
+            background: rgba(6, 182, 212, 0.04) !important; color: var(--cyber-cyan) !important; border: 1px solid rgba(6, 182, 212, 0.25) !important;
+            padding: 10px 22px; font-size: 13px; width: auto; border-radius: 10px; box-shadow: none !important; display: flex; align-items: center; gap: 8px;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
-        .server-refresh-btn:hover {
-            background: var(--blue-gradient-btn) !important;
-            color: #030712 !important; font-weight: 700 !important; border-color: transparent !important;
-            transform: translateY(-2px); box-shadow: 0 8px 24px var(--blue-glow-aesthetic) !important;
-        }
+        .server-refresh-btn:hover { background: var(--blue-gradient-btn) !important; color: #030712 !important; font-weight: 700 !important; border-color: transparent !important; transform: translateY(-2px); box-shadow: 0 8px 24px var(--blue-glow-aesthetic) !important; }
         .spinning-loader-icon { display: inline-block; transition: transform 0.6s ease; }
         .server-refresh-btn:hover .spinning-loader-icon { transform: rotate(180deg); }
 
         .row-delete-btn {
-            background: transparent !important; color: var(--cyber-rose) !important;
-            border: 1px solid rgba(244, 63, 94, 0.2) !important; padding: 6px 14px !important;
-            font-size: 12px !important; width: auto !important; font-weight: 600 !important;
-            box-shadow: none !important; border-radius: 8px !important; transition: all 0.2s ease !important;
+            background: transparent !important; color: var(--cyber-rose) !important; border: 1px solid rgba(244, 63, 94, 0.2) !important;
+            padding: 6px 14px !important; font-size: 12px !important; width: auto !important; font-weight: 600 !important; box-shadow: none !important; border-radius: 8px !important;
         }
-        .row-delete-btn:hover {
-            background: rgba(244, 63, 94, 0.08) !important; border-color: var(--cyber-rose) !important;
-            box-shadow: 0 0 15px var(--neon-glow-rose) !important;
-        }
+        .row-delete-btn:hover { background: rgba(244, 63, 94, 0.08) !important; border-color: var(--cyber-rose) !important; box-shadow: 0 0 15px var(--neon-glow-rose) !important; }
 
         .pipeline-container { display: flex; flex-direction: column; gap: 14px; }
-        .info-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 14px 18px; background: rgba(3, 5, 10, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.02); border-radius: 12px;
-            transition: background 0.3s ease;
-        }
-        .info-row:hover { background: rgba(3, 5, 10, 0.6); }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; background: rgba(3, 5, 10, 0.4); border: 1px solid rgba(255, 255, 255, 0.02); border-radius: 12px; }
         .info-label { font-size: 13px; color: var(--text-low); font-weight: 500; }
         .info-value { font-size: 13px; font-weight: 700; color: var(--text-core); }
         .tech-mono { font-family: 'JetBrains Mono', monospace; color: var(--cyber-cyan); }
 
         .queue-terminal {
             background: rgba(3, 5, 10, 0.7); border: 1px solid rgba(255,255,255,0.03); border-radius: 16px;
-            padding: 20px; height: 190px; overflow-y: auto; font-family: 'JetBrains Mono', monospace;
-            font-size: 12.5px; line-height: 1.7; color: #67e8f9;
-            box-shadow: inset 0 4px 20px rgba(0,0,0,0.6);
+            padding: 20px; height: 190px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.7; color: #67e8f9; box-shadow: inset 0 4px 20px rgba(0,0,0,0.6);
         }
 
         .cloud-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
@@ -341,12 +277,12 @@
                     <button class="circle-back-ui-btn" onclick="toggleActiveDashboardPanels(false)" title="Back to Data Entry Console">
                         <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                     </button>
-                    <div style="font-size: 14px; font-weight: 800; color: var(--cyber-emerald); text-transform: uppercase; letter-spacing: 1.5px;">
+                    <div id="pipeline-title-node" style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;">
                         ☁️ Real-time Cloud Supabase Server Records Ledger
                     </div>
                 </div>
                 
-                <button class="server-refresh-btn" onclick="fetchLiveCloudDatabaseRecords()">
+                <button id="server-refresh-action-btn" class="server-refresh-btn" onclick="fetchLiveCloudDatabaseRecords()">
                     <span class="spinning-loader-icon">🔄</span> Fetch Live Server Data
                 </button>
             </div>
@@ -383,13 +319,12 @@
         }
     }
 
-    // ⚡ FORCE LIVE HARDWARE TRANSITION LISTENER MATRIX FIX
+    // ⚡ HIGH VELOCITY EXPLICIT CLASSIFICATION HARDWARE LISTENER PATCH
     function forceNetworkInterfaceUpdate() {
         const badge = document.getElementById('network-badge');
         const badgeDot = document.getElementById('badge-glow-node');
         const badgeText = document.getElementById('badge-text-node');
         
-        // Strictly extracts browser physical network loop variables
         if (navigator.onLine) {
             badge.className = "badge online-state";
             badgeDot.style.backgroundColor = "var(--cyber-emerald)";
@@ -404,10 +339,8 @@
         }
     }
     
-    // Explicit event pipeline attachments 
     window.addEventListener('online', forceNetworkInterfaceUpdate);
     window.addEventListener('offline', forceNetworkInterfaceUpdate);
-    // Instantaneous hardware level invocation tracking
     forceNetworkInterfaceUpdate();
 
     const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 1);
@@ -512,16 +445,45 @@
         }
     }
 
+    // 🔄 ADVANCED HYBRID ROUTING MATRIX (ONLINE VS OFFLINE SAFE REVELATION)
     async function fetchLiveCloudDatabaseRecords() {
+        const titleNode = document.getElementById('pipeline-title-node');
+        const refreshActionBtn = document.getElementById('server-refresh-action-btn');
+        
+        // 🔒 OFFLINE PATHWAY FALLBACK CONTROLLER TRIGGER
+        if (!navigator.onLine) {
+            titleNode.style.color = "#f59e0b";
+            titleNode.textContent = "🗄️ Local IndexedDB Resilient Queue Store Ledger";
+            refreshActionBtn.style.display = "none"; // Hides cloud query button in offline mode
+            
+            cloudLoggerConsole.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Device operating in offline vector. Accessing local IndexedDB storage cache frames...</div>';
+            
+            if (!indexedDatabase) return;
+            const tx = indexedDatabase.transaction('reportsStore', 'readonly');
+            const store = tx.objectStore('reportsStore');
+            
+            store.getAll().onsuccess = (ev) => {
+                const data = ev.target.result;
+                if(data.length === 0) {
+                    cloudLoggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">No pending un-synchronized logs found inside local IndexedDB reportsStore buffer memory.</div>';
+                    return;
+                }
+                renderTableHTML(data, false); // Renders the safe offline cache storage elements
+            };
+            return;
+        }
+
+        // 🌐 ONLINE CLOUD API DISPATCH MODE
+        titleNode.style.color = "var(--cyber-emerald)";
+        titleNode.textContent = "☁️ Real-time Cloud Supabase Server Records Ledger";
+        refreshActionBtn.style.display = "flex";
+        
         cloudLoggerConsole.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Establishing secure gateway link to Supabase Server Ledger REST API...</div>';
         
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?select=*`, {
                 method: 'GET',
-                headers: {
-                    'apikey': SUPABASE_ANON_KEY,
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                }
+                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
             });
             const data = await response.json();
             
@@ -529,34 +491,49 @@
                 cloudLoggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">Cloud server database store table is currently empty.</div>';
                 return;
             }
-
-            let tableHTML = `<table class="cloud-table">
-                <thead>
-                    <tr>
-                        <th>Transaction ID</th>
-                        <th>Synchronized Payload Log</th>
-                        <th>System Device Time (IST)</th>
-                        <th style="text-align:center;">Action</th>
-                    </tr>
-                </thead>
-                <tbody>`;
-
-            data.forEach(row => {
-                tableHTML += `<tr>
-                    <td style="font-family:'JetBrains Mono', monospace; color: var(--cyber-cyan); font-size:11.5px; font-weight:500;">${row.id.substring(0,18)}...</td>
-                    <td>${row.reportData}</td>
-                    <td style="color: var(--cyber-emerald); font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:600;">${formatIsoStringToLocalSystemTime(row.timestamp)}</td>
-                    <td style="text-align:center;">
-                        <button class="row-delete-btn" onclick="deleteCloudRecordFromServer('${row.id}')">🗑️ Erase</button>
-                    </td>
-                </tr>`;
-            });
-
-            tableHTML += `</tbody></table>`;
-            cloudLoggerConsole.innerHTML = tableHTML;
+            renderTableHTML(data, true);
         } catch(err) {
             cloudLoggerConsole.innerHTML = '<div style="color: var(--cyber-rose); font-style: italic;">⚠️ Gateway Handshake Failure. Check network configuration.</div>';
         }
+    }
+
+    // UNIFIED GLOBAL RENDERER COMPONENT
+    function renderTableHTML(data, isOnlineContext) {
+        let tableHTML = `<table class="cloud-table">
+            <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>Synchronized Payload Log</th>
+                    <th>${isOnlineContext ? 'Server Timestamp (IST)' : 'Local Device Cache Time (IST)'}</th>
+                    <th style="text-align:center;">Action</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        data.forEach(row => {
+            tableHTML += `<tr>
+                <td style="font-family:'JetBrains Mono', monospace; color: var(--cyber-cyan); font-size:11.5px; font-weight:500;">${row.id.substring(0,18)}...</td>
+                <td>${row.reportData}</td>
+                <td style="color: ${isOnlineContext ? 'var(--cyber-emerald)' : '#f59e0b'}; font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:600;">${formatIsoStringToLocalSystemTime(row.timestamp)}</td>
+                <td style="text-align:center;">
+                    <button class="row-delete-btn" onclick="${isOnlineContext ? `deleteCloudRecordFromServer('${row.id}')` : `deleteLocalCacheRecord('${row.id}')`}">🗑️ Erase</button>
+                </td>
+            </tr>`;
+        });
+
+        tableHTML += `</tbody></table>`;
+        cloudLoggerConsole.innerHTML = tableHTML;
+    }
+
+    // LOCAL CACHE DELETION COMPONENT (When offline)
+    function deleteLocalCacheRecord(recordId) {
+        if (!confirm("Remove this log object directly from local IndexedDB cache buffer?")) return;
+        const tx = indexedDatabase.transaction('reportsStore', 'readwrite');
+        tx.objectStore('reportsStore').delete(recordId);
+        tx.oncomplete = () => {
+            refreshQueueCount();
+            fetchLiveCloudDatabaseRecords(); // Triggers UI refresh 
+        };
     }
 
     async function deleteCloudRecordFromServer(recordId) {
@@ -569,12 +546,8 @@
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?id=eq.${recordId}`, {
                 method: 'DELETE',
-                headers: {
-                    'apikey': SUPABASE_ANON_KEY,
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                }
+                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
             });
-
             if (response.ok) {
                 fetchLiveCloudDatabaseRecords();
             } else {
