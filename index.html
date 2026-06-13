@@ -8,7 +8,6 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="data:,">
     
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -41,7 +40,6 @@
             padding: 40px 20px;
         }
 
-        /* Background Grid Pattern */
         body::before {
             content: "";
             position: fixed;
@@ -69,9 +67,7 @@
             animation: revealPage 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        @keyframes revealPage {
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes revealPage { to { opacity: 1; transform: translateY(0); } }
 
         header {
             display: flex;
@@ -106,7 +102,6 @@
             border: 1px solid rgba(99, 102, 241, 0.3);
         }
 
-        /* Pulse Blinking Dot Badge Layout */
         .badge {
             padding: 8px 16px;
             border-radius: 30px;
@@ -119,17 +114,8 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        .online {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-            border: 1px solid rgba(16, 185, 129, 0.25);
-        }
-
-        .offline {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
-            border: 1px solid rgba(245, 158, 11, 0.25);
-        }
+        .online { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.25); }
+        .offline { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.25); }
 
         .badge-dot {
             width: 8px; height: 8px;
@@ -148,9 +134,7 @@
             gap: 24px;
         }
 
-        @media (max-width: 768px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } }
 
         .glass-card {
             background: var(--glass-bg);
@@ -173,57 +157,42 @@
         textarea {
             width: 100%; height: 140px; background: rgba(0, 0, 0, 0.25);
             border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px;
-            padding: 16px; color: var(--text-main); font-size: 15px;
-            line-height: 1.5; resize: none; outline: none; margin-bottom: 20px;
+            padding: 16px; color: var(--text-main); font-size: 15px; line-height: 1.5;
+            resize: none; outline: none; margin-bottom: 20px; transition: all 0.3s ease;
         }
 
-        textarea:focus {
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 15px var(--accent-glow);
-        }
+        textarea:focus { border-color: var(--accent-primary); box-shadow: 0 0 15px var(--accent-glow); }
 
         button {
             width: 100%; background: linear-gradient(135deg, #0077ff 0%, #00ddff 100%);
             color: white; border: none; padding: 14px; border-radius: 10px;
-            font-size: 15px; font-weight: 600; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 119, 255, 0.3);
+            font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 119, 255, 0.3);
         }
 
-        /* DEDICATED DATABASE CHECK SWITCH ROUTE BUTTON */
+        /* LIVE DATABASE DATABASE CHECKER BUTTON STYLE */
         .db-check-btn {
-            width: 100%;
-            background: transparent;
-            color: var(--accent-primary);
-            border: 1px dashed rgba(0, 221, 255, 0.35);
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: transparent !important;
+            color: var(--accent-primary) !important;
+            border: 1px dashed rgba(0, 221, 255, 0.4) !important;
+            margin-top: 15px; box-shadow: none !important;
         }
-
-        .db-check-btn:hover {
-            background: rgba(0, 221, 255, 0.06);
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 15px var(--accent-glow);
-        }
+        .db-check-btn:hover { background: rgba(0, 221, 255, 0.05) !important; border-color: var(--accent-primary) !important; }
 
         .pipeline-container { display: flex; flex-direction: column; gap: 16px; }
         .info-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 8px; }
-        .info-label { font-size: 13px; color: var(--text-muted); }
-        .info-value { font-size: 13px; font-weight: 600; color: var(--text-main); }
-        .tech-mono { font-family: 'JetBrains Mono', monospace; color: var(--accent-primary); }
+        .tech-mono { font-family: 'JetBrains Mono', monospace; color: var(--accent-primary); font-size: 13px; }
 
         .queue-terminal {
             background: #04060b; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px;
-            padding: 16px; height: 160px; overflow-y: auto;
-            font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #38bdf8;
+            padding: 16px; height: 160px; overflow-y: auto; font-family: 'JetBrains Mono', monospace;
+            font-size: 12px; line-height: 1.6; color: #38bdf8;
         }
+
+        /* CLOUD BACKEND VISUALIZER TABLE SYSTEM */
+        .cloud-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .cloud-table th, .cloud-table td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .cloud-table th { font-size: 11px; text-transform: uppercase; color: var(--text-muted); }
+        .cloud-table td { font-size: 13px; color: var(--text-main); }
     </style>
 </head>
 <body>
@@ -244,37 +213,44 @@
 
     <div class="dashboard-grid">
         
-        <!-- Left Side: Data Input Card & Verification Trigger Routing -->
+        <!-- Data Input Panel -->
         <div class="glass-card">
-            <div class="card-title">DATA COLLECTION CONSOLE</div>
+            <div class="card-title">📊 Data Collection Console</div>
             <form id="sync-form">
                 <textarea id="data-payload" placeholder="Enter remote rural structural matrix logs (e.g., Water telemetry, localized agricultural harvest data logs)..." required></textarea>
                 <button type="submit">Deploy Transaction to Edge</button>
             </form>
             
-            <!-- EXPLICIT ROUTE BUTTON TO VERIFY DATABASE ENTRIES INSTANTLY -->
-            <button class="db-check-btn" onclick="window.location.href='admin.html'">Verify Live Database Storage Ledger</button>
+            <!-- THE LIVE CHECKER BUTTON: CLOUD DATABASE MONITOR DATA TRIGGER -->
+            <button class="db-check-btn" onclick="fetchLiveCloudDatabase()">🛰️ Check Live Cloud Database Storage</button>
         </div>
 
-        <!-- Right Side: Architecture Metrics Layer Mapping -->
+        <!-- Infrastructure Panel -->
         <div class="glass-card">
-            <div class="card-title">INTERNAL ARCHITECTURE DATA PIPELINE</div>
+            <div class="card-title">⚙️ Internal Architecture Data Pipeline</div>
             <div class="pipeline-container">
-                <div class="info-row"><span class="info-label">Storage Architecture Hardware:</span><span class="info-value tech-mono">Client Browser Storage</span></div>
-                <div class="info-row"><span class="info-label">Underlying Target Engine API:</span><span class="info-value tech-mono" style="color:#f43f5e;">IndexedDB (Structured Local DB)</span></div>
-                <div class="info-row"><span class="info-label">Active Storage Key Database:</span><span class="info-value tech-mono">VercelOfflineQueueDB</span></div>
-                <div class="info-row"><span class="info-label">Local Memory Database Store Name:</span><span class="info-value tech-mono">reportsStore</span></div>
-                <div class="info-row"><span class="info-label">Pending Sync Payload Queue Size:</span><span class="info-value tech-mono" id="counter" style="color:#ef4444; font-weight:700;">0</span></div>
+                <div class="info-row"><span>Storage Architecture Hardware:</span><span class="tech-mono">Client Browser Storage</span></div>
+                <div class="info-row"><span>Underlying Target Engine API:</span><span class="tech-mono" style="color: #f43f5e;">IndexedDB (Local Cache)</span></div>
+                <div class="info-row"><span>Active Storage Key Database:</span><span class="tech-mono">VercelOfflineQueueDB</span></div>
+                <div class="info-row"><span>Pending Sync Payload Queue Size:</span><span class="tech-mono" id="counter" style="color: #ef4444; font-weight: 700;">0</span></div>
             </div>
         </div>
 
-    </div>
+    </div> <!-- End Grid -->
 
-    <!-- Live Local Device Telemetry Frame Logs Display -->
+    <!-- Dynamic Live Streaming Local Storage Logs Section -->
     <div class="glass-card" style="margin-top: 24px;">
-        <div class="card-title">LIVE CLIENT STORE PAYLOAD TELEMETRY LOGS (ENGA, ENNA STORE AAGUTHU NU LIVE DISPLAY)</div>
+        <div class="card-title">🖥️ Live Client Store Payload Telemetry Logs (IndexedDB Cache)</div>
         <div class="queue-terminal" id="terminal-logger">
             <div style="color:#94a3b8; font-style:italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>
+        </div>
+    </div>
+
+    <!-- PUTHUSA INTEGRATE PANNA REAL-TIME CLOUD DATABASE STORAGE CONTAINER LAYER -->
+    <div class="glass-card" style="margin-top: 24px;">
+        <div class="card-title" style="color: #10b981;">☁️ Real-time Cloud Supabase Server Records Ledger</div>
+        <div class="queue-terminal" id="cloud-server-logger" style="height: 220px; color: #a7f3d0;">
+            <div style="color:#94a3b8; font-style:italic;">Click "Check Live Cloud Database Storage" button above to pull server entries.</div>
         </div>
     </div>
 
@@ -360,10 +336,13 @@
                     if (response.ok) {
                         const deleteTx = indexedDatabase.transaction('reportsStore', 'readwrite');
                         deleteTx.objectStore('reportsStore').delete(record.id);
-                        deleteTx.oncomplete = () => refreshQueueCount();
+                        deleteTx.oncomplete = () => {
+                            refreshQueueCount();
+                            fetchLiveCloudDatabase(); // Auto updates the server list view upon successful synchronization
+                        };
                     }
                 } catch (err) {
-                    console.error("Cloud pipe transmission fault for Transaction token ID:", record.id, err);
+                    console.error("Cloud pipe transmission fault:", err);
                 }
             }
         };
@@ -383,26 +362,66 @@
                 return;
             }
             list.forEach(obj => {
-                loggerConsole.innerHTML += `<div style="border-left:2px solid #00ddff; padding-left:8px; margin-bottom:8px; font-family:'JetBrains Mono', monospace; font-size:12px; color:#38bdf8;">
-                    [IndexedDB Cache -> reportsStore] ID: ${obj.id.substring(0,8)}... | Data: "${obj.reportData}"
+                loggerConsole.innerHTML += `<div style="border-left:2px solid #00ddff; padding-left:8px; margin-bottom:8px;">
+                    [IndexedDB Cache] ID: ${obj.id.substring(0,8)}... | Data: "${obj.reportData}"
                 </div>`;
             });
         };
     }
 
-    // PWA Context Active Daemon
+    // PUTHUSA INJECT PANNA DYNAMIC CLOUD DATABASE FETCHER ENGINE LOGIC
+    async function fetchLiveCloudDatabase() {
+        const cloudLogger = document.getElementById('cloud-server-logger');
+        cloudLogger.innerHTML = '<div style="color:#38bdf8;">Querying server records ledger from Supabase API tunnel...</div>';
+        
+        try {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?select=*`, {
+                method: 'GET',
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                }
+            });
+            const data = await response.json();
+            
+            if(data.length === 0) {
+                cloudLogger.innerHTML = '<div style="color:#94a3b8; font-style:italic;">Cloud database store table is currently empty.</div>';
+                return;
+            }
+
+            let tableHTML = `<table class="cloud-table">
+                <thead>
+                    <tr>
+                        <th>UUID ID</th>
+                        <th>Report Data</th>
+                        <th>Sync Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            data.forEach(row => {
+                tableHTML += `<tr>
+                    <td style="font-family:monospace; color:#00ddff;">${row.id.substring(0,18)}...</td>
+                    <td>${row.reportData}</td>
+                    <td style="color:#10b981;">${row.timestamp.substring(0,19)}Z</td>
+                </tr>`;
+            });
+
+            tableHTML += `</tbody></table>`;
+            cloudLogger.innerHTML = tableHTML;
+        } catch(err) {
+            cloudLogger.innerHTML = '<div style="color:#f43f5e;">⚠️ Gateway Connection Handshake Error while fetching cloud data.</div>';
+        }
+    }
+
+    // Native PWA Client Worker Registration Context Layer
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('/sw.js')
                 .then((reg) => console.log('🚀 Edge Service Layer Active:', reg.scope))
                 .catch((err) => console.error('❌ Edge Layer Fault:', err));
         });
-        let isRefreshing = false;
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-            if (!isRefreshing) { window.location.reload(); isRefreshing = true; }
-        });
     }
 </script>
-
 </body>
 </html>
