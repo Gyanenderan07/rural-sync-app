@@ -373,22 +373,22 @@
     let indexedDatabase;
     const loggerConsole = document.getElementById('terminal-logger');
 
-    // FORCE IMMEDIATE NETWORK INTERFACE REACTION (Initializing state block bypass)
+    // RE-ENGINEERED NETWORK INTERFACE (Removed text emojis, kept absolute dynamic blinking dot glow)
     function updateNetworkInterface() {
         const badge = document.getElementById('network-badge');
         
         if (navigator.onLine) {
-            badge.innerHTML = `<div class="badge-dot" style="background:#10b981;"></div> 🟢 EDGE ONLINE — Pipeline Synchronized`;
+            badge.innerHTML = `<div class="badge-dot" style="background:#10b981;"></div> <span>EDGE ONLINE — Pipeline Synchronized</span>`;
             badge.className = "badge online";
             executeCloudSynchronization();
         } else {
-            badge.innerHTML = `<div class="badge-dot" style="background:#f59e0b;"></div> 🔴 EDGE OFFLINE — Local Cache Mode`;
+            badge.innerHTML = `<div class="badge-dot" style="background:#f59e0b;"></div> <span>EDGE OFFLINE — Local Cache Mode</span>`;
             badge.className = "badge offline";
         }
     }
     window.addEventListener('online', updateNetworkInterface);
     window.addEventListener('offline', updateNetworkInterface);
-    // Instant initial core flag trigger
+    // Initial immediate invocation block
     updateNetworkInterface();
 
     // 1. Initial Browser Hardware IndexedDB Setup
@@ -494,6 +494,5 @@
         });
     }
 </script>
-
 </body>
 </html>
