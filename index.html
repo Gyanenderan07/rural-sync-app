@@ -22,6 +22,8 @@
             --text-muted: #94a3b8;
             --success: #10b981;
             --warning: #f59e0b;
+            --danger: #ef4444;
+            --danger-glow: rgba(239, 68, 68, 0.15);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -70,12 +72,10 @@
             opacity: 0;
             transform: translateY(30px);
             animation: revealPage 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            position: relative; /* Base mapping for absolute components */
+            position: relative;
         }
 
-        @keyframes revealPage {
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes revealPage { to { opacity: 1; transform: translateY(0); } }
 
         header {
             display: flex;
@@ -118,24 +118,12 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        .online {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-            border: 1px solid rgba(16, 185, 129, 0.25);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
-        }
-
-        .offline {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
-            border: 1px solid rgba(245, 158, 11, 0.25);
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.1);
-        }
+        .online { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.25); }
+        .offline { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.25); }
 
         .badge-dot {
             width: 8px; height: 8px;
@@ -154,9 +142,7 @@
             gap: 24px;
         }
 
-        @media (max-width: 768px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } }
 
         .glass-card {
             background: var(--glass-bg);
@@ -164,14 +150,7 @@
             border-radius: 16px;
             padding: 28px;
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-
-        .glass-card:hover {
-            border-color: rgba(0, 221, 255, 0.2);
-            transform: translateY(-2px);
         }
 
         .card-title {
@@ -188,181 +167,75 @@
         }
 
         textarea {
-            width: 100%;
-            height: 140px;
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            padding: 16px;
-            color: var(--text-main);
-            font-family: inherit;
-            font-size: 15px;
-            line-height: 1.5;
-            resize: none;
-            outline: none;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
+            width: 100%; height: 140px; background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px;
+            padding: 16px; color: var(--text-main); font-size: 15px; line-height: 1.5;
+            resize: none; outline: none; margin-bottom: 20px; transition: all 0.3s ease;
         }
-
-        textarea:focus {
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 15px var(--accent-glow);
-            background: rgba(0, 0, 0, 0.4);
-        }
+        textarea:focus { border-color: var(--accent-primary); box-shadow: 0 0 15px var(--accent-glow); }
 
         button {
-            width: 100%;
-            background: linear-gradient(135deg, #0077ff 0%, #00ddff 100%);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%; background: linear-gradient(135deg, #0077ff 0%, #00ddff 100%);
+            color: white; border: none; padding: 14px; border-radius: 10px;
+            font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s;
             box-shadow: 0 4px 15px rgba(0, 119, 255, 0.3);
         }
-
-        button:hover {
-            transform: scale(1.01);
-            box-shadow: 0 6px 20px rgba(0, 221, 255, 0.4);
-        }
+        button:hover { transform: scale(1.01); box-shadow: 0 6px 20px rgba(0, 221, 255, 0.4); }
 
         .admin-route-btn {
-            width: 100%;
-            background: transparent;
-            color: var(--accent-primary);
-            border: 1px dashed rgba(0, 221, 255, 0.3);
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: none;
+            width: 100%; background: transparent; color: var(--accent-primary);
+            border: 1px dashed rgba(0, 221, 255, 0.3); padding: 12px; border-radius: 10px;
+            font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 15px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
+        .admin-route-btn:hover { background: rgba(0, 221, 255, 0.05); border-color: var(--accent-primary); box-shadow: 0 0 15px var(--accent-glow); }
 
-        .admin-route-btn:hover {
-            background: rgba(0, 221, 255, 0.05);
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 15px var(--accent-glow);
-            transform: translateY(-1px);
-        }
-
-        /* PREMIUM GLOWING CIRCULAR BACK INTERFACE CONSOLE ELEMENT */
+        /* CIRCULAR BACK INTERFACE CONSOLE ELEMENT */
         .circle-back-ui-btn {
-            width: 42px;
-            height: 42px;
-            background: rgba(13, 20, 35, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-main);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            width: 42px; height: 42px; background: rgba(13, 20, 35, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-main);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
+        .circle-back-ui-btn:hover { background: rgba(0, 221, 255, 0.1); border-color: var(--accent-primary); color: var(--accent-primary); box-shadow: 0 0 15px var(--accent-glow); }
+        .circle-back-ui-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
-        .circle-back-ui-btn:hover {
-            background: rgba(0, 221, 255, 0.1);
-            border-color: var(--accent-primary);
-            color: var(--accent-primary);
-            box-shadow: 0 0 15px var(--accent-glow);
-            transform: scale(1.05);
+        /* SERVER FETCH CONTROLLER REFRESH BUTTON */
+        .server-refresh-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+            padding: 10px 20px; font-size: 13px; width: auto; border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
         }
+        .server-refresh-btn:hover { box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4); }
 
-        .circle-back-ui-btn svg {
-            width: 18px;
-            height: 18px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2.5;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            transition: transform 0.3s ease;
+        /* COMPACT ULTRA-MINIMAL ROW DELETION ACTION ICON */
+        .row-delete-btn {
+            background: transparent !important; color: var(--danger) !important;
+            border: 1px solid rgba(239, 68, 68, 0.2) !important; padding: 6px 12px !important;
+            font-size: 12px !important; width: auto !important; font-weight: 500 !important;
+            box-shadow: none !important; border-radius: 6px !important;
         }
+        .row-delete-btn:hover { background: rgba(239, 68, 68, 0.1) !important; border-color: var(--danger) !important; box-shadow: 0 0 10px var(--danger-glow) !important; }
 
-        .circle-back-ui-btn:hover svg {
-            transform: translateX(-2px);
-        }
-
-        /* LAYOUT PLACEMENT NODE FOR CLOUD SYSTEM CONTROL HEADER */
-        .cloud-header-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
-        .pipeline-container {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 8px;
-        }
-
+        .cloud-header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; gap: 16px; }
+        .cloud-title-container { display: flex; align-items: center; gap: 16px; }
+        .pipeline-container { display: flex; flex-direction: column; gap: 16px; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 8px; }
         .info-label { font-size: 13px; color: var(--text-muted); }
         .info-value { font-size: 13px; font-weight: 600; color: var(--text-main); }
         .tech-mono { font-family: 'JetBrains Mono', monospace; color: var(--accent-primary); }
 
         .queue-terminal {
-            background: #04060b;
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 10px;
-            padding: 16px;
-            height: 180px;
-            overflow-y: auto;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            line-height: 1.6;
-            color: #38bdf8;
+            background: #04060b; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px;
+            padding: 16px; height: 180px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.6; color: #38bdf8;
         }
 
-        .cloud-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 5px;
-        }
+        .cloud-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+        .cloud-table th, .cloud-table td { padding: 14px 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .cloud-table th { font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; }
+        .cloud-table td { font-size: 13px; color: var(--text-main); }
 
-        .cloud-table th, .cloud-table td {
-            padding: 14px 12px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
-        }
-
-        .cloud-table th {
-            font-size: 11px;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-        }
-
-        .cloud-table td {
-            font-size: 13px;
-            color: var(--text-main);
-        }
-
-        .panel-hidden {
-            display: none !important;
-        }
-
+        .panel-hidden { display: none !important; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
@@ -387,54 +260,28 @@
 
     <div id="primary-console-panel">
         <div class="dashboard-grid">
-            
             <div class="glass-card">
-                <div class="card-title">
-                    📊 Data Collection Console
-                </div>
+                <div class="card-title">📊 Data Collection Console</div>
                 <form id="sync-form">
                     <textarea id="data-payload" placeholder="Enter remote rural structural matrix logs (e.g., Water telemetry, localized agricultural harvest data logs)..." required></textarea>
                     <button type="submit">Deploy Transaction to Edge</button>
                 </form>
-                
                 <button class="admin-route-btn" onclick="toggleActiveDashboardPanels(true)">🛰️ Open System Pipeline Monitor</button>
             </div>
 
             <div class="glass-card">
-                <div class="card-title">
-                    ⚙️ Internal Architecture Data Pipeline
-                </div>
-                
+                <div class="card-title">⚙️ Internal Architecture Data Pipeline</div>
                 <div class="pipeline-container">
-                    <div class="info-row">
-                        <span class="info-label">Storage Architecture Hardware:</span>
-                        <span class="info-value tech-mono">Client Browser Storage</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Underlying Target Engine API:</span>
-                        <span class="info-value tech-mono" style="color: #f43f5e;">IndexedDB (Structured Local DB)</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Active Storage Key Database:</span>
-                        <span class="info-value tech-mono">VercelOfflineQueueDB</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Local Memory Database Store Name:</span>
-                        <span class="info-value tech-mono">reportsStore</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Pending Sync Payload Queue Size:</span>
-                        <span class="info-value tech-mono" id="counter" style="color: #ef4444; font-weight: 700; font-size: 14px;">0</span>
-                    </div>
+                    <div class="info-row"><span>Storage Architecture Hardware:</span><span class="tech-mono">Client Browser Storage</span></div>
+                    <div class="info-row"><span>Underlying Target Engine API:</span><span class="tech-mono" style="color: #f43f5e;">IndexedDB (Structured Local DB)</span></div>
+                    <div class="info-row"><span>Active Storage Key Database:</span><span class="tech-mono">VercelOfflineQueueDB</span></div>
+                    <div class="info-row"><span>Pending Sync Payload Queue Size:</span><span class="tech-mono" id="counter" style="color: #ef4444; font-weight: 700; font-size: 14px;">0</span></div>
                 </div>
             </div>
-
         </div>
 
         <div class="glass-card" style="margin-top: 24px;">
-            <div class="card-title">
-                🖥️ Live Client Store Payload Telemetry Logs (IndexedDB Node Trace)
-            </div>
+            <div class="card-title">🖥️ Live Client Store Payload Telemetry Logs (IndexedDB Node Trace)</div>
             <div class="queue-terminal" id="terminal-logger">
                 <div style="color:#94a3b8; font-style:italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>
             </div>
@@ -445,15 +292,16 @@
         <div class="glass-card">
             
             <div class="cloud-header-wrapper">
-                <button class="circle-back-ui-btn" onclick="toggleActiveDashboardPanels(false)" title="Back to Data Entry Console">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M19 12H5M12 19l-7-7 7-7"/>
-                    </svg>
-                </button>
-                
-                <div style="font-size: 15px; font-weight: 600; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px;">
-                    ☁️ Real-time Cloud Supabase Server Records Ledger
+                <div class="cloud-title-container">
+                    <button class="circle-back-ui-btn" onclick="toggleActiveDashboardPanels(false)" title="Back to Data Entry Console">
+                        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    </button>
+                    <div style="font-size: 15px; font-weight: 600; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px;">
+                        ☁️ Real-time Cloud Supabase Server Records Ledger
+                    </div>
                 </div>
+                
+                <button class="server-refresh-btn" onclick="fetchLiveCloudDatabaseRecords()">🔄 Fetch Live Server Data</button>
             </div>
             
             <div class="queue-terminal" id="cloud-server-logger" style="height: 420px; color: #a7f3d0; background: #030712;">
@@ -474,7 +322,6 @@
 
     function updateNetworkInterface() {
         const badge = document.getElementById('network-badge');
-        
         if (navigator.onLine) {
             badge.innerHTML = `<div class="badge-dot" style="background:#10b981;"></div> <span>EDGE ONLINE — Pipeline Synchronized</span>`;
             badge.className = "badge online";
@@ -490,8 +337,7 @@
 
     const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 1);
     dbOpenRequest.onupgradeneeded = (e) => {
-        let db = e.target.result;
-        db.createObjectStore('reportsStore', { keyPath: 'id' });
+        e.target.result.createObjectStore('reportsStore', { keyPath: 'id' });
     };
     dbOpenRequest.onsuccess = (e) => {
         indexedDatabase = e.target.result;
@@ -504,10 +350,7 @@
         const textPayload = document.getElementById('data-payload').value;
         const record = { id: crypto.randomUUID(), reportData: textPayload, timestamp: new Date().toISOString() };
 
-        if (!indexedDatabase) {
-            console.error("IndexedDB engine local hardware buffer not initialized yet.");
-            return;
-        }
+        if (!indexedDatabase) return;
 
         const tx = indexedDatabase.transaction('reportsStore', 'readwrite');
         tx.objectStore('reportsStore').add(record);
@@ -553,7 +396,7 @@
                         };
                     }
                 } catch (err) {
-                    console.error("Cloud pipe transmission fault for Transaction token ID:", record.id, err);
+                    console.error("Cloud pipe transmission fault:", err);
                 }
             }
         };
@@ -618,15 +461,19 @@
                         <th>Transaction ID</th>
                         <th>Synchronized Payload Log</th>
                         <th>Server Timestamp</th>
+                        <th style="text-align:center;">Action</th>
                     </tr>
                 </thead>
                 <tbody>`;
 
             data.forEach(row => {
                 tableHTML += `<tr>
-                    <td style="font-family:'JetBrains Mono', monospace; color:#00ddff; font-size:11px;">${row.id}</td>
+                    <td style="font-family:'JetBrains Mono', monospace; color:#00ddff; font-size:11px;">${row.id.substring(0,18)}...</td>
                     <td>${row.reportData}</td>
-                    <td style="color:#10b981; font-weight:500;">${row.timestamp}</td>
+                    <td style="color:#94a3b8;">${row.timestamp.substring(0,19).replace('T',' ')}</td>
+                    <td style="text-align:center;">
+                        <button class="row-delete-btn" onclick="deleteCloudRecordFromServer('${row.id}')">🗑️ Delete</button>
+                    </td>
                 </tr>`;
             });
 
@@ -637,18 +484,41 @@
         }
     }
 
+    // NEW EXPLICIT CLOUD WIPE OUT TRANSACTION FUNCTION (Deletes directly from Supabase via Web REST query)
+    async function deleteCloudRecordFromServer(recordId) {
+        if (!navigator.onLine) {
+            alert("Edge Node is offline. Remote database deletions can only be committed while connection is online.");
+            return;
+        }
+
+        if (!confirm("Are you absolutely sure you want to permanently delete this telemetry payload line directly from the cloud backend server store?")) return;
+
+        try {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?id=eq.${recordId}`, {
+                method: 'DELETE',
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                }
+            });
+
+            if (response.ok) {
+                // Instantly re-fetch from cloud to update user view interface
+                fetchLiveCloudDatabaseRecords();
+            } else {
+                alert("Database server rejected the execution process.");
+            }
+        } catch(err) {
+            console.error("Wipe out sequence tracking error:", err);
+            alert("Failed to reach server pipeline.");
+        }
+    }
+
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
-                .then((reg) => console.log('🚀 Edge Service Layer Active:', reg.scope))
-                .catch((err) => console.error('❌ Edge Layer Fault:', err));
-        });
-        let isRefreshing = false;
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-            if (!isRefreshing) { window.location.reload(); isRefreshing = true; }
+            navigator.serviceWorker.register('/sw.js').catch((err) => console.error('❌ SW Fault:', err));
         });
     }
 </script>
-
 </body>
 </html>
