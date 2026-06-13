@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +8,7 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="data:,">
     
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -39,7 +41,7 @@
             padding: 40px 20px;
         }
 
-        /* Cinematic Background Grid Lines Effect */
+        /* Background Grid Pattern */
         body::before {
             content: "";
             position: fixed;
@@ -50,7 +52,6 @@
             pointer-events: none;
         }
 
-        /* Ambient Premium Glow Blobs */
         .glow-blob {
             position: fixed;
             width: 400px; height: 400px;
@@ -58,15 +59,8 @@
             top: -100px; right: -100px;
             z-index: -1;
             filter: blur(40px);
-            animation: floatGlow 12s infinite alternate ease-in-out;
         }
 
-        @keyframes floatGlow {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(-50px, 30px) scale(1.1); }
-        }
-
-        /* Container Layout */
         .app-container {
             width: 100%;
             max-width: 960px;
@@ -79,7 +73,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Navigation Header Section */
         header {
             display: flex;
             justify-content: space-between;
@@ -113,7 +106,7 @@
             border: 1px solid rgba(99, 102, 241, 0.3);
         }
 
-        /* Real-time Cinematic Connectivity Badge */
+        /* Pulse Blinking Dot Badge Layout */
         .badge {
             padding: 8px 16px;
             border-radius: 30px;
@@ -122,23 +115,20 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         .online {
             background: rgba(16, 185, 129, 0.1);
-            color: var(--text-main);
+            color: var(--success);
             border: 1px solid rgba(16, 185, 129, 0.25);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
         }
 
         .offline {
             background: rgba(245, 158, 11, 0.1);
-            color: var(--text-main);
+            color: var(--warning);
             border: 1px solid rgba(245, 158, 11, 0.25);
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.1);
         }
 
         .badge-dot {
@@ -152,7 +142,6 @@
             50% { opacity: 1; transform: scale(1.3); }
         }
 
-        /* Responsive Dashboard Grid Layout */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -163,21 +152,13 @@
             .dashboard-grid { grid-template-columns: 1fr; }
         }
 
-        /* Premium Glass Card Design */
         .glass-card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             padding: 28px;
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-
-        .glass-card:hover {
-            border-color: rgba(0, 221, 255, 0.2);
-            transform: translateY(-2px);
         }
 
         .card-title {
@@ -187,121 +168,62 @@
             margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
-        /* Form Engineering Design */
         textarea {
-            width: 100%;
-            height: 140px;
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            padding: 16px;
-            color: var(--text-main);
-            font-family: inherit;
-            font-size: 15px;
-            line-height: 1.5;
-            resize: none;
-            outline: none;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
+            width: 100%; height: 140px; background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px;
+            padding: 16px; color: var(--text-main); font-size: 15px;
+            line-height: 1.5; resize: none; outline: none; margin-bottom: 20px;
         }
 
         textarea:focus {
             border-color: var(--accent-primary);
             box-shadow: 0 0 15px var(--accent-glow);
-            background: rgba(0, 0, 0, 0.4);
         }
 
         button {
-            width: 100%;
-            background: linear-gradient(135deg, #0077ff 0%, #00ddff 100%);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%; background: linear-gradient(135deg, #0077ff 0%, #00ddff 100%);
+            color: white; border: none; padding: 14px; border-radius: 10px;
+            font-size: 15px; font-weight: 600; cursor: pointer;
             box-shadow: 0 4px 15px rgba(0, 119, 255, 0.3);
         }
 
-        button:hover {
-            transform: scale(1.01);
-            box-shadow: 0 6px 20px rgba(0, 221, 255, 0.4);
-        }
-
-        /* High Tech System Switch Route Link Button Styles */
-        .admin-route-btn {
+        /* DEDICATED DATABASE CHECK SWITCH ROUTE BUTTON */
+        .db-check-btn {
             width: 100%;
             background: transparent;
             color: var(--accent-primary);
-            border: 1px dashed rgba(0, 221, 255, 0.3);
+            border: 1px dashed rgba(0, 221, 255, 0.35);
             padding: 12px;
             border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             margin-top: 15px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            box-shadow: none;
         }
 
-        .admin-route-btn:hover {
-            background: rgba(0, 221, 255, 0.05);
+        .db-check-btn:hover {
+            background: rgba(0, 221, 255, 0.06);
             border-color: var(--accent-primary);
             box-shadow: 0 0 15px var(--accent-glow);
-            transform: translateY(-1px);
         }
 
-        /* DATA MONITOR PIPELINE GLASS ENGINE */
-        .pipeline-container {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 8px;
-        }
-
+        .pipeline-container { display: flex; flex-direction: column; gap: 16px; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 8px; }
         .info-label { font-size: 13px; color: var(--text-muted); }
         .info-value { font-size: 13px; font-weight: 600; color: var(--text-main); }
         .tech-mono { font-family: 'JetBrains Mono', monospace; color: var(--accent-primary); }
 
-        /* Real-time Dynamic Queue Viewer Console */
         .queue-terminal {
-            background: #04060b;
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 10px;
-            padding: 16px;
-            height: 180px;
-            overflow-y: auto;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            line-height: 1.6;
-            color: #38bdf8;
+            background: #04060b; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px;
+            padding: 16px; height: 160px; overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #38bdf8;
         }
-
-        /* Custom Modern Scrollbars */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
     </style>
 </head>
 <body>
@@ -322,51 +244,35 @@
 
     <div class="dashboard-grid">
         
+        <!-- Left Side: Data Input Card & Verification Trigger Routing -->
         <div class="glass-card">
-            <div class="card-title">
-                📊 Data Collection Console
-            </div>
+            <div class="card-title">DATA COLLECTION CONSOLE</div>
             <form id="sync-form">
                 <textarea id="data-payload" placeholder="Enter remote rural structural matrix logs (e.g., Water telemetry, localized agricultural harvest data logs)..." required></textarea>
                 <button type="submit">Deploy Transaction to Edge</button>
             </form>
             
-            <button class="admin-route-btn" onclick="window.location.href='/admin.html'">🛰️ Open System Pipeline Monitor</button>
+            <!-- EXPLICIT ROUTE BUTTON TO VERIFY DATABASE ENTRIES INSTANTLY -->
+            <button class="db-check-btn" onclick="window.location.href='admin.html'">Verify Live Database Storage Ledger</button>
         </div>
 
+        <!-- Right Side: Architecture Metrics Layer Mapping -->
         <div class="glass-card">
-            <div class="card-title">
-                ⚙️ Internal Architecture Data Pipeline
-            </div>
-            
+            <div class="card-title">INTERNAL ARCHITECTURE DATA PIPELINE</div>
             <div class="pipeline-container">
-                <div class="info-row">
-                    <span class="info-label">Storage Architecture Hardware:</span>
-                    <span class="info-value tech-mono">Client Browser Storage</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Underlying Target Engine API:</span>
-                    <span class="info-value tech-mono" style="color: #f43f5e;">IndexedDB (Structured Local DB)</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Active Storage Key Database:</span>
-                    <span class="info-value tech-mono">VercelOfflineQueueDB</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Local Memory Database Store Name:</span>
-                    <span class="info-value tech-mono">reportsStore</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Pending Sync Payload Queue Size:</span>
-                    <span class="info-value tech-mono" id="counter" style="color: #ef4444; font-weight: 700; font-size: 14px;">0</span>
-                </div>
+                <div class="info-row"><span class="info-label">Storage Architecture Hardware:</span><span class="info-value tech-mono">Client Browser Storage</span></div>
+                <div class="info-row"><span class="info-label">Underlying Target Engine API:</span><span class="info-value tech-mono" style="color:#f43f5e;">IndexedDB (Structured Local DB)</span></div>
+                <div class="info-row"><span class="info-label">Active Storage Key Database:</span><span class="info-value tech-mono">VercelOfflineQueueDB</span></div>
+                <div class="info-row"><span class="info-label">Local Memory Database Store Name:</span><span class="info-value tech-mono">reportsStore</span></div>
+                <div class="info-row"><span class="info-label">Pending Sync Payload Queue Size:</span><span class="info-value tech-mono" id="counter" style="color:#ef4444; font-weight:700;">0</span></div>
             </div>
         </div>
 
-    </div> <div class="glass-card" style="margin-top: 24px;">
-        <div class="card-title">
-            🖥️ Live Client Store Payload Telemetry Logs (Enga, Enna store aaguthu nu Live Display)
-        </div>
+    </div>
+
+    <!-- Live Local Device Telemetry Frame Logs Display -->
+    <div class="glass-card" style="margin-top: 24px;">
+        <div class="card-title">LIVE CLIENT STORE PAYLOAD TELEMETRY LOGS (ENGA, ENNA STORE AAGUTHU NU LIVE DISPLAY)</div>
         <div class="queue-terminal" id="terminal-logger">
             <div style="color:#94a3b8; font-style:italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>
         </div>
@@ -382,10 +288,8 @@
     let indexedDatabase;
     const loggerConsole = document.getElementById('terminal-logger');
 
-    // RE-ENGINEERED NETWORK INTERFACE (Removed text emojis, preserved native blinking dot indicator)
     function updateNetworkInterface() {
         const badge = document.getElementById('network-badge');
-        
         if (navigator.onLine) {
             badge.innerHTML = `<div class="badge-dot" style="background:#10b981;"></div> <span>EDGE ONLINE — Pipeline Synchronized</span>`;
             badge.className = "badge online";
@@ -397,7 +301,6 @@
     }
     window.addEventListener('online', updateNetworkInterface);
     window.addEventListener('offline', updateNetworkInterface);
-    // Instant initial check invoke trigger
     updateNetworkInterface();
 
     // 1. Initial Browser Hardware IndexedDB Setup
@@ -418,10 +321,7 @@
         const textPayload = document.getElementById('data-payload').value;
         const record = { id: crypto.randomUUID(), reportData: textPayload, timestamp: new Date().toISOString() };
 
-        if (!indexedDatabase) {
-            console.error("IndexedDB engine local hardware buffer not initialized yet.");
-            return;
-        }
+        if (!indexedDatabase) return;
 
         const tx = indexedDatabase.transaction('reportsStore', 'readwrite');
         tx.objectStore('reportsStore').add(record);
@@ -490,7 +390,7 @@
         };
     }
 
-    // Native PWA Client Worker Registration Context Layer
+    // PWA Context Active Daemon
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('/sw.js')
