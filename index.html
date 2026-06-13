@@ -30,7 +30,7 @@
             --neon-glow-rose: rgba(244, 63, 94, 0.25);
             
             --fluid-gradient: linear-gradient(135deg, var(--cyber-indigo) 0%, var(--cyber-cyan) 50%, var(--cyber-purple) 100%);
-            --blue-gradient-btn: linear-gradient(135deg, #0055ff 0%, #00ddff 100%);
+            --blue-gradient-btn: linear-gradient(135deg, #0077ff 0%, #00ddff 100%);
             --blue-glow-aesthetic: rgba(0, 221, 255, 0.35);
         }
 
@@ -109,17 +109,20 @@
         .badge {
             padding: 10px 20px; border-radius: 14px; font-size: 12px; font-weight: 700;
             display: flex; align-items: center; gap: 10px; backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            -webkit-backdrop-filter: blur(20px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             border: 1px solid rgba(255,255,255,0.03); background: rgba(5, 8, 16, 0.6);
         }
-        .online { color: var(--cyber-emerald); box-shadow: 0 4px 20px rgba(16, 185, 129, 0.06); }
-        .offline { color: var(--warning); box-shadow: 0 4px 20px rgba(245, 158, 11, 0.06); }
+        
+        /* CHROMATIC SHIELD EXTENSION FOR LIVE REACTION CHANNELS */
+        .online { color: var(--cyber-emerald) !important; border-color: rgba(16, 185, 129, 0.2) !important; box-shadow: 0 4px 24px rgba(16, 185, 129, 0.08); }
+        .offline { color: #f59e0b !important; border-color: rgba(245, 158, 11, 0.2) !important; box-shadow: 0 4px 24px rgba(245, 158, 11, 0.08); }
 
         .badge-dot {
-            width: 6px; height: 6px; border-radius: 50%;
-            animation: coreBlinkGlow 1.8s infinite ease-in-out;
+            width: 8px; height: 8px; border-radius: 50%;
+            transition: background-color 0.4s ease, box-shadow 0.4s ease;
+            animation: coreBlinkGlow 1.6s infinite ease-in-out;
         }
-        @keyframes coreBlinkGlow { 0%, 100% { opacity: 0.3; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.25); } }
+        @keyframes coreBlinkGlow { 0%, 100% { opacity: 0.4; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.2); } }
 
         .dashboard-grid {
             display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px;
@@ -281,8 +284,8 @@
             <h1>EdgeSync <span>InStep v2.1</span></h1>
         </div>
         <div id="network-badge" class="badge online">
-            <div class="badge-dot" style="background: var(--cyber-emerald);"></div>
-            <span>Initializing Edge Engine...</span>
+            <div id="badge-glow-node" class="badge-dot"></div>
+            <span id="badge-text-node">Initializing Edge Engine...</span>
         </div>
     </header>
 
@@ -364,22 +367,45 @@
     const loggerConsole = document.getElementById('terminal-logger');
     const cloudLoggerConsole = document.getElementById('cloud-server-logger');
 
+    function getSupabaseSecureTimestamp() {
+        return new Date().toISOString();
+    }
+
+    function formatIsoStringToLocalSystemTime(isoString) {
+        if(!isoString) return "N/A";
+        try {
+            return new Date(isoString).toLocaleString("en-IN", {
+                hour12: true, year: "numeric", month: "2-digit", day: "2-digit",
+                hour: "2-digit", minute: "2-digit", second: "2-digit"
+            }).replace(/,/g, '');
+        } catch(e) {
+            return isoString;
+        }
+    }
+
+    // ⚡ HIGH PRECISION HARDWARE-LAYER INTERNET LISTENER PIPELINE FIX
     function updateNetworkInterface() {
         const badge = document.getElementById('network-badge');
-        const badgeDot = badge.querySelector('.badge-dot');
+        const badgeDot = document.getElementById('badge-glow-node');
+        const badgeText = document.getElementById('badge-text-node');
+        
         if (navigator.onLine) {
-            badgeDot.style.background = "var(--cyber-emerald)";
-            badge.querySelector('span').textContent = "EDGE ONLINE — Pipeline Synchronized";
+            // Direct injection to secure smooth transition matrix
             badge.className = "badge online";
+            badgeDot.style.backgroundColor = "var(--cyber-emerald)";
+            badgeDot.style.boxShadow = "0 0 12px var(--cyber-emerald)";
+            badgeText.textContent = "EDGE ONLINE — Pipeline Synchronized";
             executeCloudSynchronization();
         } else {
-            badgeDot.style.background = "var(--warning)";
-            badge.querySelector('span').textContent = "EDGE OFFLINE — Local Cache Mode";
             badge.className = "badge offline";
+            badgeDot.style.backgroundColor = "#f59e0b";
+            badgeDot.style.boxShadow = "0 0 12px #f59e0b";
+            badgeText.textContent = "EDGE OFFLINE — Local Cache Mode";
         }
     }
     window.addEventListener('online', updateNetworkInterface);
     window.addEventListener('offline', updateNetworkInterface);
+    // Instant runtime engine invoke
     updateNetworkInterface();
 
     const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 1);
@@ -395,7 +421,7 @@
     document.getElementById('sync-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const textPayload = document.getElementById('data-payload').value;
-        const record = { id: crypto.randomUUID(), reportData: textPayload, timestamp: new Date().toISOString() };
+        const record = { id: crypto.randomUUID(), reportData: textPayload, timestamp: getSupabaseSecureTimestamp() };
 
         if (!indexedDatabase) return;
 
@@ -464,7 +490,7 @@
             }
             list.forEach(obj => {
                 loggerConsole.innerHTML += `<div style="border-left:2px solid var(--cyber-cyan); padding-left:10px; margin-bottom:10px; font-family:'JetBrains Mono', monospace; font-size:12px; color:#c7d2fe;">
-                    [IndexedDB Cache] ID: ${obj.id.substring(0,8)}... | Data: "${obj.reportData}"
+                    [IndexedDB Cache] ID: ${obj.id.substring(0,8)}... | Time: ${formatIsoStringToLocalSystemTime(obj.timestamp)} | Data: "${obj.reportData}"
                 </div>`;
             });
         };
@@ -507,7 +533,7 @@
                     <tr>
                         <th>Transaction ID</th>
                         <th>Synchronized Payload Log</th>
-                        <th>Server Timestamp</th>
+                        <th>System Device Time (IST)</th>
                         <th style="text-align:center;">Action</th>
                     </tr>
                 </thead>
@@ -517,7 +543,7 @@
                 tableHTML += `<tr>
                     <td style="font-family:'JetBrains Mono', monospace; color: var(--cyber-cyan); font-size:11.5px; font-weight:500;">${row.id.substring(0,18)}...</td>
                     <td>${row.reportData}</td>
-                    <td style="color: var(--text-low); font-family:'JetBrains Mono', monospace; font-size:12px;">${row.timestamp.substring(0,19).replace('T',' ')}</td>
+                    <td style="color: var(--cyber-emerald); font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:600;">${formatIsoStringToLocalSystemTime(row.timestamp)}</td>
                     <td style="text-align:center;">
                         <button class="row-delete-btn" onclick="deleteCloudRecordFromServer('${row.id}')">🗑️ Erase</button>
                     </td>
