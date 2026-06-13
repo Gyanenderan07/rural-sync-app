@@ -366,68 +366,41 @@
 </div>
 
 <script>
-    const SERVER_ENDPOINT = '/api/sync';
+    // Live Cloud Infrastructure Supabase API Handshake Connectivity Credentials
+    const SUPABASE_URL = "https://rsjyvrnxqkjtaczwectr.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzanl2cm54cWtqdGFjendlY3RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMDMwNjUsImV4cCI6MjA5Njg3OTA2NX0.YB63IkqX1Q5uFtNNxEjnyx-TFdCeN_U09vWM6zguL-o";
+
     let indexedDatabase;
     const loggerConsole = document.getElementById('terminal-logger');
-    const logsEmptyText = document.getElementById('terminal-empty-text');
 
-    // 1. Setup Local IndexedDB Database Structure
+    // 1. Initial Browser Hardware IndexedDB Setup
     const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 1);
-
     dbOpenRequest.onupgradeneeded = (e) => {
         let db = e.target.result;
         db.createObjectStore('reportsStore', { keyPath: 'id' });
     };
-
     dbOpenRequest.onsuccess = (e) => {
         indexedDatabase = e.target.result;
         refreshQueueCount();
         executeCloudSynchronization();
     };
 
-    // 2. Continuous Micro-Interactive Network State Core Engine
-    function updateNetworkInterface() {
-        const badge = document.getElementById('network-badge');
-        const badgeText = document.getElementById('badge-text');
-        
-        if (navigator.onLine) {
-            badgeText.textContent = "EDGE ONLINE — Pipeline Synchronized";
-            badge.className = "badge online";
-            executeCloudSynchronization();
-        } else {
-            badgeText.textContent = "EDGE OFFLINE — Local Cache Mode";
-            badge.className = "badge offline";
-        }
-    }
-    window.addEventListener('online', updateNetworkInterface);
-    window.addEventListener('offline', updateNetworkInterface);
-    updateNetworkInterface();
-
-    // 3. Form Transaction Processor (Saves structured objects instantly to local IndexedDB)
+    // 2. Transaction Form Submission Execution 
     document.getElementById('sync-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const textPayload = document.getElementById('data-payload').value;
-
-        // Structured transactional telemetry object architecture schema
-        const record = {
-            id: crypto.randomUUID(), 
-            reportData: textPayload,
-            timestamp: new Date().toISOString()
-        };
+        const record = { id: crypto.randomUUID(), reportData: textPayload, timestamp: new Date().toISOString() };
 
         const tx = indexedDatabase.transaction('reportsStore', 'readwrite');
         tx.objectStore('reportsStore').add(record);
-
         tx.oncomplete = () => {
             document.getElementById('data-payload').value = ''; 
             refreshQueueCount();
-            if (navigator.onLine) {
-                executeCloudSynchronization();
-            }
+            if (navigator.onLine) executeCloudSynchronization();
         };
     });
 
-    // 4. Background Serverless Synchronizer Data Pipeline 
+    // 3. Automated Advanced Serverless Cloud Sync Pipeline Engine
     async function executeCloudSynchronization() {
         if (!navigator.onLine || !indexedDatabase) return;
 
@@ -439,84 +412,66 @@
             const recordsQueue = fetchAllQuery.result;
             if (recordsQueue.length === 0) return;
 
-            try {
-                const cloudResponse = await fetch(SERVER_ENDPOINT, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(recordsQueue)
-                });
+            for (const record of recordsQueue) {
+                try {
+                    // REST HTTP Transport Handshake Tunnel to Supabase
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify(record)
+                    });
 
-                const responseData = await cloudResponse.json();
-
-                if (responseData.success) {
-                    const deleteTx = indexedDatabase.transaction('reportsStore', 'readwrite');
-                    const deleteStore = deleteTx.objectStore('reportsStore');
-                    
-                    responseData.syncedIds.forEach(id => deleteStore.delete(id));
-
-                    deleteTx.oncomplete = () => {
-                        refreshQueueCount();
-                    };
+                    if (response.ok) {
+                        // Data safely injected into Supabase Cloud. Clear local buffer node.
+                        const deleteTx = indexedDatabase.transaction('reportsStore', 'readwrite');
+                        deleteTx.objectStore('reportsStore').delete(record.id);
+                        deleteTx.oncomplete = () => refreshQueueCount();
+                    }
+                } catch (err) {
+                    console.error("Cloud pipe transmission fault for Transaction token ID:", record.id, err);
                 }
-            } catch (networkError) {
-                console.error("Vercel Serverless pipeline endpoint unreachable.", networkError);
             }
         };
     }
 
-    
-
-    // 5. Dynamic Telemetry Terminal Logger Mapping Engine (Displays EXPLICITLY where, what, and how data is sitting)
     function refreshQueueCount() {
         if (!indexedDatabase) return;
         const tx = indexedDatabase.transaction('reportsStore', 'readonly');
         const store = tx.objectStore('reportsStore');
         
-        // Count update logic
-        const countQuery = store.count();
-        countQuery.onsuccess = () => {
-            document.getElementById('counter').textContent = countQuery.result;
-        };
-
-        // Render detailed payload mapping inside the visual monitor console
-        const getAllQuery = store.getAll();
-        getAllQuery.onsuccess = () => {
-            const dataObjectsList = getAllQuery.result;
-            
-            // Clear current log visuals
+        store.count().onsuccess = (ev) => { document.getElementById('counter').textContent = ev.target.result; };
+        store.getAll().onsuccess = (ev) => {
+            const list = ev.target.result;
             loggerConsole.innerHTML = '';
-            
-            if (dataObjectsList.length === 0) {
-                loggerConsole.appendChild(logsEmptyText);
+            if (list.length === 0) {
+                loggerConsole.innerHTML = '<div style="color:#94a3b8; font-style:italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>';
                 return;
             }
-
-            dataObjectsList.forEach(obj => {
-                const logEntry = document.createElement('div');
-                logEntry.className = 'console-entry';
-                logEntry.innerHTML = `[LOCAL MAP TRACE - IndexedDB -> reportsStore] <br> 
-                                      <span style="color: #fff;">⚡ PAYLOAD ID:</span> ${obj.id} <br>
-                                      <span style="color: #fff;">📦 ENCODED DATA:</span> "${obj.reportData}" <br>
-                                      <span style="color: #fff;">⏰ TIMESTAMP:</span> ${obj.timestamp}`;
-                loggerConsole.appendChild(logEntry);
+            list.forEach(obj => {
+                loggerConsole.innerHTML += `<div style="border-left:2px solid #00ddff; padding-left:8px; margin-bottom:8px;">
+                    [IndexedDB Cache -> reportsStore] ID: ${obj.id.substring(0,8)}... | Data: "${obj.reportData}"
+                </div>`;
             });
         };
     }
 
-    // 6. Native Service Worker PWA Context Layer Takeover
+    window.addEventListener('online', executeCloudSynchronization);
+
+    // Native PWA Client Worker Registration Context Layer
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('/sw.js')
                 .then((reg) => console.log('🚀 Edge Service Layer Active:', reg.scope))
                 .catch((err) => console.error('❌ Edge Layer Fault:', err));
         });
-
         let isRefreshing = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {
-            if (!isRefreshing) {
-                window.location.reload();
-                isRefreshing = true;
-            }
+            if (!isRefreshing) { window.location.reload(); isRefreshing = true; }
         });
     }
 </script>
