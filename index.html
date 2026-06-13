@@ -1,10 +1,9 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RuralSync — Enterprise Edge Client Layer</title>
+    <title>EdgeSync — Enterprise Edge Client Layer</title>
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="data:,">
     
@@ -14,7 +13,6 @@
     
     <style>
         :root {
-            /* NEXT-GEN MODERN GRADIENT WEBSITES MATRIX CORES */
             --canvas-bg: #030712;
             --cyber-indigo: #4f46e5;
             --cyber-cyan: #06b6d4;
@@ -33,6 +31,7 @@
             
             --fluid-gradient: linear-gradient(135deg, var(--cyber-indigo) 0%, var(--cyber-cyan) 50%, var(--cyber-purple) 100%);
             --blue-gradient-btn: linear-gradient(135deg, #0055ff 0%, #00ddff 100%);
+            --blue-glow-aesthetic: rgba(0, 221, 255, 0.35);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -50,7 +49,6 @@
             position: relative;
         }
 
-        /* DYNAMIC LIQUID FLUID ORBITING ORBS EFFECT BACKGROUNDS */
         body::before {
             content: "";
             position: fixed;
@@ -76,7 +74,6 @@
             100% { transform: translate(80px, -60px) scale(1.15); }
         }
 
-        /* TECH GRAPH LINES MESH OVERLAY LAYER */
         .tech-mesh-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 0), linear-gradient(rgba(255, 255, 255, 0.005) 1px, transparent 1px);
@@ -89,7 +86,6 @@
             position: relative; z-index: 1;
         }
 
-        /* CINEMATIC STORYTELLING GLOW HEADER ARRAYS */
         header {
             display: flex; justify-content: space-between; align-items: center;
             width: 100%; margin-bottom: 50px; padding-bottom: 24px;
@@ -110,7 +106,6 @@
             border: 1px solid rgba(165, 180, 252, 0.15);
         }
 
-        /* MINIMAL BLINKING GLOW BADGE */
         .badge {
             padding: 10px 20px; border-radius: 14px; font-size: 12px; font-weight: 700;
             display: flex; align-items: center; gap: 10px; backdrop-filter: blur(20px);
@@ -126,7 +121,6 @@
         }
         @keyframes coreBlinkGlow { 0%, 100% { opacity: 0.3; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.25); } }
 
-        /* MULTI-PANEL VIEW INTERFACES SCROLLING SYSTEM */
         .dashboard-grid {
             display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px;
             animation: sectionScrollReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -137,7 +131,6 @@
         }
         @media (max-width: 868px) { .dashboard-grid { grid-template-columns: 1fr; } }
 
-        /* ETHEREAL GLASSMORPHIC CARD STRUCTURAL LAYOUT */
         .glass-card {
             background: var(--glass-sheet);
             border: 1px solid var(--glass-border-glow);
@@ -164,7 +157,6 @@
             display: flex; align-items: center; justify-content: space-between; gap: 10px;
         }
 
-        /* TEXTAREA CINEMATIC NEON FIELD SETUP */
         textarea {
             width: 100%; height: 150px; background: rgba(3, 5, 10, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px;
@@ -178,7 +170,6 @@
             box-shadow: 0 0 24px rgba(6, 182, 212, 0.08), inset 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        /* GRADIENT BLUE BUTTONS MATRIX DEPLOY */
         button {
             width: 100%; background: var(--blue-gradient-btn);
             color: #ffffff; border: none; padding: 16px; border-radius: 14px;
@@ -192,7 +183,6 @@
         }
         button:active { transform: translateY(0px) scale(0.98); }
 
-        /* DASHED AMBIENT PIPELINE ROUTE SYSTEM LINK */
         .admin-route-btn {
             width: 100%; background: transparent; color: var(--cyber-cyan);
             border: 1px dashed rgba(6, 182, 212, 0.3); padding: 14px; border-radius: 14px;
@@ -204,7 +194,18 @@
             box-shadow: 0 0 20px rgba(6, 182, 212, 0.12); transform: scale(1.005);
         }
 
-        /* HIGH INTERACTIVE BLUE REFRESH TOGGLE ARRAYS */
+        .circle-back-ui-btn {
+            width: 44px; height: 44px; background: rgba(3, 7, 18, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-core);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        .circle-back-ui-btn:hover {
+            background: rgba(6, 182, 212, 0.1); border-color: var(--cyber-cyan);
+            color: var(--cyber-cyan); box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); transform: scale(1.05);
+        }
+        .circle-back-ui-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
         .server-refresh-btn {
             background: rgba(6, 182, 212, 0.04) !important;
             color: var(--cyber-cyan) !important;
@@ -221,20 +222,6 @@
         .spinning-loader-icon { display: inline-block; transition: transform 0.6s ease; }
         .server-refresh-btn:hover .spinning-loader-icon { transform: rotate(180deg); }
 
-        /* PRECISE CIRCULAR GLOW BACK SYSTEM ELEMENT */
-        .circle-back-ui-btn {
-            width: 44px; height: 44px; background: rgba(3, 7, 18, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-core);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-        }
-        .circle-back-ui-btn:hover {
-            background: rgba(6, 182, 212, 0.1); border-color: var(--cyber-cyan);
-            color: var(--cyber-cyan); box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); transform: scale(1.05);
-        }
-        .circle-back-ui-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-
-        /* ROW ERASE TRANSACTIONS ICON ENGINE */
         .row-delete-btn {
             background: transparent !important; color: var(--cyber-rose) !important;
             border: 1px solid rgba(244, 63, 94, 0.2) !important; padding: 6px 14px !important;
@@ -246,7 +233,6 @@
             box-shadow: 0 0 15px var(--neon-glow-rose) !important;
         }
 
-        /* DATA PROCESSING METRICS HUD DESIGN LAYOUT */
         .pipeline-container { display: flex; flex-direction: column; gap: 14px; }
         .info-row {
             display: flex; justify-content: space-between; align-items: center;
@@ -259,7 +245,6 @@
         .info-value { font-size: 13px; font-weight: 700; color: var(--text-core); }
         .tech-mono { font-family: 'JetBrains Mono', monospace; color: var(--cyber-cyan); }
 
-        /* THEMED HIGH CAPACITY TERMINALS VIEWBOX PANELS */
         .queue-terminal {
             background: rgba(3, 5, 10, 0.7); border: 1px solid rgba(255,255,255,0.03); border-radius: 16px;
             padding: 20px; height: 190px; overflow-y: auto; font-family: 'JetBrains Mono', monospace;
@@ -267,7 +252,6 @@
             box-shadow: inset 0 4px 20px rgba(0,0,0,0.6);
         }
 
-        /* PREMIUM MINIMAL FLAT LEDGER DATA TABLES ARCHITECTURE */
         .cloud-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
         .cloud-table th, .cloud-table td { padding: 16px 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.03); }
         .cloud-table th { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); letter-spacing: 1px; background: rgba(0,0,0,0.15); }
@@ -287,16 +271,14 @@
 </head>
 <body>
 
-<!-- Dynamic Background Systems Node Layers -->
 <div class="tech-mesh-overlay"></div>
 <div class="glow-blob"></div>
 
 <div class="app-container">
     
-    <!-- Top HUD App Header -->
     <header>
         <div class="logo-section">
-            <h1>RuralSync <span>InStep v2.1</span></h1>
+            <h1>EdgeSync <span>InStep v2.1</span></h1>
         </div>
         <div id="network-badge" class="badge online">
             <div class="badge-dot" style="background: var(--cyber-emerald);"></div>
@@ -304,13 +286,9 @@
         </div>
     </header>
 
-    <!-- ========================================== -->
-    <!-- PANEL A: SCROLL REVEAL ENTRY INTERFACE     -->
-    <!-- ========================================== -->
     <div id="primary-console-panel">
         <div class="dashboard-grid">
             
-            <!-- Left Side Operations Console Box -->
             <div class="glass-card">
                 <div class="card-title">📊 Data Collection Console</div>
                 <form id="sync-form">
@@ -320,7 +298,6 @@
                 <button class="admin-route-btn" onclick="toggleActiveDashboardPanels(true)">🛰️ Open System Pipeline Monitor</button>
             </div>
 
-            <!-- Right Side Storage Internal Engine Specs Box -->
             <div class="glass-card">
                 <div class="card-title">⚙️ Internal Architecture Data Pipeline</div>
                 <div class="pipeline-container">
@@ -345,7 +322,6 @@
 
         </div>
 
-        <!-- Local Cache Tracker Console Logs Panel -->
         <div class="glass-card" style="margin-top: 32px;">
             <div class="card-title">🖥️ Live Client Store Payload Telemetry Logs (IndexedDB Node Trace)</div>
             <div class="queue-terminal" id="terminal-logger">
@@ -354,9 +330,6 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- PANEL B: SERVER VIEW CONTROLLER INTERFACE  -->
-    <!-- ========================================== -->
     <div id="cloud-ledger-panel" class="panel-hidden">
         <div class="glass-card" style="animation: sectionScrollReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
             
@@ -383,7 +356,6 @@
 
 </div>
 
-<!-- ALL PROGRAM CORE LOGIC REMAINS ABSOLUTELY UNTOUCHED & PROUDLY SECURE -->
 <script>
     const SUPABASE_URL = "https://rsjyvrnxqkjtaczwectr.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzanl2cm54cWtqdGFjendlY3RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMDMwNjUsImV4cCI6MjA5Njg3OTA2NX0.YB63IkqX1Q5uFtNNxEjnyx-TFdCeN_U09vWM6zguL-o";
