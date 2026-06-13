@@ -39,7 +39,6 @@
             padding: 40px 20px;
         }
 
-        /* Cinematic Background Grid Lines Effect */
         body::before {
             content: "";
             position: fixed;
@@ -50,7 +49,6 @@
             pointer-events: none;
         }
 
-        /* Ambient Premium Glow Blobs */
         .glow-blob {
             position: fixed;
             width: 400px; height: 400px;
@@ -66,7 +64,6 @@
             100% { transform: translate(-50px, 30px) scale(1.1); }
         }
 
-        /* Container Layout */
         .app-container {
             width: 100%;
             max-width: 960px;
@@ -79,7 +76,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Navigation Header Section */
         header {
             display: flex;
             justify-content: space-between;
@@ -113,7 +109,6 @@
             border: 1px solid rgba(99, 102, 241, 0.3);
         }
 
-        /* Real-time Cinematic Connectivity Badge */
         .badge {
             padding: 8px 16px;
             border-radius: 30px;
@@ -152,7 +147,6 @@
             50% { opacity: 1; transform: scale(1.3); }
         }
 
-        /* Responsive Dashboard Grid Layout */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -163,7 +157,6 @@
             .dashboard-grid { grid-template-columns: 1fr; }
         }
 
-        /* Premium Glass Card Design */
         .glass-card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -189,10 +182,10 @@
             letter-spacing: 0.5px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 8px;
         }
 
-        /* Form Engineering Design */
         textarea {
             width: 100%;
             height: 140px;
@@ -235,7 +228,6 @@
             box-shadow: 0 6px 20px rgba(0, 221, 255, 0.4);
         }
 
-        /* MODERN SYSTEM ROUTE LINK SWITCH BUTTON BUTTON STYLE */
         .admin-route-btn {
             width: 100%;
             background: transparent;
@@ -262,7 +254,27 @@
             transform: translateY(-1px);
         }
 
-        /* DATA MONITOR PIPELINE GLASS ENGINE */
+        /* CINEMATIC MINIMALIST BACK LINK ACTION BUTTON STYLE */
+        .back-ui-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .back-ui-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
         .pipeline-container {
             display: flex;
             flex-direction: column;
@@ -283,7 +295,6 @@
         .info-value { font-size: 13px; font-weight: 600; color: var(--text-main); }
         .tech-mono { font-family: 'JetBrains Mono', monospace; color: var(--accent-primary); }
 
-        /* Real-time Dynamic Queue Viewer Console */
         .queue-terminal {
             background: #04060b;
             border: 1px solid rgba(255,255,255,0.05);
@@ -297,7 +308,36 @@
             color: #38bdf8;
         }
 
-        /* Custom Modern Scrollbars */
+        /* CLOUD LEDGER INTERFACE SPECIFIC STYLES */
+        .cloud-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+        }
+
+        .cloud-table th, .cloud-table td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .cloud-table th {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .cloud-table td {
+            font-size: 13px;
+            color: var(--text-main);
+        }
+
+        /* VIEW TRANSITION SMOOTH PANELS EFFECTS */
+        .panel-hidden {
+            display: none !important;
+        }
+
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
@@ -320,55 +360,73 @@
         </div>
     </header>
 
-    <div class="dashboard-grid">
-        
-        <div class="glass-card">
-            <div class="card-title">
-                📊 Data Collection Console
-            </div>
-            <form id="sync-form">
-                <textarea id="data-payload" placeholder="Enter remote rural structural matrix logs (e.g., Water telemetry, localized agricultural harvest data logs)..." required></textarea>
-                <button type="submit">Deploy Transaction to Edge</button>
-            </form>
+    <div id="primary-console-panel">
+        <div class="dashboard-grid">
             
-            <button class="admin-route-btn" onclick="window.location.href='/admin.html'">🛰️ Open System Pipeline Monitor</button>
+            <div class="glass-card">
+                <div class="card-title">
+                    📊 Data Collection Console
+                </div>
+                <form id="sync-form">
+                    <textarea id="data-payload" placeholder="Enter remote rural structural matrix logs (e.g., Water telemetry, localized agricultural harvest data logs)..." required></textarea>
+                    <button type="submit">Deploy Transaction to Edge</button>
+                </form>
+                
+                <button class="admin-route-btn" onclick="toggleActiveDashboardPanels(true)">🛰️ Open System Pipeline Monitor</button>
+            </div>
+
+            <div class="glass-card">
+                <div class="card-title">
+                    ⚙️ Internal Architecture Data Pipeline
+                </div>
+                
+                <div class="pipeline-container">
+                    <div class="info-row">
+                        <span class="info-label">Storage Architecture Hardware:</span>
+                        <span class="info-value tech-mono">Client Browser Storage</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Underlying Target Engine API:</span>
+                        <span class="info-value tech-mono" style="color: #f43f5e;">IndexedDB (Structured Local DB)</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Active Storage Key Database:</span>
+                        <span class="info-value tech-mono">VercelOfflineQueueDB</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Local Memory Database Store Name:</span>
+                        <span class="info-value tech-mono">reportsStore</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Pending Sync Payload Queue Size:</span>
+                        <span class="info-value tech-mono" id="counter" style="color: #ef4444; font-weight: 700; font-size: 14px;">0</span>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
+        <div class="glass-card" style="margin-top: 24px;">
+            <div class="card-title">
+                🖥️ Live Client Store Payload Telemetry Logs (IndexedDB Node Trace)
+            </div>
+            <div class="queue-terminal" id="terminal-logger">
+                <div style="color:#94a3b8; font-style:italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cloud-ledger-panel" class="panel-hidden">
         <div class="glass-card">
             <div class="card-title">
-                ⚙️ Internal Architecture Data Pipeline
+                <span style="color: #10b981;">☁️ Real-time Cloud Supabase Server Records Ledger</span>
+                
+                <button class="back-ui-btn" onclick="toggleActiveDashboardPanels(false)">⬅️ Back to Data Entry Console</button>
             </div>
             
-            <div class="pipeline-container">
-                <div class="info-row">
-                    <span class="info-label">Storage Architecture Hardware:</span>
-                    <span class="info-value tech-mono">Client Browser Storage</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Underlying Target Engine API:</span>
-                    <span class="info-value tech-mono" style="color: #f43f5e;">IndexedDB (Structured Local DB)</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Active Storage Key Database:</span>
-                    <span class="info-value tech-mono">VercelOfflineQueueDB</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Local Memory Database Store Name:</span>
-                    <span class="info-value tech-mono">reportsStore</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Pending Sync Payload Queue Size:</span>
-                    <span class="info-value tech-mono" id="counter" style="color: #ef4444; font-weight: 700; font-size: 14px;">0</span>
-                </div>
+            <div class="queue-terminal" id="cloud-server-logger" style="height: 420px; color: #a7f3d0; background: #030712;">
+                <div style="color:#94a3b8; font-style:italic;">Querying cloud storage pipeline nodes...</div>
             </div>
-        </div>
-
-    </div> <div class="glass-card" style="margin-top: 24px;">
-        <div class="card-title">
-            🖥️ Live Client Store Payload Telemetry Logs (Enga, Enna store aaguthu nu Live Display)
-        </div>
-        <div class="queue-terminal" id="terminal-logger">
-            <div style="color:#94a3b8; font-style:italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>
         </div>
     </div>
 
@@ -381,8 +439,8 @@
 
     let indexedDatabase;
     const loggerConsole = document.getElementById('terminal-logger');
+    const cloudLoggerConsole = document.getElementById('cloud-server-logger');
 
-    // RE-ENGINEERED NETWORK INTERFACE (Removed text emojis, kept absolute dynamic blinking dot glow)
     function updateNetworkInterface() {
         const badge = document.getElementById('network-badge');
         
@@ -459,7 +517,13 @@
                     if (response.ok) {
                         const deleteTx = indexedDatabase.transaction('reportsStore', 'readwrite');
                         deleteTx.objectStore('reportsStore').delete(record.id);
-                        deleteTx.oncomplete = () => refreshQueueCount();
+                        deleteTx.oncomplete = () => {
+                            refreshQueueCount();
+                            // If user is currently looking at the database ledger view, auto refresh it live
+                            if (!document.getElementById('cloud-ledger-panel').classList.contains('panel-hidden')) {
+                                fetchLiveCloudDatabaseRecords();
+                            }
+                        };
                     }
                 } catch (err) {
                     console.error("Cloud pipe transmission fault for Transaction token ID:", record.id, err);
@@ -487,6 +551,65 @@
                 </div>`;
             });
         };
+    }
+
+    // INTERFACE PANEL TOGGLE SWITCH CONTROLLER WITH AUTOMATIC FETCH HANDSHAKE LINK
+    function toggleActiveDashboardPanels(showCloudLedger) {
+        const primaryConsole = document.getElementById('primary-console-panel');
+        const cloudLedger = document.getElementById('cloud-ledger-panel');
+
+        if (showCloudLedger) {
+            primaryConsole.classList.add('panel-hidden');
+            cloudLedger.classList.remove('panel-hidden');
+            fetchLiveCloudDatabaseRecords();
+        } else {
+            cloudLedger.classList.add('panel-hidden');
+            primaryConsole.classList.remove('panel-hidden');
+        }
+    }
+
+    // CLOUD DATABASE INTEGRATED RECORD FETCH MATRIX 
+    async function fetchLiveCloudDatabaseRecords() {
+        cloudLoggerConsole.innerHTML = '<div style="color:#38bdf8;">Establishing encrypted handshake tunnel to Supabase Ledger REST API...</div>';
+        
+        try {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?select=*`, {
+                method: 'GET',
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                }
+            });
+            const data = await response.json();
+            
+            if(data.length === 0) {
+                cloudLoggerConsole.innerHTML = '<div style="color:#94a3b8; font-style:italic; text-align:center; padding-top:40px;">Cloud server database store table is currently empty.</div>';
+                return;
+            }
+
+            let tableHTML = `<table class="cloud-table">
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Synchronized Payload Log</th>
+                        <th>Server Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            data.forEach(row => {
+                tableHTML += `<tr>
+                    <td style="font-family:'JetBrains Mono', monospace; color:#00ddff; font-size:11px;">${row.id}</td>
+                    <td>${row.reportData}</td>
+                    <td style="color:#10b981; font-weight:500;">${row.timestamp}</td>
+                </tr>`;
+            });
+
+            tableHTML += `</tbody></table>`;
+            cloudLoggerConsole.innerHTML = tableHTML;
+        } catch(err) {
+            cloudLoggerConsole.innerHTML = '<div style="color:#f43f5e; font-style:italic;">⚠️ Gateway Handshake Failure. Check network parameters.</div>';
+        }
     }
 
     // Native PWA Client Worker Registration Context Layer
