@@ -19,7 +19,7 @@
             --cyber-purple: #9333ea;
             --cyber-emerald: #10b981;
             --cyber-rose: #f43f5e;
-            --cyber-orange: #f59e0b; /* STRICT ORANGE THEME PARAMETER */
+            --cyber-orange: #f59e0b;
             
             --glass-sheet: rgba(8, 14, 28, 0.45);
             --glass-border-glow: rgba(255, 255, 255, 0.04);
@@ -79,7 +79,7 @@
 
         header {
             display: flex; justify-content: space-between; align-items: center;
-            width: 100%; margin-bottom: 50px; padding-bottom: 24px;
+            width: 100%; margin-bottom: 40px; padding-bottom: 24px;
             border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
         }
 
@@ -138,8 +138,8 @@
         }
 
         textarea {
-            width: 100%; height: 150px; background: rgba(3, 5, 10, 0.6); border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px; padding: 18px; color: var(--text-core); font-family: inherit; font-size: 15px; line-height: 1.6; resize: none; outline: none; margin-bottom: 24px;
+            width: 100%; height: 130px; background: rgba(3, 5, 10, 0.6); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px; padding: 18px; color: var(--text-core); font-family: inherit; font-size: 15px; line-height: 1.6; resize: none; outline: none; margin-bottom: 20px;
         }
         textarea:focus { border-color: rgba(6, 182, 212, 0.4); background: rgba(3, 5, 10, 0.85); box-shadow: 0 0 24px rgba(6, 182, 212, 0.08), inset 0 2px 4px rgba(0,0,0,0.5); }
 
@@ -152,7 +152,7 @@
 
         .admin-route-btn {
             width: 100%; background: transparent; color: var(--cyber-cyan); border: 1px dashed rgba(6, 182, 212, 0.3);
-            padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 18px;
+            padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 14px;
             display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: none;
         }
         .admin-route-btn:hover { background: rgba(6, 182, 212, 0.03); border-color: var(--cyber-cyan); box-shadow: 0 0 20px rgba(6, 182, 212, 0.12); transform: scale(1.005); }
@@ -188,7 +188,7 @@
 
         .queue-terminal {
             background: rgba(3, 5, 10, 0.7); border: 1px solid rgba(255,255,255,0.03); border-radius: 16px;
-            padding: 20px; height: 190px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.7; color: #67e8f9; box-shadow: inset 0 4px 20px rgba(0,0,0,0.6);
+            padding: 20px; height: 180px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.7; color: #67e8f9; box-shadow: inset 0 4px 20px rgba(0,0,0,0.6);
         }
 
         .cloud-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
@@ -206,18 +206,53 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--cyber-cyan); }
+
+        /* ======================== NEW PREMIUM SMART STYLES ======================== */
+        .unique-features-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 32px;
+        }
+        @media (max-width: 768px) { .unique-features-grid { grid-template-columns: 1fr; } }
+        
+        .smart-widget {
+            background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.03); border-radius: 18px; padding: 20px;
+        }
+        .widget-metric { font-size: 24px; font-weight: 800; color: var(--cyber-cyan); font-family: 'JetBrains Mono', monospace; margin-top: 10px; }
+        .widget-subtext { font-size: 11px; color: var(--text-low); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+        
+        .pill-tag {
+            display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-bottom: 8px;
+        }
+        .pill-water { background: rgba(6, 182, 212, 0.15); color: var(--cyber-cyan); }
+        .pill-agri { background: rgba(16, 185, 129, 0.15); color: var(--cyber-emerald); }
+        .pill-sys { background: rgba(244, 63, 94, 0.15); color: var(--cyber-rose); }
+
+        /* Custom Toggle Switch for Battery Eco Mode */
+        .switch-container { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+        .toggle-switch {
+            position: relative; inline-size: 44px; block-size: 24px; display: inline-block;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255,255,255,0.1); transition: .3s; border-radius: 24px;
+        }
+        .toggle-slider:before {
+            position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px;
+            background-color: white; transition: .3s; border-radius: 50%;
+        }
+        input:checked + .toggle-slider { background-color: var(--cyber-emerald); }
+        input:checked + .toggle-slider:before { transform: translateX(20px); }
     </style>
 </head>
 <body>
 
 <div class="tech-mesh-overlay"></div>
-<div class="glow-blob"></div>
 
 <div class="app-container">
     
     <header>
         <div class="logo-section">
-            <h1>EdgeSync <span>InStep v2.1</span></h1>
+            <h1>EdgeSync <span>InStep v2.2</span></h1>
         </div>
         <div id="network-badge" class="badge">
             <div id="badge-glow-node" class="badge-dot"></div>
@@ -231,7 +266,7 @@
             <div class="glass-card">
                 <div class="card-title">📊 Data Collection Console</div>
                 <form id="sync-form">
-                    <textarea id="data-payload" placeholder="Enter remote rural structural matrix logs (e.g., Water telemetry, localized agricultural harvest data logs)..." required></textarea>
+                    <textarea id="data-payload" placeholder="Type logs... Try matching keywords like 'pH 7.2', 'water flow 120L', or 'harvest 500kg' to trigger the intelligent live text analyzer!" required></textarea>
                     <button type="submit">Deploy Transaction to Edge</button>
                 </form>
                 <button class="admin-route-btn" onclick="toggleActiveDashboardPanels(true)">🛰️ Open System Pipeline Monitor</button>
@@ -241,15 +276,15 @@
                 <div class="card-title">⚙️ Internal Architecture Data Pipeline</div>
                 <div class="pipeline-container">
                     <div class="info-row">
-                        <span class="info-label">Storage Architecture Hardware:</span>
+                        <span class="info-label">Storage Architecture:</span>
                         <span class="info-value tech-mono">Client Browser Storage</span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">Underlying Target Engine API:</span>
-                        <span class="info-value tech-mono" style="color: var(--cyber-rose);">IndexedDB (Structured Local DB)</span>
+                        <span class="info-label">Target Engine API:</span>
+                        <span class="info-value tech-mono" style="color: var(--cyber-rose);">IndexedDB Core Node</span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">Active Storage Key Database:</span>
+                        <span class="info-label">Active Database Name:</span>
                         <span class="info-value tech-mono">VercelOfflineQueueDB</span>
                     </div>
                     <div class="info-row">
@@ -261,6 +296,30 @@
 
         </div>
 
+        <div class="unique-features-grid">
+            <div class="smart-widget">
+                <div class="card-title" style="margin-bottom:0; font-size:11px;">📉 Live Text Analytics</div>
+                <div id="analytics-metric" class="widget-metric">--</div>
+                <div id="analytics-subtext" class="widget-subtext">Awaiting valid entry inputs</div>
+            </div>
+            <div class="smart-widget">
+                <div class="card-title" style="margin-bottom:0; font-size:11px;">🧠 AI Pattern Categorizer</div>
+                <div style="margin-top: 10px;"><span id="category-pill" class="pill-tag pill-sys">GENERIC LOG</span></div>
+                <div id="category-desc" class="widget-subtext" style="margin-top:0;">No structured metrics matched</div>
+            </div>
+            <div class="smart-widget">
+                <div class="card-title" style="margin-bottom:0; font-size:11px;">🔋 Battery Adaptive Sync</div>
+                <div class="switch-container">
+                    <span id="sync-rate-status" style="font-family:'JetBrains Mono'; font-size:13px; color:var(--cyber-emerald);">ECO MODE OFF</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="battery-toggle" onchange="adjustBatteryEcoSyncRates()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="widget-subtext">Optimizes network heartbeat for low coverage grids</div>
+            </div>
+        </div>
+
         <div class="glass-card" style="margin-top: 32px;">
             <div class="card-title">🖥️ Live Client Store Payload Telemetry Logs (IndexedDB Node Trace)</div>
             <div class="queue-terminal" id="terminal-logger">
@@ -270,7 +329,7 @@
     </div>
 
     <div id="cloud-ledger-panel" class="panel-hidden">
-        <div class="glass-card" style="animation: sectionScrollReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+        <div class="glass-card">
             
             <div class="cloud-header-wrapper">
                 <div class="cloud-title-container">
@@ -304,10 +363,9 @@
     const cloudLoggerConsole = document.getElementById('cloud-server-logger');
 
     let previousNetworkStateIsOnline = navigator.onLine;
+    let fallbackPollIntervalTimer = 2500; // Native default clock pipeline
 
-    function getSupabaseSecureTimestamp() {
-        return new Date().toISOString();
-    }
+    function getSupabaseSecureTimestamp() { return new Date().toISOString(); }
 
     function formatIsoStringToLocalSystemTime(isoString) {
         if(!isoString) return "N/A";
@@ -316,9 +374,68 @@
                 hour12: true, year: "numeric", month: "2-digit", day: "2-digit",
                 hour: "2-digit", minute: "2-digit", second: "2-digit"
             }).replace(/,/g, '');
-        } catch(e) {
-            return isoString;
+        } catch(e) { return isoString; }
+    }
+
+    // ================= UNIQUE FEATURE MODULE LOGIC ENGINE =================
+    // Live Regex Pattern Extractor for Agriculture and Community Water telemetry logs
+    document.getElementById('data-payload').addEventListener('input', (e) => {
+        const textValue = e.target.value.toLowerCase();
+        const metricBox = document.getElementById('analytics-metric');
+        const subtextBox = document.getElementById('analytics-subtext');
+        const pill = document.getElementById('category-pill');
+        const desc = document.getElementById('category-desc');
+
+        if(textValue.trim() === '') {
+            metricBox.textContent = "--"; subtextBox.textContent = "Awaiting valid entry inputs";
+            pill.className = "pill-tag pill-sys"; pill.textContent = "GENERIC LOG";
+            desc.textContent = "No structured metrics matched";
+            return;
         }
+
+        // Feature 1 & 2 Execution Loop: Identify and Parse Numbers
+        const numberExtractionRegex = /(\d+(\.\d+)?)\s*(l|kg|ph|c|v|ltr|ml|%)/i;
+        const matchedNumber = textValue.match(numberExtractionRegex);
+        
+        if (matchedNumber) {
+            metricBox.textContent = matchedNumber[1] + " " + matchedNumber[3].toUpperCase();
+            subtextBox.textContent = "Extracted Live Pattern Value";
+        } else {
+            metricBox.textContent = "Processing"; subtextBox.textContent = "Scanning characters...";
+        }
+
+        // Categorizer Logic Switch
+        if(textValue.includes('ph') || textValue.includes('water') || textValue.includes('flow') || textValue.includes('tank')) {
+            pill.className = "pill-tag pill-water"; pill.textContent = "💧 WATER METRICS";
+            desc.textContent = "Hydro-telemetry Node Detected";
+        } else if (textValue.includes('harvest') || textValue.includes('kg') || textValue.includes('crop') || textValue.includes('soil')) {
+            pill.className = "pill-tag pill-agri"; pill.textContent = "🌾 AGRI-STRUCTURAL";
+            desc.textContent = "Rural Crop Inventory Vector";
+        } else {
+            pill.className = "pill-tag pill-sys"; pill.textContent = "📦 GENERAL BUNDLE";
+            desc.textContent = "Standard Client Buffer Record";
+        }
+    });
+
+    // Feature 3: Smart Eco Sync Regulator Controller
+    let heartbeatThreadLoop;
+    function adjustBatteryEcoSyncRates() {
+        const isChecked = document.getElementById('battery-toggle').checked;
+        const statusDisplay = document.getElementById('sync-rate-status');
+        
+        clearInterval(heartbeatThreadLoop);
+        
+        if(isChecked) {
+            statusDisplay.textContent = "ECO MODE ACTIVE";
+            statusDisplay.style.color = "var(--cyber-orange)";
+            fallbackPollIntervalTimer = 10000; // Slows heartbeats down to preserve device energy levels
+        } else {
+            statusDisplay.textContent = "ECO MODE OFF";
+            statusDisplay.style.color = "var(--cyber-emerald)";
+            fallbackPollIntervalTimer = 2500; // High speed performance execution mode
+        }
+        
+        heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
     }
 
     function forceNetworkInterfaceUpdate() {
@@ -350,7 +467,7 @@
     
     window.addEventListener('online', forceNetworkInterfaceUpdate);
     window.addEventListener('offline', forceNetworkInterfaceUpdate);
-    setInterval(forceNetworkInterfaceUpdate, 2500); 
+    heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
     forceNetworkInterfaceUpdate();
 
     const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 2); 
@@ -376,6 +493,11 @@
         tx.objectStore('reportsStore').add(record);
         tx.oncomplete = () => {
             document.getElementById('data-payload').value = ''; 
+            // Reset intelligent widget elements gracefully
+            document.getElementById('analytics-metric').textContent = "--";
+            document.getElementById('category-pill').className = "pill-tag pill-sys";
+            document.getElementById('category-pill').textContent = "GENERIC LOG";
+            
             refreshQueueCount();
             if (navigator.onLine) executeCloudSynchronization();
         };
@@ -413,9 +535,7 @@
                             fetchSilentMirrorUpdate();
                         };
                     }
-                } catch (err) {
-                    console.error("Cloud pipe transmission fault:", err);
-                }
+                } catch (err) { console.error(err); }
             }
         };
     }
@@ -477,9 +597,8 @@
         const titleNode = document.getElementById('pipeline-title-node');
         const refreshActionBtn = document.getElementById('server-refresh-action-btn');
         
-        // 🔒 THE OFFLINE VECTOR (STRICT COLOR SHIFT TO ACCENT ORANGE MAP)
         if (!navigator.onLine) {
-            titleNode.style.color = "var(--cyber-orange)"; // MATCHES EXCLUSIVELY WITH EDGE OFFLINE COLOR SHADE
+            titleNode.style.color = "var(--cyber-orange)";
             titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Offline Presence Mode)";
             refreshActionBtn.style.display = "none"; 
             
@@ -500,7 +619,6 @@
             return;
         }
 
-        // 🌐 THE ONLINE VECTOR
         titleNode.style.color = "var(--cyber-emerald)";
         titleNode.textContent = "☁️ Real-time Cloud Supabase Server Records Ledger";
         refreshActionBtn.style.display = "flex";
@@ -561,10 +679,7 @@
     }
 
     async function deleteCloudRecordFromServer(recordId) {
-        if (!navigator.onLine) {
-            alert("Edge Node is offline. Remote operations require active server channels.");
-            return;
-        }
+        if (!navigator.onLine) return;
         if (!confirm("Are you absolutely sure you want to permanently erase this ledger line directly from the cloud backend server store?")) return;
 
         try {
@@ -572,15 +687,8 @@
                 method: 'DELETE',
                 headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
             });
-            if (response.ok) {
-                fetchLiveCloudDatabaseRecords();
-            } else {
-                alert("Database transactional server layer rejected execution.");
-            }
-        } catch(err) {
-            console.error("Wipe out sequence tracking error:", err);
-            alert("Failed to target cloud pipeline endpoints.");
-        }
+            if (response.ok) { fetchLiveCloudDatabaseRecords(); }
+        } catch(err) { console.error(err); }
     }
 
     if ('serviceWorker' in navigator) {
