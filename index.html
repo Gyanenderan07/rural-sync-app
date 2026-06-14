@@ -19,6 +19,7 @@
             --cyber-purple: #9333ea;
             --cyber-emerald: #10b981;
             --cyber-rose: #f43f5e;
+            --cyber-orange: #f59e0b; /* STRICT ORANGE THEME PARAMETER */
             
             --glass-sheet: rgba(8, 14, 28, 0.45);
             --glass-border-glow: rgba(255, 255, 255, 0.04);
@@ -104,7 +105,7 @@
         }
         
         .badge.online-state { color: var(--cyber-emerald) !important; border-color: rgba(16, 185, 129, 0.25) !important; box-shadow: 0 4px 24px rgba(16, 185, 129, 0.08) !important; }
-        .badge.offline-state { color: #f59e0b !important; border-color: rgba(245, 158, 11, 0.25) !important; box-shadow: 0 4px 24px rgba(245, 158, 11, 0.08) !important; }
+        .badge.offline-state { color: var(--cyber-orange) !important; border-color: rgba(245, 158, 11, 0.25) !important; box-shadow: 0 4px 24px rgba(245, 158, 11, 0.08) !important; }
 
         .badge-dot { width: 8px; height: 8px; border-radius: 50%; transition: all 0.3s ease; animation: coreBlinkGlow 1.6s infinite ease-in-out; }
         @keyframes coreBlinkGlow { 0%, 100% { opacity: 0.4; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.25); } }
@@ -276,7 +277,7 @@
                     <button class="circle-back-ui-btn" onclick="toggleActiveDashboardPanels(false)" title="Back to Data Entry Console">
                         <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                     </button>
-                    <div id="pipeline-title-node" style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;">
+                    <div id="pipeline-title-node" style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; transition: color 0.3s ease;">
                         ☁️ Real-time Cloud Supabase Server Records Ledger
                     </div>
                 </div>
@@ -302,7 +303,6 @@
     const loggerConsole = document.getElementById('terminal-logger');
     const cloudLoggerConsole = document.getElementById('cloud-server-logger');
 
-    // TRACKS PREVIOUS NETWORK BOUNDARY STATE TO PREVENT LIVE REFRESH CONFLICT CORES
     let previousNetworkStateIsOnline = navigator.onLine;
 
     function getSupabaseSecureTimestamp() {
@@ -335,12 +335,11 @@
             executeCloudSynchronization();
         } else {
             badge.className = "badge offline-state";
-            badgeDot.style.backgroundColor = "#f59e0b";
-            badgeDot.style.boxShadow = "0 0 16px #f59e0b";
+            badgeDot.style.backgroundColor = "var(--cyber-orange)";
+            badgeDot.style.boxShadow = "0 0 16px var(--cyber-orange)";
             badgeText.textContent = "EDGE OFFLINE — Local Cache Mode";
         }
 
-        // 🧠 FIXED CRITICAL TRACE: Instantly updates the monitor grid row fields only if state flipped boundaries!
         if (currentOnlineState !== previousNetworkStateIsOnline) {
             previousNetworkStateIsOnline = currentOnlineState;
             if (!document.getElementById('cloud-ledger-panel').classList.contains('panel-hidden')) {
@@ -351,7 +350,7 @@
     
     window.addEventListener('online', forceNetworkInterfaceUpdate);
     window.addEventListener('offline', forceNetworkInterfaceUpdate);
-    setInterval(forceNetworkInterfaceUpdate, 2500); // Sharp heartbeat intervals
+    setInterval(forceNetworkInterfaceUpdate, 2500); 
     forceNetworkInterfaceUpdate();
 
     const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 2); 
@@ -411,7 +410,6 @@
                         deleteTx.objectStore('reportsStore').delete(record.id);
                         deleteTx.oncomplete = () => {
                             refreshQueueCount();
-                            // Pulls fresh records to auto backup onto disk mirror store array nodes
                             fetchSilentMirrorUpdate();
                         };
                     }
@@ -422,7 +420,6 @@
         };
     }
 
-    // SILENT SYNC UPDATER COMPONENT FOR PERSISTENCE STORAGE
     async function fetchSilentMirrorUpdate() {
         if(!navigator.onLine || !indexedDatabase) return;
         try {
@@ -476,14 +473,13 @@
         }
     }
 
-    // 🔄 STATE-RESILIENT LIVE HYBRID RE-ROUTING GATEWAY FETCH COMPONENT
     async function fetchLiveCloudDatabaseRecords() {
         const titleNode = document.getElementById('pipeline-title-node');
         const refreshActionBtn = document.getElementById('server-refresh-action-btn');
         
-        // 🔒 THE OFFLINE PERSISTENCE FLOW STATE (ROUTES TO SYSTEM DISK DISK MEMORYSnapshots)
+        // 🔒 THE OFFLINE VECTOR (STRICT COLOR SHIFT TO ACCENT ORANGE MAP)
         if (!navigator.onLine) {
-            titleNode.style.color = "#00ddff";
+            titleNode.style.color = "var(--cyber-orange)"; // MATCHES EXCLUSIVELY WITH EDGE OFFLINE COLOR SHADE
             titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Offline Presence Mode)";
             refreshActionBtn.style.display = "none"; 
             
@@ -499,13 +495,12 @@
                     cloudLoggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">No persistent mirrored cloud server data logs discovered inside device disk cache. Connect online once to synchronize parameters.</div>';
                     return;
                 }
-                // FIXED STRATAGEM: Prints data securely with absolute layout stability when internet drops
                 renderTableHTML(mirroredOfflineData, false); 
             };
             return;
         }
 
-        // 🌐 THE ONLINE INTERNET ROUTINE (PULLS STRAIGHT FROM SUPABASE AND RE-MIRRORS SNAPSHOTS)
+        // 🌐 THE ONLINE VECTOR
         titleNode.style.color = "var(--cyber-emerald)";
         titleNode.textContent = "☁️ Real-time Cloud Supabase Server Records Ledger";
         refreshActionBtn.style.display = "flex";
@@ -524,7 +519,6 @@
                 return;
             }
             
-            // Instantly hooks cloud snapshot records straight into your system backup database memory folder
             if (indexedDatabase) {
                 const mirrorTx = indexedDatabase.transaction('cloudMirrorStore', 'readwrite');
                 const mirrorStore = mirrorTx.objectStore('cloudMirrorStore');
@@ -555,7 +549,7 @@
             tableHTML += `<tr>
                 <td style="font-family:'JetBrains Mono', monospace; color: var(--cyber-cyan); font-size:11.5px; font-weight:500;">${row.id.substring(0,18)}...</td>
                 <td>${row.reportData}</td>
-                <td style="color: ${isOnlineContext ? 'var(--cyber-emerald)' : '#a5b4fc'}; font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:600;">${formatIsoStringToLocalSystemTime(row.timestamp)}</td>
+                <td style="color: ${isOnlineContext ? 'var(--cyber-emerald)' : 'var(--cyber-orange)'}; font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:600;">${formatIsoStringToLocalSystemTime(row.timestamp)}</td>
                 <td style="text-align:center;">
                     <button class="row-delete-btn" onclick="${isOnlineContext ? `deleteCloudRecordFromServer('${row.id}')` : `alert('Deletions can only be executed while device has active cloud connectivity.')`}">🗑️ Erase</button>
                 </td>
