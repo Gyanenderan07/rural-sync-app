@@ -19,13 +19,18 @@
             --cyber-purple: #9333ea;
             --cyber-emerald: #10b981;
             --cyber-rose: #f43f5e;
-            --cyber-orange: #f59e0b;
+            --cyber-orange: #f59e0b; /* STRICT ORANGE THEME PARAMETER */
             
             --glass-sheet: rgba(8, 14, 28, 0.45);
             --glass-border-glow: rgba(255, 255, 255, 0.04);
             --text-core: #f8fafc;
             --text-low: #64748b;
             
+            --neon-glow-cyan: rgba(6, 182, 212, 0.25);
+            --neon-glow-indigo: rgba(79, 70, 229, 0.2);
+            --neon-glow-rose: rgba(244, 63, 94, 0.25);
+            
+            --fluid-gradient: linear-gradient(135deg, var(--cyber-indigo) 0%, var(--cyber-cyan) 50%, var(--cyber-purple) 100%);
             --blue-gradient-btn: linear-gradient(135deg, #0077ff 0%, #00ddff 100%);
             --blue-glow-aesthetic: rgba(0, 221, 255, 0.35);
         }
@@ -74,7 +79,7 @@
 
         header {
             display: flex; justify-content: space-between; align-items: center;
-            width: 100%; margin-bottom: 40px; padding-bottom: 24px;
+            width: 100%; margin-bottom: 50px; padding-bottom: 24px;
             border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
         }
 
@@ -133,8 +138,8 @@
         }
 
         textarea {
-            width: 100%; height: 130px; background: rgba(3, 5, 10, 0.6); border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px; padding: 18px; color: var(--text-core); font-family: inherit; font-size: 15px; line-height: 1.6; resize: none; outline: none; margin-bottom: 20px;
+            width: 100%; height: 150px; background: rgba(3, 5, 10, 0.6); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px; padding: 18px; color: var(--text-core); font-family: inherit; font-size: 15px; line-height: 1.6; resize: none; outline: none; margin-bottom: 24px;
         }
         textarea:focus { border-color: rgba(6, 182, 212, 0.4); background: rgba(3, 5, 10, 0.85); box-shadow: 0 0 24px rgba(6, 182, 212, 0.08), inset 0 2px 4px rgba(0,0,0,0.5); }
 
@@ -147,7 +152,7 @@
 
         .admin-route-btn {
             width: 100%; background: transparent; color: var(--cyber-cyan); border: 1px dashed rgba(6, 182, 212, 0.3);
-            padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 14px;
+            padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 18px;
             display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: none;
         }
         .admin-route-btn:hover { background: rgba(6, 182, 212, 0.03); border-color: var(--cyber-cyan); box-shadow: 0 0 20px rgba(6, 182, 212, 0.12); transform: scale(1.005); }
@@ -183,7 +188,7 @@
 
         .queue-terminal {
             background: rgba(3, 5, 10, 0.7); border: 1px solid rgba(255,255,255,0.03); border-radius: 16px;
-            padding: 20px; height: 180px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.7; color: #67e8f9; box-shadow: inset 0 4px 20px rgba(0,0,0,0.6);
+            padding: 20px; height: 190px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.7; color: #67e8f9; box-shadow: inset 0 4px 20px rgba(0,0,0,0.6);
         }
 
         .cloud-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
@@ -201,49 +206,18 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--cyber-cyan); }
-
-        /* ======================== FEATURE CONTROL SECTION ======================== */
-        .single-feature-container {
-            margin-top: 32px;
-        }
-        
-        .smart-widget-wide {
-            background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.03); border-radius: 20px; padding: 24px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        @media (max-width: 580px) { .smart-widget-wide { flex-direction: column; align-items: flex-start; gap: 16px; } }
-        
-        .widget-info-block { display: flex; flex-direction: column; gap: 4px; }
-        .widget-main-title { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-core); }
-        .widget-subtext { font-size: 12px; color: var(--text-low); line-height: 1.5; }
-
-        /* Custom Toggle Switch for Battery Eco Mode */
-        .switch-flex-box { display: flex; align-items: center; gap: 16px; }
-        .toggle-switch {
-            position: relative; width: 48px; height: 26px; display: inline-block;
-        }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .toggle-slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(255,255,255,0.1); transition: .3s; border-radius: 24px;
-        }
-        .toggle-slider:before {
-            position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px;
-            background-color: white; transition: .3s; border-radius: 50%;
-        }
-        input:checked + .toggle-slider { background-color: var(--cyber-emerald); }
-        input:checked + .toggle-slider:before { transform: translateX(22px); }
     </style>
 </head>
 <body>
 
 <div class="tech-mesh-overlay"></div>
+<div class="glow-blob"></div>
 
 <div class="app-container">
     
     <header>
         <div class="logo-section">
-            <h1>EdgeSync <span>InStep v2.3</span></h1>
+            <h1>EdgeSync <span>InStep v2.1</span></h1>
         </div>
         <div id="network-badge" class="badge">
             <div id="badge-glow-node" class="badge-dot"></div>
@@ -267,15 +241,15 @@
                 <div class="card-title">⚙️ Internal Architecture Data Pipeline</div>
                 <div class="pipeline-container">
                     <div class="info-row">
-                        <span class="info-label">Storage Architecture:</span>
+                        <span class="info-label">Storage Architecture Hardware:</span>
                         <span class="info-value tech-mono">Client Browser Storage</span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">Target Engine API:</span>
-                        <span class="info-value tech-mono" style="color: var(--cyber-rose);">IndexedDB Core Node</span>
+                        <span class="info-label">Underlying Target Engine API:</span>
+                        <span class="info-value tech-mono" style="color: var(--cyber-rose);">IndexedDB (Structured Local DB)</span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">Active Database Name:</span>
+                        <span class="info-label">Active Storage Key Database:</span>
                         <span class="info-value tech-mono">VercelOfflineQueueDB</span>
                     </div>
                     <div class="info-row">
@@ -287,22 +261,6 @@
 
         </div>
 
-        <div class="single-feature-container">
-            <div class="smart-widget-wide">
-                <div class="widget-info-block">
-                    <div class="widget-main-title">🔋 Battery Adaptive Sync Regulator</div>
-                    <div class="widget-subtext">Optimizes local tracking heartbeat configurations and network handshakes for low coverage power-grid zones.</div>
-                </div>
-                <div class="switch-flex-box">
-                    <span id="sync-rate-status" style="font-family:'JetBrains Mono'; font-weight: 700; font-size:13px; color:var(--cyber-emerald);">ECO MODE OFF</span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="battery-toggle" onchange="adjustBatteryEcoSyncRates()">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-            </div>
-        </div>
-
         <div class="glass-card" style="margin-top: 32px;">
             <div class="card-title">🖥️ Live Client Store Payload Telemetry Logs (IndexedDB Node Trace)</div>
             <div class="queue-terminal" id="terminal-logger">
@@ -312,7 +270,7 @@
     </div>
 
     <div id="cloud-ledger-panel" class="panel-hidden">
-        <div class="glass-card">
+        <div class="glass-card" style="animation: sectionScrollReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
             
             <div class="cloud-header-wrapper">
                 <div class="cloud-title-container">
@@ -339,16 +297,17 @@
 
 <script>
     const SUPABASE_URL = "https://rsjyvrnxqkjtaczwectr.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzanl2cm54cWtqdGFjendlY3RyIiwicm9sZSI6ImFub24pdfiaXQiOjE3ODEzMDMwNjUsImV4cCI6MjA5Njg3OTA2NX0.YB63IkqX1Q5uFtNNxEjnyx-TFdCeN_U09vWM6zguL-o";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzanl2cm54cWtqdGFjendlY3RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMDMwNjUsImV4cCI6MjA5Njg3OTA2NX0.YB63IkqX1Q5uFtNNxEjnyx-TFdCeN_U09vWM6zguL-o";
 
     let indexedDatabase;
     const loggerConsole = document.getElementById('terminal-logger');
     const cloudLoggerConsole = document.getElementById('cloud-server-logger');
 
     let previousNetworkStateIsOnline = navigator.onLine;
-    let fallbackPollIntervalTimer = 2500; 
 
-    function getSupabaseSecureTimestamp() { return new Date().toISOString(); }
+    function getSupabaseSecureTimestamp() {
+        return new Date().toISOString();
+    }
 
     function formatIsoStringToLocalSystemTime(isoString) {
         if(!isoString) return "N/A";
@@ -357,28 +316,9 @@
                 hour12: true, year: "numeric", month: "2-digit", day: "2-digit",
                 hour: "2-digit", minute: "2-digit", second: "2-digit"
             }).replace(/,/g, '');
-        } catch(e) { return isoString; }
-    }
-
-    // ================= DYNAMIC SYNC RATE REGULATOR LOOP =================
-    let heartbeatThreadLoop;
-    function adjustBatteryEcoSyncRates() {
-        const isChecked = document.getElementById('battery-toggle').checked;
-        const statusDisplay = document.getElementById('sync-rate-status');
-        
-        clearInterval(heartbeatThreadLoop);
-        
-        if(isChecked) {
-            statusDisplay.textContent = "ECO MODE ACTIVE";
-            statusDisplay.style.color = "var(--cyber-orange)";
-            fallbackPollIntervalTimer = 10000; // Power preservation interval logic map
-        } else {
-            statusDisplay.textContent = "ECO MODE OFF";
-            statusDisplay.style.color = "var(--cyber-emerald)";
-            fallbackPollIntervalTimer = 2500; // Standard high speed processing clock
+        } catch(e) {
+            return isoString;
         }
-        
-        heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
     }
 
     function forceNetworkInterfaceUpdate() {
@@ -410,7 +350,7 @@
     
     window.addEventListener('online', forceNetworkInterfaceUpdate);
     window.addEventListener('offline', forceNetworkInterfaceUpdate);
-    heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
+    setInterval(forceNetworkInterfaceUpdate, 2500); 
     forceNetworkInterfaceUpdate();
 
     const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 2); 
@@ -473,7 +413,9 @@
                             fetchSilentMirrorUpdate();
                         };
                     }
-                } catch (err) { console.error(err); }
+                } catch (err) {
+                    console.error("Cloud pipe transmission fault:", err);
+                }
             }
         };
     }
@@ -535,8 +477,9 @@
         const titleNode = document.getElementById('pipeline-title-node');
         const refreshActionBtn = document.getElementById('server-refresh-action-btn');
         
+        // 🔒 THE OFFLINE VECTOR (STRICT COLOR SHIFT TO ACCENT ORANGE MAP)
         if (!navigator.onLine) {
-            titleNode.style.color = "var(--cyber-orange)";
+            titleNode.style.color = "var(--cyber-orange)"; // MATCHES EXCLUSIVELY WITH EDGE OFFLINE COLOR SHADE
             titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Offline Presence Mode)";
             refreshActionBtn.style.display = "none"; 
             
@@ -557,6 +500,7 @@
             return;
         }
 
+        // 🌐 THE ONLINE VECTOR
         titleNode.style.color = "var(--cyber-emerald)";
         titleNode.textContent = "☁️ Real-time Cloud Supabase Server Records Ledger";
         refreshActionBtn.style.display = "flex";
@@ -617,7 +561,10 @@
     }
 
     async function deleteCloudRecordFromServer(recordId) {
-        if (!navigator.onLine) return;
+        if (!navigator.onLine) {
+            alert("Edge Node is offline. Remote operations require active server channels.");
+            return;
+        }
         if (!confirm("Are you absolutely sure you want to permanently erase this ledger line directly from the cloud backend server store?")) return;
 
         try {
@@ -625,8 +572,15 @@
                 method: 'DELETE',
                 headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
             });
-            if (response.ok) { fetchLiveCloudDatabaseRecords(); }
-        } catch(err) { console.error(err); }
+            if (response.ok) {
+                fetchLiveCloudDatabaseRecords();
+            } else {
+                alert("Database transactional server layer rejected execution.");
+            }
+        } catch(err) {
+            console.error("Wipe out sequence tracking error:", err);
+            alert("Failed to target cloud pipeline endpoints.");
+        }
     }
 
     if ('serviceWorker' in navigator) {
