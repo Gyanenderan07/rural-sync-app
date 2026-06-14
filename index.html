@@ -96,7 +96,6 @@
             border: 1px solid rgba(165, 180, 252, 0.15);
         }
 
-        /* HARD-PATCHED STRICT NEON GLOW BADGE SELECTOR ELEMENTS */
         .badge {
             padding: 10px 20px; border-radius: 14px; font-size: 12px; font-weight: 700;
             display: flex; align-items: center; gap: 10px; backdrop-filter: blur(20px);
@@ -104,7 +103,6 @@
             background: rgba(5, 8, 16, 0.6); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
-        /* Fixed explicit style prioritization layout rules using !important blocks */
         .badge.online-state { color: var(--cyber-emerald) !important; border-color: rgba(16, 185, 129, 0.25) !important; box-shadow: 0 4px 24px rgba(16, 185, 129, 0.08) !important; }
         .badge.offline-state { color: #f59e0b !important; border-color: rgba(245, 158, 11, 0.25) !important; box-shadow: 0 4px 24px rgba(245, 158, 11, 0.08) !important; }
 
@@ -320,13 +318,11 @@
         }
     }
 
-    // ⚡ ULTIMATE HARDWARE NETWORK POLLING ACTIVE INTELLIGENCE ENGINE (FOR LAPTOPS)
     function forceNetworkInterfaceUpdate() {
         const badge = document.getElementById('network-badge');
         const badgeDot = document.getElementById('badge-glow-node');
         const badgeText = document.getElementById('badge-text-node');
         
-        // Directly maps physical execution loops overriding cached spoofed service worker states
         if (navigator.onLine) {
             badge.className = "badge online-state";
             badgeDot.style.backgroundColor = "var(--cyber-emerald)";
@@ -339,26 +335,28 @@
             badgeDot.style.boxShadow = "0 0 16px #f59e0b";
             badgeText.textContent = "EDGE OFFLINE — Local Cache Mode";
             
-            // Auto changes layout headers if user is looking at the dashboard monitor while turning off wifi
             if (!document.getElementById('cloud-ledger-panel').classList.contains('panel-hidden')) {
                 fetchLiveCloudDatabaseRecords();
             }
         }
     }
     
-    // Core event binding layers
     window.addEventListener('online', forceNetworkInterfaceUpdate);
     window.addEventListener('offline', forceNetworkInterfaceUpdate);
-    
-    // 🫀 LAPTOP ENHANCEMENT: 3-Second Active Heartbeat Polling Loop
     setInterval(forceNetworkInterfaceUpdate, 3000);
-    
-    // Instant execution invocation
     forceNetworkInterfaceUpdate();
 
-    const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 1);
+    // 🛠️ DUAL-LAYER STORAGE STORE INITIALIZATION
+    const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 2); // Upgraded database schema version to 2
     dbOpenRequest.onupgradeneeded = (e) => {
-        e.target.result.createObjectStore('reportsStore', { keyPath: 'id' });
+        let db = e.target.result;
+        if (!db.objectStoreNames.contains('reportsStore')) {
+            db.createObjectStore('reportsStore', { keyPath: 'id' });
+        }
+        // PUTHUSA ANCHOR PANNA BACKUP LEDGER REPOSITORY STORE
+        if (!db.objectStoreNames.contains('cloudMirrorStore')) {
+            db.createObjectStore('cloudMirrorStore', { keyPath: 'id' });
+        }
     };
     dbOpenRequest.onsuccess = (e) => {
         indexedDatabase = e.target.result;
@@ -411,9 +409,8 @@
                         deleteTx.objectStore('reportsStore').delete(record.id);
                         deleteTx.oncomplete = () => {
                             refreshQueueCount();
-                            if (!document.getElementById('cloud-ledger-panel').classList.contains('panel-hidden')) {
-                                fetchLiveCloudDatabaseRecords();
-                            }
+                            // Automatic mirror refresh upon connection sync success
+                            updateLocalMirrorCacheStore();
                         };
                     }
                 } catch (err) {
@@ -444,6 +441,21 @@
         };
     }
 
+    // AUTOMATIC LOCAL CONTEXT BACKGROUND CACHE HOISTING MATRIX
+    function updateLocalMirrorCacheStore(cloudDataRecords) {
+        if (!indexedDatabase || !cloudDataRecords || cloudDataRecords.length === 0) return;
+        
+        const tx = indexedDatabase.transaction('cloudMirrorStore', 'readwrite');
+        const store = tx.objectStore('cloudMirrorStore');
+        
+        // Flushes old records inside local backup to prevent schema blocks
+        store.clear().onsuccess = () => {
+            cloudDataRecords.forEach(record => {
+                store.put(record); // Locks current snapshot into disk memory
+            });
+        };
+    }
+
     function toggleActiveDashboardPanels(showCloudLedger) {
         const primaryConsole = document.getElementById('primary-console-panel');
         const cloudLedger = document.getElementById('cloud-ledger-panel');
@@ -458,34 +470,36 @@
         }
     }
 
+    // 🔄 RE-ENGINEERED SMART HYBRID REAL-TIME RECORD LEDGER ROUTER 
     async function fetchLiveCloudDatabaseRecords() {
         const titleNode = document.getElementById('pipeline-title-node');
         const refreshActionBtn = document.getElementById('server-refresh-action-btn');
         
-        // HYBRID RESILIENT SAFEGUARD CONTROLLER FOR OFFLINE MAPPING
+        // 🔒 CRITICAL OFFLINE RE-ROUTING PROTECTION MATRIX
         if (!navigator.onLine) {
-            titleNode.style.color = "#f59e0b";
-            titleNode.textContent = "🗄️ Local IndexedDB Resilient Queue Store Ledger";
+            titleNode.style.color = "#00ddff";
+            titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Offline Presence Mode)";
             refreshActionBtn.style.display = "none"; 
             
-            cloudLoggerConsole.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Device operating in offline vector. Accessing local IndexedDB storage cache frames...</div>';
+            cloudLoggerConsole.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Accessing local disk-mirrored data repositories from cloudMirrorStore cache...</div>';
             
             if (!indexedDatabase) return;
-            const tx = indexedDatabase.transaction('reportsStore', 'readonly');
-            const store = tx.objectStore('reportsStore');
+            const tx = indexedDatabase.transaction('cloudMirrorStore', 'readonly');
+            const store = tx.objectStore('cloudMirrorStore');
             
             store.getAll().onsuccess = (ev) => {
-                const data = ev.target.result;
-                if(data.length === 0) {
-                    cloudLoggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">No pending un-synchronized logs found inside local IndexedDB reportsStore buffer memory.</div>';
+                const mirroredOfflineData = ev.target.result;
+                if(mirroredOfflineData.length === 0) {
+                    cloudLoggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">No persistent mirrored cloud server data logs discovered inside device disk cache. Connect online once to synchronize parameters.</div>';
                     return;
                 }
-                renderTableHTML(data, false); 
+                // Renders past online entries cleanly even when there is absolutely no network!
+                renderTableHTML(mirroredOfflineData, false); 
             };
             return;
         }
 
-        // ONLINE SUPABASE DISPATCH
+        // 🌐 FULL ONLINE INTERNET CHANNEL PULL SETUP
         titleNode.style.color = "var(--cyber-emerald)";
         titleNode.textContent = "☁️ Real-time Cloud Supabase Server Records Ledger";
         refreshActionBtn.style.display = "flex";
@@ -503,6 +517,10 @@
                 cloudLoggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">Cloud server database store table is currently empty.</div>';
                 return;
             }
+            
+            // Core Action: Instantly updates the disk cache snapshot on the background loop
+            updateLocalMirrorCacheStore(data);
+            
             renderTableHTML(data, true);
         } catch(err) {
             cloudLoggerConsole.innerHTML = '<div style="color: var(--cyber-rose); font-style: italic;">⚠️ Gateway Handshake Failure. Check network configuration.</div>';
@@ -515,7 +533,7 @@
                 <tr>
                     <th>Transaction ID</th>
                     <th>Synchronized Payload Log</th>
-                    <th>${isOnlineContext ? 'Server Timestamp (IST)' : 'Local Device Cache Time (IST)'}</th>
+                    <th>${isOnlineContext ? 'Server Timestamp (IST)' : 'Mirrored Offline Timestamp (IST)'}</th>
                     <th style="text-align:center;">Action</th>
                 </tr>
             </thead>
@@ -525,25 +543,15 @@
             tableHTML += `<tr>
                 <td style="font-family:'JetBrains Mono', monospace; color: var(--cyber-cyan); font-size:11.5px; font-weight:500;">${row.id.substring(0,18)}...</td>
                 <td>${row.reportData}</td>
-                <td style="color: ${isOnlineContext ? 'var(--cyber-emerald)' : '#f59e0b'}; font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:600;">${formatIsoStringToLocalSystemTime(row.timestamp)}</td>
+                <td style="color: ${isOnlineContext ? 'var(--cyber-emerald)' : '#a5b4fc'}; font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:600;">${formatIsoStringToLocalSystemTime(row.timestamp)}</td>
                 <td style="text-align:center;">
-                    <button class="row-delete-btn" onclick="${isOnlineContext ? `deleteCloudRecordFromServer('${row.id}')` : `deleteLocalCacheRecord('${row.id}')`}">🗑️ Erase</button>
+                    <button class="row-delete-btn" onclick="${isOnlineContext ? `deleteCloudRecordFromServer('${row.id}')` : `alert('Deletions can only be executed while device has active cloud connectivity.')`}">🗑️ Erase</button>
                 </td>
             </tr>`;
         });
 
         tableHTML += `</tbody></table>`;
         cloudLoggerConsole.innerHTML = tableHTML;
-    }
-
-    function deleteLocalCacheRecord(recordId) {
-        if (!confirm("Remove this log object directly from local IndexedDB cache buffer?")) return;
-        const tx = indexedDatabase.transaction('reportsStore', 'readwrite');
-        tx.objectStore('reportsStore').delete(recordId);
-        tx.oncomplete = () => {
-            refreshQueueCount();
-            fetchLiveCloudDatabaseRecords(); 
-        };
     }
 
     async function deleteCloudRecordFromServer(recordId) {
@@ -559,6 +567,7 @@
                 headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
             });
             if (response.ok) {
+                // Forces update to cloud fetcher to re-align internal mirror nodes instantly
                 fetchLiveCloudDatabaseRecords();
             } else {
                 alert("Database transactional server layer rejected execution.");
