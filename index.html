@@ -26,11 +26,6 @@
             --text-core: #f8fafc;
             --text-low: #64748b;
             
-            --neon-glow-cyan: rgba(6, 182, 212, 0.25);
-            --neon-glow-indigo: rgba(79, 70, 229, 0.2);
-            --neon-glow-rose: rgba(244, 63, 94, 0.25);
-            
-            --fluid-gradient: linear-gradient(135deg, var(--cyber-indigo) 0%, var(--cyber-cyan) 50%, var(--cyber-purple) 100%);
             --blue-gradient-btn: linear-gradient(135deg, #0077ff 0%, #00ddff 100%);
             --blue-glow-aesthetic: rgba(0, 221, 255, 0.35);
         }
@@ -207,29 +202,25 @@
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--cyber-cyan); }
 
-        /* ======================== NEW PREMIUM SMART STYLES ======================== */
-        .unique-features-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 32px;
+        /* ======================== FEATURE CONTROL SECTION ======================== */
+        .single-feature-container {
+            margin-top: 32px;
         }
-        @media (max-width: 768px) { .unique-features-grid { grid-template-columns: 1fr; } }
         
-        .smart-widget {
-            background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.03); border-radius: 18px; padding: 20px;
+        .smart-widget-wide {
+            background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.03); border-radius: 20px; padding: 24px;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .widget-metric { font-size: 24px; font-weight: 800; color: var(--cyber-cyan); font-family: 'JetBrains Mono', monospace; margin-top: 10px; }
-        .widget-subtext { font-size: 11px; color: var(--text-low); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+        @media (max-width: 580px) { .smart-widget-wide { flex-direction: column; align-items: flex-start; gap: 16px; } }
         
-        .pill-tag {
-            display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-bottom: 8px;
-        }
-        .pill-water { background: rgba(6, 182, 212, 0.15); color: var(--cyber-cyan); }
-        .pill-agri { background: rgba(16, 185, 129, 0.15); color: var(--cyber-emerald); }
-        .pill-sys { background: rgba(244, 63, 94, 0.15); color: var(--cyber-rose); }
+        .widget-info-block { display: flex; flex-direction: column; gap: 4px; }
+        .widget-main-title { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-core); }
+        .widget-subtext { font-size: 12px; color: var(--text-low); line-height: 1.5; }
 
         /* Custom Toggle Switch for Battery Eco Mode */
-        .switch-container { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+        .switch-flex-box { display: flex; align-items: center; gap: 16px; }
         .toggle-switch {
-            position: relative; inline-size: 44px; block-size: 24px; display: inline-block;
+            position: relative; width: 48px; height: 26px; display: inline-block;
         }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider {
@@ -237,11 +228,11 @@
             background-color: rgba(255,255,255,0.1); transition: .3s; border-radius: 24px;
         }
         .toggle-slider:before {
-            position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px;
+            position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px;
             background-color: white; transition: .3s; border-radius: 50%;
         }
         input:checked + .toggle-slider { background-color: var(--cyber-emerald); }
-        input:checked + .toggle-slider:before { transform: translateX(20px); }
+        input:checked + .toggle-slider:before { transform: translateX(22px); }
     </style>
 </head>
 <body>
@@ -252,7 +243,7 @@
     
     <header>
         <div class="logo-section">
-            <h1>EdgeSync <span>InStep v2.2</span></h1>
+            <h1>EdgeSync <span>InStep v2.3</span></h1>
         </div>
         <div id="network-badge" class="badge">
             <div id="badge-glow-node" class="badge-dot"></div>
@@ -266,7 +257,7 @@
             <div class="glass-card">
                 <div class="card-title">📊 Data Collection Console</div>
                 <form id="sync-form">
-                    <textarea id="data-payload" placeholder="Type logs... Try matching keywords like 'pH 7.2', 'water flow 120L', or 'harvest 500kg' to trigger the intelligent live text analyzer!" required></textarea>
+                    <textarea id="data-payload" placeholder="Enter remote rural structural matrix logs (e.g., Water telemetry, localized agricultural harvest data logs)..." required></textarea>
                     <button type="submit">Deploy Transaction to Edge</button>
                 </form>
                 <button class="admin-route-btn" onclick="toggleActiveDashboardPanels(true)">🛰️ Open System Pipeline Monitor</button>
@@ -296,27 +287,19 @@
 
         </div>
 
-        <div class="unique-features-grid">
-            <div class="smart-widget">
-                <div class="card-title" style="margin-bottom:0; font-size:11px;">📉 Live Text Analytics</div>
-                <div id="analytics-metric" class="widget-metric">--</div>
-                <div id="analytics-subtext" class="widget-subtext">Awaiting valid entry inputs</div>
-            </div>
-            <div class="smart-widget">
-                <div class="card-title" style="margin-bottom:0; font-size:11px;">🧠 AI Pattern Categorizer</div>
-                <div style="margin-top: 10px;"><span id="category-pill" class="pill-tag pill-sys">GENERIC LOG</span></div>
-                <div id="category-desc" class="widget-subtext" style="margin-top:0;">No structured metrics matched</div>
-            </div>
-            <div class="smart-widget">
-                <div class="card-title" style="margin-bottom:0; font-size:11px;">🔋 Battery Adaptive Sync</div>
-                <div class="switch-container">
-                    <span id="sync-rate-status" style="font-family:'JetBrains Mono'; font-size:13px; color:var(--cyber-emerald);">ECO MODE OFF</span>
+        <div class="single-feature-container">
+            <div class="smart-widget-wide">
+                <div class="widget-info-block">
+                    <div class="widget-main-title">🔋 Battery Adaptive Sync Regulator</div>
+                    <div class="widget-subtext">Optimizes local tracking heartbeat configurations and network handshakes for low coverage power-grid zones.</div>
+                </div>
+                <div class="switch-flex-box">
+                    <span id="sync-rate-status" style="font-family:'JetBrains Mono'; font-weight: 700; font-size:13px; color:var(--cyber-emerald);">ECO MODE OFF</span>
                     <label class="toggle-switch">
                         <input type="checkbox" id="battery-toggle" onchange="adjustBatteryEcoSyncRates()">
                         <span class="toggle-slider"></span>
                     </label>
                 </div>
-                <div class="widget-subtext">Optimizes network heartbeat for low coverage grids</div>
             </div>
         </div>
 
@@ -356,14 +339,14 @@
 
 <script>
     const SUPABASE_URL = "https://rsjyvrnxqkjtaczwectr.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzanl2cm54cWtqdGFjendlY3RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMDMwNjUsImV4cCI6MjA5Njg3OTA2NX0.YB63IkqX1Q5uFtNNxEjnyx-TFdCeN_U09vWM6zguL-o";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzanl2cm54cWtqdGFjendlY3RyIiwicm9sZSI6ImFub24pdfiaXQiOjE3ODEzMDMwNjUsImV4cCI6MjA5Njg3OTA2NX0.YB63IkqX1Q5uFtNNxEjnyx-TFdCeN_U09vWM6zguL-o";
 
     let indexedDatabase;
     const loggerConsole = document.getElementById('terminal-logger');
     const cloudLoggerConsole = document.getElementById('cloud-server-logger');
 
     let previousNetworkStateIsOnline = navigator.onLine;
-    let fallbackPollIntervalTimer = 2500; // Native default clock pipeline
+    let fallbackPollIntervalTimer = 2500; 
 
     function getSupabaseSecureTimestamp() { return new Date().toISOString(); }
 
@@ -377,47 +360,7 @@
         } catch(e) { return isoString; }
     }
 
-    // ================= UNIQUE FEATURE MODULE LOGIC ENGINE =================
-    // Live Regex Pattern Extractor for Agriculture and Community Water telemetry logs
-    document.getElementById('data-payload').addEventListener('input', (e) => {
-        const textValue = e.target.value.toLowerCase();
-        const metricBox = document.getElementById('analytics-metric');
-        const subtextBox = document.getElementById('analytics-subtext');
-        const pill = document.getElementById('category-pill');
-        const desc = document.getElementById('category-desc');
-
-        if(textValue.trim() === '') {
-            metricBox.textContent = "--"; subtextBox.textContent = "Awaiting valid entry inputs";
-            pill.className = "pill-tag pill-sys"; pill.textContent = "GENERIC LOG";
-            desc.textContent = "No structured metrics matched";
-            return;
-        }
-
-        // Feature 1 & 2 Execution Loop: Identify and Parse Numbers
-        const numberExtractionRegex = /(\d+(\.\d+)?)\s*(l|kg|ph|c|v|ltr|ml|%)/i;
-        const matchedNumber = textValue.match(numberExtractionRegex);
-        
-        if (matchedNumber) {
-            metricBox.textContent = matchedNumber[1] + " " + matchedNumber[3].toUpperCase();
-            subtextBox.textContent = "Extracted Live Pattern Value";
-        } else {
-            metricBox.textContent = "Processing"; subtextBox.textContent = "Scanning characters...";
-        }
-
-        // Categorizer Logic Switch
-        if(textValue.includes('ph') || textValue.includes('water') || textValue.includes('flow') || textValue.includes('tank')) {
-            pill.className = "pill-tag pill-water"; pill.textContent = "💧 WATER METRICS";
-            desc.textContent = "Hydro-telemetry Node Detected";
-        } else if (textValue.includes('harvest') || textValue.includes('kg') || textValue.includes('crop') || textValue.includes('soil')) {
-            pill.className = "pill-tag pill-agri"; pill.textContent = "🌾 AGRI-STRUCTURAL";
-            desc.textContent = "Rural Crop Inventory Vector";
-        } else {
-            pill.className = "pill-tag pill-sys"; pill.textContent = "📦 GENERAL BUNDLE";
-            desc.textContent = "Standard Client Buffer Record";
-        }
-    });
-
-    // Feature 3: Smart Eco Sync Regulator Controller
+    // ================= DYNAMIC SYNC RATE REGULATOR LOOP =================
     let heartbeatThreadLoop;
     function adjustBatteryEcoSyncRates() {
         const isChecked = document.getElementById('battery-toggle').checked;
@@ -428,11 +371,11 @@
         if(isChecked) {
             statusDisplay.textContent = "ECO MODE ACTIVE";
             statusDisplay.style.color = "var(--cyber-orange)";
-            fallbackPollIntervalTimer = 10000; // Slows heartbeats down to preserve device energy levels
+            fallbackPollIntervalTimer = 10000; // Power preservation interval logic map
         } else {
             statusDisplay.textContent = "ECO MODE OFF";
             statusDisplay.style.color = "var(--cyber-emerald)";
-            fallbackPollIntervalTimer = 2500; // High speed performance execution mode
+            fallbackPollIntervalTimer = 2500; // Standard high speed processing clock
         }
         
         heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
@@ -493,11 +436,6 @@
         tx.objectStore('reportsStore').add(record);
         tx.oncomplete = () => {
             document.getElementById('data-payload').value = ''; 
-            // Reset intelligent widget elements gracefully
-            document.getElementById('analytics-metric').textContent = "--";
-            document.getElementById('category-pill').className = "pill-tag pill-sys";
-            document.getElementById('category-pill').textContent = "GENERIC LOG";
-            
             refreshQueueCount();
             if (navigator.onLine) executeCloudSynchronization();
         };
