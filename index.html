@@ -18,6 +18,7 @@
             --cyber-cyan: #06b6d4;
             --cyber-purple: #9333ea;
             --cyber-emerald: #10b981;
+            --cyber-rose: #f43f5e;
             --cyber-orange: #f59e0b; /* STRICT ORANGE THEME PARAMETER */
             
             --glass-sheet: rgba(8, 14, 28, 0.45);
@@ -206,21 +207,29 @@
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--cyber-cyan); }
 
-        /* ======================== PREMIUM MOBILE-STYLE STATUS NETWORK SPEED ODOMETER OVERLAYS ======================== */
+        /* ======================== NEW INDIVIDUAL TIME, DATE & LOCATION INDEPENDENT BOXES ======================== */
+        .sync-hud-segment-row {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px;
+        }
+        @media(max-width: 600px) { .sync-hud-segment-row { grid-template-columns: 1fr; } }
+        
+        .segment-mini-box {
+            background: rgba(5, 8, 16, 0.6); border: 1px solid rgba(255,255,255,0.03); border-radius: 14px;
+            padding: 14px; display: flex; flex-direction: column; gap: 4px; transition: border 0.3s ease;
+        }
+        .segment-mini-box:hover { border-color: rgba(6, 182, 212, 0.2); }
+        .segment-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); letter-spacing: 0.5px; }
+        .segment-value { font-size: 13.5px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: #f8fafc; }
+
         .adaptive-sync-panel {
             background: var(--glass-sheet); border: 1px solid var(--glass-border-glow);
             border-radius: 24px; padding: 24px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); margin-top: 32px;
         }
-        .sync-hud-header {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
-        }
-        .sync-hud-title {
-            font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-core);
-            display: flex; align-items: center; gap: 8px;
-        }
+        .sync-hud-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .sync-hud-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-core); }
         .toggle-switch-wrapper { display: flex; align-items: center; gap: 12px; }
-        .toggle-switch-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; transition: color 0.3s ease; }
+        .toggle-switch-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; }
         .toggle-switch { position: relative; width: 48px; height: 26px; display: inline-block; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider {
@@ -281,6 +290,22 @@
                     <textarea id="data-payload" placeholder="Enter remote rural structural matrix logs (e.g., Water telemetry, localized agricultural harvest data logs)..." required></textarea>
                     <button type="submit">Deploy Transaction to Edge</button>
                 </form>
+                
+                <div class="sync-hud-segment-row">
+                    <div class="segment-mini-box">
+                        <span class="segment-label">📍 Active Node Location</span>
+                        <span id="hud-live-location" class="segment-value" style="color: var(--cyber-cyan);">Acquiring village...</span>
+                    </div>
+                    <div class="segment-mini-box">
+                        <span class="segment-label">📅 Transaction Date</span>
+                        <span id="hud-live-date" class="segment-value" style="color: var(--cyber-emerald);">--/--/----</span>
+                    </div>
+                    <div class="segment-mini-box">
+                        <span class="segment-label">🕒 Transaction Time</span>
+                        <span id="hud-live-time" class="segment-value" style="color: var(--cyber-orange);">--:--:-- --</span>
+                    </div>
+                </div>
+
                 <button class="admin-route-btn" onclick="toggleActiveDashboardPanels(true)">🛰️ Open System Pipeline Monitor</button>
             </div>
 
@@ -387,19 +412,56 @@
     let heartbeatThreadLoop;
     let activeFetchAbortController = null; 
 
+    // Global variables to hold parsed geolocation parameters securely
+    let capturedVillageNameStr = "Unknown Location";
+
     function getSupabaseSecureTimestamp() { return new Date().toISOString(); }
 
-    function formatIsoStringToLocalSystemTime(isoString) {
-        if(!isoString) return "N/A";
-        try {
-            return new Date(isoString).toLocaleString("en-IN", {
-                hour12: true, year: "numeric", month: "2-digit", day: "2-digit",
-                hour: "2-digit", minute: "2-digit", second: "2-digit"
-            }).replace(/,/g, '');
-        } catch(e) { return isoString; }
+    // 📍 NATIVE GEOLOCATIONAL REVERSE GEOCODING ENGINE
+    function invokeGeocodingEngine() {
+        if (!navigator.geolocation) {
+            capturedVillageNameStr = "Not Supported";
+            document.getElementById('hud-live-location').textContent = capturedVillageNameStr;
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            try {
+                // Free OpenStreetMap Reverse Geocoding API Endpoint (Zero Cost Secure Verification Loop)
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1`);
+                const geoJSON = await res.json();
+                
+                // Smartly extracts Village Name / Suburb / City relative to rural maps blocks
+                capturedVillageNameStr = geoJSON.address.village || geoJSON.address.suburb || geoJSON.address.county || geoJSON.address.town || "Remote Outpost";
+                document.getElementById('hud-live-location').textContent = capturedVillageNameStr;
+            } catch (err) {
+                capturedVillageNameStr = "Infield Grid Alpha"; // Fail-safe default backup flag name if completely offline
+                document.getElementById('hud-live-location').textContent = capturedVillageNameStr;
+            }
+        }, () => {
+            capturedVillageNameStr = "Permission Denied";
+            document.getElementById('hud-live-location').textContent = capturedVillageNameStr;
+        }, { enableHighAccuracy: true, timeout: 6000 });
     }
 
-    // 📱 RE-ENGINEERED HIGH SPEED HIGH-FIDELITY LIVE SPEED ODOMETER (DESKTOP & MOBILE ACCURATE)
+    // 📅 Individual Time & Date Clock Pulser
+    function invokeLiveClockTelemetry() {
+        const currentDateObj = new Date();
+        
+        // 1. Separate Date Frame
+        const formattedDate = currentDateObj.toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" });
+        document.getElementById('hud-live-date').textContent = formattedDate;
+
+        // 2. Separate Time Frame (Strict 12-Hour AM/PM format)
+        const formattedTime = currentDateObj.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
+        document.getElementById('hud-live-time').textContent = formattedTime;
+    }
+    setInterval(invokeLiveClockTelemetry, 1000); // 1-second ticking matrix engine
+    invokeGeocodingEngine(); // Initial location handshake trigger
+
     async function updateTelemetryHUDDisplayMetrics() {
         const speedNode = document.getElementById('live-speed-telemetry');
         const odometerNode = document.getElementById('mobile-live-odometer-node');
@@ -489,7 +551,6 @@
         forceNetworkInterfaceUpdate();
     }
 
-    // ⚡ INTERCEPTOR ENFORCER FIX FOR DIRECT TEXT SHIFTS AND HARDWARE SYNCHRONIZATION
     function forceNetworkInterfaceUpdate() {
         const badge = document.getElementById('network-badge');
         const badgeDot = document.getElementById('badge-glow-node');
@@ -500,14 +561,14 @@
             badge.className = "badge online-state";
             badgeDot.style.backgroundColor = "var(--cyber-emerald)";
             badgeDot.style.boxShadow = "0 0 16px var(--cyber-emerald)";
-            badgeText.textContent = "EDGE ONLINE — Pipeline Synchronized"; // Exact layout string text restore
+            badgeText.textContent = "EDGE ONLINE"; 
             executeCloudSynchronization();
         } else {
             if (activeFetchAbortController) activeFetchAbortController.abort();
             badge.className = "badge offline-state";
             badgeDot.style.backgroundColor = "var(--cyber-orange)";
             badgeDot.style.boxShadow = "0 0 16px var(--cyber-orange)";
-            badgeText.textContent = "EDGE OFFLINE — Local Cache Mode"; // Exact layout string text restore
+            badgeText.textContent = "EDGE OFFLINE"; 
         }
 
         updateTelemetryHUDDisplayMetrics();
@@ -523,7 +584,7 @@
     window.addEventListener('online', forceNetworkInterfaceUpdate);
     window.addEventListener('offline', forceNetworkInterfaceUpdate);
 
-    const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 2); 
+    const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 3); // Bumped up database connection scheme version to 3
     dbOpenRequest.onupgradeneeded = (e) => {
         let db = e.target.result;
         if (!db.objectStoreNames.contains('reportsStore')) { db.createObjectStore('reportsStore', { keyPath: 'id' }); }
@@ -544,7 +605,20 @@
     document.getElementById('sync-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const textPayload = document.getElementById('data-payload').value;
-        const record = { id: crypto.randomUUID(), reportData: textPayload, timestamp: getSupabaseSecureTimestamp() };
+        
+        // Split Date and Time strings for individual structural array dispatches
+        const targetDate = document.getElementById('hud-live-date').textContent;
+        const targetTime = document.getElementById('hud-live-time').textContent;
+
+        // Binds transaction packet securely to the 3 new tracking structures
+        const record = { 
+            id: crypto.randomUUID(), 
+            reportData: textPayload, 
+            timestamp: getSupabaseSecureTimestamp(),
+            village_name: capturedVillageNameStr,
+            entry_date: targetDate,
+            entry_time: targetTime
+        };
 
         if (!indexedDatabase) return;
 
@@ -627,7 +701,7 @@
             }
             list.forEach(obj => {
                 loggerConsole.innerHTML += `<div style="border-left:2px solid var(--cyber-cyan); padding-left:10px; margin-bottom:10px; font-family:'JetBrains Mono', monospace; font-size:12px; color:#c7d2fe;">
-                    [IndexedDB Cache] ID: ${obj.id.substring(0,8)}... | Time: ${formatIsoStringToLocalSystemTime(obj.timestamp)} | Data: "${obj.reportData}"
+                    [IndexedDB Cache] ID: ${obj.id.substring(0,8)}... | Location: ${obj.village_name || 'Acquiring'} | Data: "${obj.reportData}"
                 </div>`;
             });
         };
@@ -709,21 +783,28 @@
         let tableHTML = `<table class="cloud-table">
             <thead>
                 <tr>
-                    <th>Transaction ID</th>
+                    <th>📦 Infield Node Location</th>
+                    <th>📅 Entry Date</th>
+                    <th>🕒 Entry Time</th>
                     <th>Synchronized Payload Log</th>
-                    <th>${isOnlineContext ? 'Server Timestamp (IST)' : 'Mirrored Offline Timestamp (IST)'}</th>
                     <th style="text-align:center;">Action</th>
                 </tr>
             </thead>
             <tbody>`;
 
         data.forEach(row => {
+            // Safe alignment structures fallback configurations
+            const villageName = row.village_name || "Unknown Post";
+            const dateVal = row.entry_date || formatIsoStringToLocalSystemTime(row.timestamp).split(' ')[0];
+            const timeVal = row.entry_time || formatIsoStringToLocalSystemTime(row.timestamp).split(' ').slice(1).join(' ');
+
             tableHTML += `<tr>
-                <td style="font-family:'JetBrains Mono', monospace; color: var(--cyber-cyan); font-size:11.5px; font-weight:500;">${row.id.substring(0,18)}...</td>
+                <td style="font-weight:700; color: var(--cyber-cyan); font-size:13px;">📍 ${villageName}</td>
+                <td style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#cbd5e1;">${dateVal}</td>
+                <td style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#a5b4fc;">${timeVal}</td>
                 <td>${row.reportData}</td>
-                <td style="color: ${isOnlineContext ? 'var(--cyber-emerald)' : 'var(--cyber-orange)'}; font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:600;">${formatIsoStringToLocalSystemTime(row.timestamp)}</td>
                 <td style="text-align:center;">
-                    <button class="row-delete-btn" onclick="${isOnlineContext ? `deleteCloudRecordFromServer('${row.id}')` : `alert('Deletions can only be executed while device has active cloud connectivity.')`}">🗑️ Erase</button>
+                    <button class="row-delete-btn" onclick="executeSecureLocationBoundErasure('${row.id}', '${villageName}', ${isOnlineContext})">🗑️ Erase</button>
                 </td>
             </tr>`;
         });
@@ -732,10 +813,20 @@
         cloudLoggerConsole.innerHTML = tableHTML;
     }
 
-    async function deleteCloudRecordFromServer(recordId) {
-        if (!navigator.onLine) return;
-        if (!confirm("Are you absolutely sure you want to permanently erase this ledger line directly from the cloud backend server store?")) return;
+    // 🔒 GEOLOCATION BOUND SECURE ERASURE SEQ ENGINE
+    function executeSecureLocationBoundErasure(recordId, registeredVillage, isOnlineContext) {
+        if (!isOnlineContext) {
+            alert(`Remote server entries erasure require server channel sovereignty. Action locked inside ${capturedVillageNameStr}.`);
+            return;
+        }
 
+        // Direct validation confirmation popup showcasing target location mapping bounds
+        if (!confirm(`CRITICAL SECURITY WARNING:\n\nYou are executing a cloud ledger deletion sequence.\nOperation Source: 📍 ${capturedVillageNameStr}\nTarget Record Source: 📍 ${registeredVillage}\n\nAre you absolutely sure you want to wipe this ledger line from the server?`)) return;
+        
+        deleteCloudRecordFromServer(recordId);
+    }
+
+    async function deleteCloudRecordFromServer(recordId) {
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?id=eq.${recordId}`, {
                 method: 'DELETE',
