@@ -292,7 +292,8 @@
                 <div class="sync-hud-segment-row">
                     <div class="segment-mini-box">
                         <span class="segment-label">📍 Active Node Location</span>
-                        <span id="hud-live-location" class="segment-value" style="color: var(--cyber-cyan);">Awaiting Access...</span>
+                        <!-- 🔗 Action Click handler added to easily trigger prompt safely upon user manual will -->
+                        <span id="hud-live-location" class="segment-value" style="color: var(--cyber-cyan); cursor: pointer;" onclick="forceEnforcedLocationVerification(true)">Tap to Grant Access</span>
                     </div>
                     <div class="segment-mini-box">
                         <span class="segment-label">📅 Transaction Date</span>
@@ -425,7 +426,8 @@
         } catch(e) { return isoString; }
     }
 
-    function forceEnforcedLocationVerification() {
+    // 📍 BULLETPROOF NON-BLOCKING GEOLOCATION RUNTIME ENGINE
+    function forceEnforcedLocationVerification(triggerManualAlertOnBlock = false) {
         if (!navigator.geolocation) {
             capturedVillageNameStr = "Not Supported";
             document.getElementById('hud-live-location').textContent = capturedVillageNameStr;
@@ -435,6 +437,7 @@
         navigator.geolocation.getCurrentPosition(
             async (position) => {
                 locationPermissionGranted = true;
+                document.getElementById('hud-live-location').style.color = "var(--cyber-cyan)";
                 document.getElementById('submit-btn-node').disabled = false;
                 document.getElementById('submit-btn-node').style.opacity = "1";
                 document.getElementById('submit-btn-node').textContent = "Deploy Transaction to Edge";
@@ -454,14 +457,17 @@
             },
             (error) => {
                 locationPermissionGranted = false;
-                document.getElementById('hud-live-location').textContent = "Access Blocked";
-                document.getElementById('hud-live-location').style.color = "var(--cyber-rose)";
+                document.getElementById('hud-live-location').textContent = "⚠️ Location Off";
+                document.getElementById('hud-live-location').style.color = "var(--cyber-orange)";
                 
                 document.getElementById('submit-btn-node').disabled = true;
                 document.getElementById('submit-btn-node').style.opacity = "0.4";
                 document.getElementById('submit-btn-node').textContent = "🔒 Locked — Enable Location Services";
                 
-                alert("📍 EdgeSync Security Shield Alert:\n\nPrecise location access is strictly required to sign infield metrics telemetry lines.\n\nPlease enable location tracking services in your system or smartphone browser privacy settings and refresh the page.");
+                // 🛑 FIXED: Popups now only trigger on user manual tap click events to prevent automated browser blacklist cycles
+                if (triggerManualAlertOnBlock) {
+                    alert("📍 Location Service Interrupted:\n\nEdgeSync requires active geolocation to verify field nodes. Please click the location icon in your laptop URL address bar or mobile settings to change 'Block' to 'Allow' and reload!");
+                }
             },
             { enableHighAccuracy: true, timeout: 8000 }
         );
@@ -474,7 +480,8 @@
     }
     
     setInterval(invokeLiveClockTelemetry, 1000);
-    forceEnforcedLocationVerification();
+    // Non-blocking invocation at script launch frame
+    forceEnforcedLocationVerification(false);
 
     async function updateTelemetryHUDDisplayMetrics() {
         const speedNode = document.getElementById('live-speed-telemetry');
@@ -490,11 +497,11 @@
             odometerNode.textContent = "0.0 KB/s";
             odometerNode.style.color = "var(--text-low)";
         } else {
-            const hostStartTime = Date.now();
             if (activeFetchAbortController) activeFetchAbortController.abort();
             activeFetchAbortController = new AbortController();
 
             try {
+                const hostStartTime = Date.now();
                 await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?limit=1`, {
                     method: 'HEAD',
                     headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
@@ -565,7 +572,6 @@
         forceNetworkInterfaceUpdate();
     }
 
-    // ⚡ DIRECT DOM OVERRIDE ENFORCER TO FORCE TOGGLE TEXT CHANGES Instantly
     function forceNetworkInterfaceUpdate() {
         const badge = document.getElementById('network-badge');
         const badgeDot = document.getElementById('badge-glow-node');
@@ -573,7 +579,6 @@
         const currentOnlineState = navigator.onLine;
         
         if (currentOnlineState) {
-            // Force strict manual CSS class reset via JS Core Engine
             badge.setAttribute('class', 'badge online-state');
             badgeDot.style.backgroundColor = "var(--cyber-emerald)";
             badgeDot.style.boxShadow = "0 0 16px var(--cyber-emerald)";
@@ -581,7 +586,6 @@
             executeCloudSynchronization();
         } else {
             if (activeFetchAbortController) activeFetchAbortController.abort();
-            // Force strict manual CSS class reset via JS Core Engine
             badge.setAttribute('class', 'badge offline-state');
             badgeDot.style.backgroundColor = "var(--cyber-orange)";
             badgeDot.style.boxShadow = "0 0 16px var(--cyber-orange)";
@@ -622,7 +626,7 @@
     document.getElementById('sync-form').addEventListener('submit', (e) => {
         e.preventDefault();
         if (!locationPermissionGranted) {
-            forceEnforcedLocationVerification();
+            forceEnforcedLocationVerification(true);
             return;
         }
 
