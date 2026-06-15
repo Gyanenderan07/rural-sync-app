@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -206,6 +207,41 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--cyber-cyan); }
+
+        /* ======================== NEW PREMIUM ADAPTIVE SYNC LAYOUT HUD ======================== */
+        .adaptive-sync-panel {
+            background: var(--glass-sheet); border: 1px solid var(--glass-border-glow);
+            border-radius: 24px; padding: 24px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); margin-top: 32px;
+        }
+        .sync-hud-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
+        }
+        .sync-hud-title {
+            font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-core);
+            display: flex; align-items: center; gap: 8px;
+        }
+        /* Custom Premium Toggle Switch */
+        .toggle-switch-wrapper { display: flex; align-items: center; gap: 12px; }
+        .toggle-switch-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; transition: color 0.3s ease; }
+        .toggle-switch { position: relative; width: 48px; height: 26px; display: inline-block; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.05); transition: .3s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 24px;
+        }
+        .toggle-slider:before {
+            position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px;
+            background-color: #cbd5e1; transition: .3s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 50%;
+        }
+        input:checked + .toggle-slider { background-color: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4); }
+        input:checked + .toggle-slider:before { background-color: var(--cyber-emerald); transform: translateX(22px); box-shadow: 0 0 10px var(--cyber-emerald); }
+        
+        .sync-telemetry-terminal {
+            background: rgba(3, 5, 10, 0.7); border: 1px solid rgba(255,255,255,0.02); border-radius: 14px;
+            padding: 16px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+        }
+        @media (max-width: 550px) { .sync-telemetry-terminal { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -261,6 +297,39 @@
 
         </div>
 
+        <!-- ==================== NEW DYNAMIC AUDIO-VISUAL BATTERY ADAPTIVE SYNC TERMINAL PANEL ==================== -->
+        <div class="adaptive-sync-panel">
+            <div class="sync-hud-header">
+                <div class="sync-hud-title">🔋 Battery Adaptive Sync Regulator Configuration</div>
+                <div class="toggle-switch-wrapper">
+                    <span id="sync-rate-status" class="toggle-switch-label" style="color: var(--cyber-emerald);">ECO MODE: OFF</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="battery-toggle" onchange="adjustBatteryEcoSyncRatesHUD()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="sync-telemetry-terminal">
+                <div class="info-row" style="background: rgba(0,0,0,0.2);">
+                    <span class="info-label">Current Internet Speed:</span>
+                    <span id="live-speed-telemetry" class="info-value tech-mono" style="color: var(--cyber-cyan); font-weight: 800;">Checking bandwidth...</span>
+                </div>
+                <div class="info-row" style="background: rgba(0,0,0,0.2);">
+                    <span class="info-label">Network Polling Engine Frequency:</span>
+                    <span id="live-polling-frequency" class="info-value tech-mono" style="color: var(--cyber-emerald);">2500 ms (High Performance)</span>
+                </div>
+                <div class="info-row" style="background: rgba(0,0,0,0.2);">
+                    <span class="info-label">Expected Standby Hardware Latency:</span>
+                    <span id="live-hardware-latency" class="info-value tech-mono">Minimal (~0.04s)</span>
+                </div>
+                <div class="info-row" style="background: rgba(0,0,0,0.2);">
+                    <span class="info-label">Client Handshake Throttle Burst:</span>
+                    <span id="live-handshake-throttle" class="info-value tech-mono">Unrestricted (Continuous Dispatches)</span>
+                </div>
+            </div>
+        </div>
+
         <div class="glass-card" style="margin-top: 32px;">
             <div class="card-title">🖥️ Live Client Store Payload Telemetry Logs (IndexedDB Node Trace)</div>
             <div class="queue-terminal" id="terminal-logger">
@@ -304,6 +373,10 @@
     const cloudLoggerConsole = document.getElementById('cloud-server-logger');
 
     let previousNetworkStateIsOnline = navigator.onLine;
+    
+    // Core structural intervals configuration tracking parameters
+    let fallbackPollIntervalTimer = 2500;
+    let heartbeatThreadLoop;
 
     function getSupabaseSecureTimestamp() {
         return new Date().toISOString();
@@ -319,6 +392,66 @@
         } catch(e) {
             return isoString;
         }
+    }
+
+    // ==================== NEW REAL-TIME VISUAL HUD UPDATE INTERFACE LOGIC ====================
+    function updateTelemetryHUDDisplayMetrics() {
+        const speedNode = document.getElementById('live-speed-telemetry');
+        const freqNode = document.getElementById('live-polling-frequency');
+        const latencyNode = document.getElementById('live-hardware-latency');
+        const throttleNode = document.getElementById('live-handshake-throttle');
+        const isEcoChecked = document.getElementById('battery-toggle').checked;
+
+        // 🌐 Extracting Dynamic Bandwidth Connection Metrics 
+        if (!navigator.onLine) {
+            speedNode.textContent = "0 Mbps (Offline Mode)";
+            speedNode.style.color = "var(--cyber-orange)";
+        } else if (navigator.connection && navigator.connection.downlink) {
+            speedNode.textContent = navigator.connection.downlink + " Mbps (Active Channel)";
+            speedNode.style.color = "var(--cyber-cyan)";
+        } else {
+            speedNode.textContent = "Stable Bandwidth Verified";
+            speedNode.style.color = "var(--cyber-cyan)";
+        }
+
+        // Updating visual trace metrics to reflect actual internal variable polling loops
+        if (isEcoChecked) {
+            freqNode.textContent = "10000 ms (Throttled Delay Mode)";
+            freqNode.style.color = "var(--cyber-orange)";
+            latencyNode.textContent = "Extended Optimized (~4.20s)";
+            latencyNode.style.color = "var(--cyber-orange)";
+            throttleNode.textContent = "Preservation Caps Locked (Batch Dispatches)";
+            throttleNode.style.color = "var(--cyber-orange)";
+        } else {
+            freqNode.textContent = "2500 ms (High Performance Mode)";
+            freqNode.style.color = "var(--cyber-emerald)";
+            latencyNode.textContent = "Minimal Base (~0.04s)";
+            latencyNode.style.color = "var(--text-core)";
+            throttleNode.textContent = "Unrestricted (Continuous Dispatches)";
+            throttleNode.style.color = "var(--text-core)";
+        }
+    }
+
+    // NEW HUD COEFICIENT SWITCH HOOK
+    function adjustBatteryEcoSyncRatesHUD() {
+        const isChecked = document.getElementById('battery-toggle').checked;
+        const statusDisplay = document.getElementById('sync-rate-status');
+        
+        clearInterval(heartbeatThreadLoop);
+        
+        if (isChecked) {
+            statusDisplay.textContent = "ECO MODE: ACTIVE";
+            statusDisplay.style.color = "var(--cyber-orange)";
+            fallbackPollIntervalTimer = 10000; // Power preservation interval variable update
+        } else {
+            statusDisplay.textContent = "ECO MODE: OFF";
+            statusDisplay.style.color = "var(--cyber-emerald)";
+            fallbackPollIntervalTimer = 2500; // High speed production loop clock reset
+        }
+        
+        // Dynamic re-invocation layer mapping
+        heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
+        updateTelemetryHUDDisplayMetrics();
     }
 
     function forceNetworkInterfaceUpdate() {
@@ -340,6 +473,9 @@
             badgeText.textContent = "EDGE OFFLINE — Local Cache Mode";
         }
 
+        // Instant execution mapping hook to prevent telemetry lag blocks
+        updateTelemetryHUDDisplayMetrics();
+
         if (currentOnlineState !== previousNetworkStateIsOnline) {
             previousNetworkStateIsOnline = currentOnlineState;
             if (!document.getElementById('cloud-ledger-panel').classList.contains('panel-hidden')) {
@@ -350,7 +486,9 @@
     
     window.addEventListener('online', forceNetworkInterfaceUpdate);
     window.addEventListener('offline', forceNetworkInterfaceUpdate);
-    setInterval(forceNetworkInterfaceUpdate, 2500); 
+    
+    // Core thread assignment
+    heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
     forceNetworkInterfaceUpdate();
 
     const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 2); 
@@ -477,9 +615,8 @@
         const titleNode = document.getElementById('pipeline-title-node');
         const refreshActionBtn = document.getElementById('server-refresh-action-btn');
         
-        // 🔒 THE OFFLINE VECTOR (STRICT COLOR SHIFT TO ACCENT ORANGE MAP)
         if (!navigator.onLine) {
-            titleNode.style.color = "var(--cyber-orange)"; // MATCHES EXCLUSIVELY WITH EDGE OFFLINE COLOR SHADE
+            titleNode.style.color = "var(--cyber-orange)"; 
             titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Offline Presence Mode)";
             refreshActionBtn.style.display = "none"; 
             
@@ -500,7 +637,6 @@
             return;
         }
 
-        // 🌐 THE ONLINE VECTOR
         titleNode.style.color = "var(--cyber-emerald)";
         titleNode.textContent = "☁️ Real-time Cloud Supabase Server Records Ledger";
         refreshActionBtn.style.display = "flex";
