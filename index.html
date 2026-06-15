@@ -408,6 +408,9 @@
     let fallbackPollIntervalTimer = 2500;
     let heartbeatThreadLoop;
     let activeFetchAbortController = null; 
+    let telemetryRequestInFlight = false;
+    let cloudRecordsRequestInFlight = null;
+    let cloudSyncInProgress = false;
 
     let capturedVillageNameStr = "Unknown Location";
     let locationPermissionGranted = false; 
@@ -478,7 +481,25 @@
     setInterval(invokeLiveClockTelemetry, 1000);
     forceEnforcedLocationVerification(false);
 
-    // 📱 UNIVERSAL ZERO-ERROR HIGH-VELOCITY NETWORK PROFILE ODOMETER
+    function renderNetworkSpeed(speedMbps, sourceLabel) {
+        const speedNode = document.getElementById('live-speed-telemetry');
+        const odometerNode = document.getElementById('mobile-live-odometer-node');
+        const safeMbps = Math.max(0, Number(speedMbps) || 0);
+        const calculatedKbsValue = (safeMbps * 1000) / 8;
+
+        speedNode.textContent = `${safeMbps.toFixed(2)} Mbps (${sourceLabel})`;
+        speedNode.style.color = "var(--cyber-cyan)";
+
+        if (calculatedKbsValue >= 1000) {
+            odometerNode.textContent = `${(calculatedKbsValue / 1000).toFixed(1)} MB/s`;
+            odometerNode.style.color = "var(--cyber-emerald)";
+        } else {
+            odometerNode.textContent = `${calculatedKbsValue.toFixed(1)} KB/s`;
+            odometerNode.style.color = "var(--cyber-cyan)";
+        }
+    }
+
+    // Uses the browser adapter estimate first and a same-origin download probe as fallback.
     async function updateTelemetryHUDDisplayMetrics() {
         const speedNode = document.getElementById('live-speed-telemetry');
         const odometerNode = document.getElementById('mobile-live-odometer-node');
@@ -495,59 +516,54 @@
             return;
         }
 
-        if (activeFetchAbortController) activeFetchAbortController.abort();
-        activeFetchAbortController = new AbortController();
-
-        try {
-            const hostStartTime = Date.now();
-            
-            // 📡 FIXED SECURE TARGET: Hits public endpoint with 'limit=0' preventing 401 Unauthorized block failures
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?limit=0`, {
-                method: 'HEAD',
-                cache: 'no-store',
-                headers: { 
-                    'apikey': SUPABASE_ANON_KEY, 
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                },
-                signal: activeFetchAbortController.signal
-            });
-            
-            const contentType = response.headers.get("content-type");
-            if (!response.ok || (contentType && contentType.includes("text/html"))) {
-                throw new Error("Proxy Override Intercepted");
-            }
-
-            const computeDeltaDuration = (Date.now() - hostStartTime) / 1000;
-            let simulatedDownlinkMbps = Math.max(1.5, (2.6 / (computeDeltaDuration + 0.02)));
-            if(simulatedDownlinkMbps > 95) simulatedDownlinkMbps = 54.32;
-
-            speedNode.textContent = simulatedDownlinkMbps.toFixed(2) + " Mbps (Active Grid)";
-            speedNode.style.color = "var(--cyber-cyan)";
-
-            const calculatedKbsValue = (simulatedDownlinkMbps * 1024) / 8;
-            if (calculatedKbsValue >= 1024) {
-                const mbsValue = (calculatedKbsValue / 1024) * (0.94 + Math.random() * 0.12);
-                odometerNode.textContent = mbsValue.toFixed(1) + " MB/s";
-                odometerNode.style.color = "var(--cyber-emerald)";
-            } else {
-                const dynamicRenderKbs = calculatedKbsValue * (0.94 + Math.random() * 0.14);
-                odometerNode.textContent = dynamicRenderKbs.toFixed(1) + " KB/s";
-                odometerNode.style.color = "var(--cyber-cyan)";
-            }
-        } catch (e) {
-            if (e.name !== 'AbortError') {
-                speedNode.textContent = "0.00 Mbps (Disconnected)";
-                speedNode.style.color = "var(--cyber-orange)";
-                odometerNode.textContent = "0.0 KB/s";
-                odometerNode.style.color = "var(--text-low)";
-                
-                if (previousNetworkStateIsOnline !== false) {
-                    previousNetworkStateIsOnline = false;
-                    forceNetworkInterfaceUpdate();
-                }
-            }
+        const networkInformation = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if (networkInformation && Number(networkInformation.downlink) > 0) {
+            renderNetworkSpeed(networkInformation.downlink, networkInformation.effectiveType || "Live Link");
+            updateAdaptiveTelemetryLabels(isEcoChecked, freqNode, latencyNode, throttleNode);
+            return;
         }
 
+        if (telemetryRequestInFlight) return;
+        telemetryRequestInFlight = true;
+        activeFetchAbortController = new AbortController();
+        const requestTimeout = setTimeout(() => activeFetchAbortController.abort(), 8000);
+
+        try {
+            const hostStartTime = performance.now();
+            const probeURL = new URL(window.location.pathname || '/', window.location.origin);
+            probeURL.searchParams.set('_speed_probe', Date.now().toString());
+            const response = await fetch(probeURL.toString(), {
+                method: 'GET',
+                cache: 'no-store',
+                signal: activeFetchAbortController.signal
+            });
+
+            const contentType = response.headers.get("content-type");
+            if (!response.ok || !contentType || !contentType.includes("text/html")) {
+                throw new Error("Speed probe unavailable");
+            }
+
+            const payload = await response.arrayBuffer();
+            const computeDeltaDuration = Math.max((performance.now() - hostStartTime) / 1000, 0.001);
+            const measuredMbps = (payload.byteLength * 8) / computeDeltaDuration / 1000000;
+            renderNetworkSpeed(measuredMbps, "Measured Link");
+        } catch (e) {
+            if (navigator.onLine) {
+                speedNode.textContent = "Online (Speed unavailable)";
+                speedNode.style.color = "var(--text-low)";
+                odometerNode.textContent = "-- KB/s";
+                odometerNode.style.color = "var(--text-low)";
+            }
+        } finally {
+            clearTimeout(requestTimeout);
+            activeFetchAbortController = null;
+            telemetryRequestInFlight = false;
+        }
+
+        updateAdaptiveTelemetryLabels(isEcoChecked, freqNode, latencyNode, throttleNode);
+    }
+
+    function updateAdaptiveTelemetryLabels(isEcoChecked, freqNode, latencyNode, throttleNode) {
         if (isEcoChecked) {
             freqNode.textContent = "10000 ms (Throttled Delay Mode)";
             freqNode.style.color = "var(--cyber-orange)";
@@ -685,7 +701,8 @@
     });
 
     async function executeCloudSynchronization() {
-        if (!navigator.onLine || !indexedDatabase || !locationPermissionGranted || capturedVillageNameStr === "Unknown Location" || capturedVillageNameStr === "Acquiring village...") return;
+        if (cloudSyncInProgress || !navigator.onLine || !indexedDatabase || !locationPermissionGranted || capturedVillageNameStr === "Unknown Location" || capturedVillageNameStr === "Acquiring village...") return;
+        cloudSyncInProgress = true;
 
         try {
             const tx = indexedDatabase.transaction('reportsStore', 'readonly');
@@ -694,33 +711,46 @@
 
             fetchAllQuery.onsuccess = async () => {
                 const recordsQueue = fetchAllQuery.result;
-                if (recordsQueue.length === 0) return;
+                if (recordsQueue.length === 0) {
+                    cloudSyncInProgress = false;
+                    return;
+                }
 
-                for (const record of recordsQueue) {
-                    try {
-                        const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore`, {
-                            method: 'POST',
-                            headers: {
-                                'apikey': SUPABASE_ANON_KEY,
-                                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                                'Content-Type': 'application/json',
-                                'Prefer': 'return=minimal'
-                            },
-                            body: JSON.stringify(record)
-                        });
+                try {
+                    for (const record of recordsQueue) {
+                        try {
+                            const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore`, {
+                                method: 'POST',
+                                headers: {
+                                    'apikey': SUPABASE_ANON_KEY,
+                                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                                    'Content-Type': 'application/json',
+                                    'Prefer': 'return=minimal'
+                                },
+                                body: JSON.stringify(record)
+                            });
 
-                        if (response.ok && indexedDatabase) {
-                            const deleteTx = indexedDatabase.transaction('reportsStore', 'readwrite');
-                            deleteTx.objectStore('reportsStore').delete(record.id);
-                            deleteTx.oncomplete = () => {
-                                refreshQueueCount();
-                                fetchSilentMirrorUpdate();
-                            };
+                            if (response.ok && indexedDatabase) {
+                                const deleteTx = indexedDatabase.transaction('reportsStore', 'readwrite');
+                                deleteTx.objectStore('reportsStore').delete(record.id);
+                                deleteTx.oncomplete = () => {
+                                    refreshQueueCount();
+                                    fetchSilentMirrorUpdate();
+                                };
+                            }
+                        } catch (err) {
+                            console.warn("Cloud synchronization deferred until the next network cycle.", err);
                         }
-                    } catch (err) { console.error(err); }
+                    }
+                } finally {
+                    cloudSyncInProgress = false;
                 }
             };
-        } catch(e) { console.error(e); }
+            fetchAllQuery.onerror = () => { cloudSyncInProgress = false; };
+        } catch(e) {
+            cloudSyncInProgress = false;
+            console.warn("Local synchronization queue is temporarily unavailable.", e);
+        }
     }
 
     async function fetchSilentMirrorUpdate() {
@@ -783,6 +813,17 @@
     }
 
     async function fetchLiveCloudDatabaseRecords() {
+        if (cloudRecordsRequestInFlight) return cloudRecordsRequestInFlight;
+
+        cloudRecordsRequestInFlight = performCloudDatabaseFetch();
+        try {
+            return await cloudRecordsRequestInFlight;
+        } finally {
+            cloudRecordsRequestInFlight = null;
+        }
+    }
+
+    async function performCloudDatabaseFetch() {
         const titleNode = document.getElementById('pipeline-title-node');
         const cloudServerLogger = document.getElementById('cloud-server-logger');
         const refreshActionBtn = document.getElementById('server-refresh-action-btn');
@@ -801,13 +842,18 @@
             titleNode.textContent = "☁️ Real-time Cloud Supabase Server Records Ledger";
         }
         if (refreshActionBtn) refreshActionBtn.style.display = "flex";
+        if (refreshActionBtn) refreshActionBtn.disabled = true;
         if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Establishing secure gateway link to Supabase Server Ledger REST API...</div>';
-        
+
+        const controller = new AbortController();
+        const requestTimeout = setTimeout(() => controller.abort(), 12000);
+
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?select=*`, {
                 method: 'GET',
                 cache: 'no-store',
-                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+                signal: controller.signal
             });
             
             const contentType = response.headers.get("content-type");
@@ -830,12 +876,15 @@
             }
             renderTableHTML(data, true);
         } catch(err) {
-            console.warn("Handshake blocked. Pulling mirrored disk backups safely...", err);
+            console.warn("Cloud ledger unavailable. Loading the local mirror.", err);
             if (titleNode) {
                 titleNode.style.color = "var(--cyber-orange)";
                 titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Server Connection Congested)";
             }
             loadLocalMirrorCacheFallback();
+        } finally {
+            clearTimeout(requestTimeout);
+            if (refreshActionBtn) refreshActionBtn.disabled = false;
         }
     }
 
@@ -911,8 +960,13 @@
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').catch((err) => console.error('❌ SW Fault:', err));
+            navigator.serviceWorker.register('/sw.js').catch((err) => console.warn('Service worker unavailable:', err));
         });
+    }
+
+    const networkInformation = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (networkInformation && typeof networkInformation.addEventListener === 'function') {
+        networkInformation.addEventListener('change', updateTelemetryHUDDisplayMetrics);
     }
 </script>
 </body>

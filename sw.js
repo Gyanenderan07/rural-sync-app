@@ -1,5 +1,5 @@
 // sw.js
-const CACHE_NAME = 'ruralsync-ultimate-cache-v1';
+const CACHE_NAME = 'ruralsync-ultimate-cache-v2';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -37,6 +37,17 @@ self.addEventListener('activate', (event) => {
 
 // 2. Powerful Network-First with Cache-Fallback Strategy
 self.addEventListener('fetch', (event) => {
+  const requestURL = new URL(event.request.url);
+
+  // Cross-origin APIs and fonts must keep their native responses and errors.
+  if (requestURL.origin !== self.location.origin) {
+    return;
+  }
+
+  if (event.request.method !== 'GET' || requestURL.searchParams.has('_speed_probe')) {
+    return;
+  }
+
   // Sync API data-va absolutely dynamic-ah thaan vachirikanum
   if (event.request.url.includes('/api/sync')) {
     return;
@@ -60,8 +71,12 @@ self.addEventListener('fetch', (event) => {
           if (cachedResponse) {
             return cachedResponse;
           }
-          // Default structural routing fallback
-          return caches.match('/index.html');
+          // Only page navigations may fall back to the application shell.
+          if (event.request.mode === 'navigate') {
+            return caches.match('/index.html');
+          }
+
+          return Response.error();
         });
       })
   );
