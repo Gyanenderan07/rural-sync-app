@@ -101,13 +101,13 @@
             padding: 10px 20px; border-radius: 14px; font-size: 12px; font-weight: 700;
             display: flex; align-items: center; gap: 10px; backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); border: 1px solid transparent; 
-            background: rgba(5, 8, 16, 0.6); min-width: max-content; transition: all 0.2s ease;
+            background: rgba(5, 8, 16, 0.6); transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
         .badge.online-state { color: var(--cyber-emerald) !important; border-color: rgba(16, 185, 129, 0.25) !important; box-shadow: 0 4px 24px rgba(16, 185, 129, 0.08) !important; }
         .badge.offline-state { color: var(--cyber-orange) !important; border-color: rgba(245, 158, 11, 0.25) !important; box-shadow: 0 4px 24px rgba(245, 158, 11, 0.08) !important; }
 
-        .badge-dot { width: 8px; height: 8px; border-radius: 50%; transition: all 0.2s ease; animation: coreBlinkGlow 1.6s infinite ease-in-out; }
+        .badge-dot { width: 8px; height: 8px; border-radius: 50%; transition: all 0.25s ease; animation: coreBlinkGlow 1.6s infinite ease-in-out; }
         @keyframes coreBlinkGlow { 0%, 100% { opacity: 0.4; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.25); } }
 
         .dashboard-grid {
@@ -207,7 +207,10 @@
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--cyber-cyan); }
 
-        .sync-hud-segment-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
+        /* ======================== NEW INDIVIDUAL TIME, DATE & LOCATION INDEPENDENT BOXES ======================== */
+        .sync-hud-segment-row {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px;
+        }
         @media(max-width: 600px) { .sync-hud-segment-row { grid-template-columns: 1fr; } }
         
         .segment-mini-box {
@@ -285,13 +288,13 @@
                 <div class="card-title">📊 Data Collection Console</div>
                 <form id="sync-form">
                     <textarea id="data-payload" placeholder="Enter remote rural structural matrix logs (e.g., Water telemetry, localized agricultural harvest data logs)..." required></textarea>
-                    <button type="submit" id="submit-btn-node">Deploy Transaction to Edge</button>
+                    <button type="submit">Deploy Transaction to Edge</button>
                 </form>
                 
                 <div class="sync-hud-segment-row">
                     <div class="segment-mini-box">
                         <span class="segment-label">📍 Active Node Location</span>
-                        <span id="hud-live-location" class="segment-value" style="color: var(--cyber-cyan); cursor: pointer;" onclick="forceEnforcedLocationVerification(true)">Tap to Grant Access</span>
+                        <span id="hud-live-location" class="segment-value" style="color: var(--cyber-cyan);">Acquiring village...</span>
                     </div>
                     <div class="segment-mini-box">
                         <span class="segment-label">📅 Transaction Date</span>
@@ -409,76 +412,56 @@
     let heartbeatThreadLoop;
     let activeFetchAbortController = null; 
 
+    // Global variables to hold parsed geolocation parameters securely
     let capturedVillageNameStr = "Unknown Location";
-    let locationPermissionGranted = false; 
 
     function getSupabaseSecureTimestamp() { return new Date().toISOString(); }
 
-    function formatIsoStringToLocalSystemTime(isoString) {
-        if(!isoString) return "N/A";
-        try {
-            return new Date(isoString).toLocaleString("en-IN", {
-                hour12: true, year: "numeric", month: "2-digit", day: "2-digit",
-                hour: "2-digit", minute: "2-digit", second: "2-digit"
-            }).replace(/,/g, '');
-        } catch(e) { return isoString; }
-    }
-
-    function forceEnforcedLocationVerification(triggerManualAlertOnBlock = false) {
+    // 📍 NATIVE GEOLOCATIONAL REVERSE GEOCODING ENGINE
+    function invokeGeocodingEngine() {
         if (!navigator.geolocation) {
             capturedVillageNameStr = "Not Supported";
             document.getElementById('hud-live-location').textContent = capturedVillageNameStr;
             return;
         }
 
-        navigator.geolocation.getCurrentPosition(
-            async (position) => {
-                locationPermissionGranted = true;
-                document.getElementById('hud-live-location').style.color = "var(--cyber-cyan)";
-                document.getElementById('submit-btn-node').disabled = false;
-                document.getElementById('submit-btn-node').style.opacity = "1";
-                document.getElementById('submit-btn-node').textContent = "Deploy Transaction to Edge";
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
 
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-
-                try {
-                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1`);
-                    const geoJSON = await res.json();
-                    capturedVillageNameStr = geoJSON.address.village || geoJSON.address.suburb || geoJSON.address.county || geoJSON.address.town || "Remote Outpost";
-                    document.getElementById('hud-live-location').textContent = capturedVillageNameStr;
-                } catch (err) {
-                    capturedVillageNameStr = "Infield Grid Alpha";
-                    document.getElementById('hud-live-location').textContent = capturedVillageNameStr;
-                }
-            },
-            (error) => {
-                locationPermissionGranted = false;
-                document.getElementById('hud-live-location').textContent = "⚠️ Location Off";
-                document.getElementById('hud-live-location').style.color = "var(--cyber-orange)";
+            try {
+                // Free OpenStreetMap Reverse Geocoding API Endpoint (Zero Cost Secure Verification Loop)
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1`);
+                const geoJSON = await res.json();
                 
-                document.getElementById('submit-btn-node').disabled = true;
-                document.getElementById('submit-btn-node').style.opacity = "0.4";
-                document.getElementById('submit-btn-node').textContent = "🔒 Locked — Enable Location Services";
-                
-                if (triggerManualAlertOnBlock) {
-                    alert("📍 Location Service Interrupted:\n\nEdgeSync requires active geolocation to verify field nodes. Please click the location icon in your address bar to enable tracking.");
-                }
-            },
-            { enableHighAccuracy: true, timeout: 8000 }
-        );
+                // Smartly extracts Village Name / Suburb / City relative to rural maps blocks
+                capturedVillageNameStr = geoJSON.address.village || geoJSON.address.suburb || geoJSON.address.county || geoJSON.address.town || "Remote Outpost";
+                document.getElementById('hud-live-location').textContent = capturedVillageNameStr;
+            } catch (err) {
+                capturedVillageNameStr = "Infield Grid Alpha"; // Fail-safe default backup flag name if completely offline
+                document.getElementById('hud-live-location').textContent = capturedVillageNameStr;
+            }
+        }, () => {
+            capturedVillageNameStr = "Permission Denied";
+            document.getElementById('hud-live-location').textContent = capturedVillageNameStr;
+        }, { enableHighAccuracy: true, timeout: 6000 });
     }
 
+    // 📅 Individual Time & Date Clock Pulser
     function invokeLiveClockTelemetry() {
         const currentDateObj = new Date();
-        document.getElementById('hud-live-date').textContent = currentDateObj.toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" });
-        document.getElementById('hud-live-time').textContent = currentDateObj.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
-    }
-    
-    setInterval(invokeLiveClockTelemetry, 1000);
-    forceEnforcedLocationVerification(false);
+        
+        // 1. Separate Date Frame
+        const formattedDate = currentDateObj.toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" });
+        document.getElementById('hud-live-date').textContent = formattedDate;
 
-    // 📱 ZERO-ERROR HIGH-VELOCITY NETWORK LIGHTWEIGHT PING ENGINE
+        // 2. Separate Time Frame (Strict 12-Hour AM/PM format)
+        const formattedTime = currentDateObj.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
+        document.getElementById('hud-live-time').textContent = formattedTime;
+    }
+    setInterval(invokeLiveClockTelemetry, 1000); // 1-second ticking matrix engine
+    invokeGeocodingEngine(); // Initial location handshake trigger
+
     async function updateTelemetryHUDDisplayMetrics() {
         const speedNode = document.getElementById('live-speed-telemetry');
         const odometerNode = document.getElementById('mobile-live-odometer-node');
@@ -493,57 +476,40 @@
             odometerNode.textContent = "0.0 KB/s";
             odometerNode.style.color = "var(--text-low)";
         } else {
+            const hostStartTime = Date.now();
             if (activeFetchAbortController) activeFetchAbortController.abort();
             activeFetchAbortController = new AbortController();
 
             try {
-                const hostStartTime = Date.now();
-                // 🛠️ FIXED: Hits the primary server root route securely without causing 400 Bad Request query faults
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/`, {
+                await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?limit=1`, {
                     method: 'HEAD',
-                    cache: 'no-store',
-                    headers: { 
-                        'apikey': SUPABASE_ANON_KEY, 
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    },
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
                     signal: activeFetchAbortController.signal
                 });
                 
-                // Block if it returns a Vercel HTML proxy freeze frame instead of server context
-                const contentType = response.headers.get("content-type");
-                if (!response.ok || (contentType && contentType.includes("text/html"))) {
-                    throw new Error("Proxy Isolation Triggered");
-                }
-
                 const computeDeltaDuration = (Date.now() - hostStartTime) / 1000;
-                let simulatedDownlinkMbps = Math.max(1.5, (2.4 / (computeDeltaDuration + 0.02)));
-                if(simulatedDownlinkMbps > 95) simulatedDownlinkMbps = 52.41;
+                let simulatedDownlinkMbps = Math.max(0.8, (1.9 / (computeDeltaDuration + 0.04)));
+                if(simulatedDownlinkMbps > 90) simulatedDownlinkMbps = 44.15;
 
                 speedNode.textContent = simulatedDownlinkMbps.toFixed(2) + " Mbps (Active Grid)";
                 speedNode.style.color = "var(--cyber-cyan)";
 
                 const calculatedKbsValue = (simulatedDownlinkMbps * 1024) / 8;
                 if (calculatedKbsValue >= 1024) {
-                    const mbsValue = (calculatedKbsValue / 1024) * (0.94 + Math.random() * 0.12);
+                    const mbsValue = (calculatedKbsValue / 1024) * (0.92 + Math.random() * 0.16);
                     odometerNode.textContent = mbsValue.toFixed(1) + " MB/s";
                     odometerNode.style.color = "var(--cyber-emerald)";
                 } else {
-                    const dynamicRenderKbs = calculatedKbsValue * (0.94 + Math.random() * 0.14);
+                    const dynamicRenderKbs = calculatedKbsValue * (0.9 + Math.random() * 0.22);
                     odometerNode.textContent = dynamicRenderKbs.toFixed(1) + " KB/s";
                     odometerNode.style.color = "var(--cyber-cyan)";
                 }
             } catch (e) {
                 if (e.name !== 'AbortError') {
-                    speedNode.textContent = "0.00 Mbps (Disconnected)";
+                    speedNode.textContent = "0.00 Mbps (Network Severed)";
                     speedNode.style.color = "var(--cyber-orange)";
                     odometerNode.textContent = "0.0 KB/s";
                     odometerNode.style.color = "var(--text-low)";
-                    
-                    // Hardware enforcer fallback lock trigger
-                    if (previousNetworkStateIsOnline !== false) {
-                        previousNetworkStateIsOnline = false;
-                        forceNetworkInterfaceUpdate();
-                    }
                 }
             }
         }
@@ -585,41 +551,30 @@
         forceNetworkInterfaceUpdate();
     }
 
-    // ⚡ STRICT DIRECT HARDWARE INTERCEPTOR (100% RELIABLE DISCONNECTION TOGGLES)
     function forceNetworkInterfaceUpdate() {
         const badge = document.getElementById('network-badge');
         const badgeDot = document.getElementById('badge-glow-node');
         const badgeText = document.getElementById('badge-text-node');
         const currentOnlineState = navigator.onLine;
         
-        if (currentOnlineState === false) {
+        if (currentOnlineState) {
+            badge.className = "badge online-state";
+            badgeDot.style.backgroundColor = "var(--cyber-emerald)";
+            badgeDot.style.boxShadow = "0 0 16px var(--cyber-emerald)";
+            badgeText.textContent = "EDGE ONLINE"; 
+            executeCloudSynchronization();
+        } else {
             if (activeFetchAbortController) activeFetchAbortController.abort();
-            badge.setAttribute('class', 'badge offline-state');
+            badge.className = "badge offline-state";
             badgeDot.style.backgroundColor = "var(--cyber-orange)";
             badgeDot.style.boxShadow = "0 0 16px var(--cyber-orange)";
-            badgeText.innerHTML = "EDGE OFFLINE — Local Cache Mode"; 
-            
-            updateTelemetryHUDDisplayMetrics();
-            
-            if (previousNetworkStateIsOnline !== false) {
-                previousNetworkStateIsOnline = false;
-                if (!document.getElementById('cloud-ledger-panel').classList.contains('panel-hidden')) {
-                    fetchLiveCloudDatabaseRecords();
-                }
-            }
-            return;
+            badgeText.textContent = "EDGE OFFLINE"; 
         }
 
-        badge.setAttribute('class', 'badge online-state');
-        badgeDot.style.backgroundColor = "var(--cyber-emerald)";
-        badgeDot.style.boxShadow = "0 0 16px var(--cyber-emerald)";
-        badgeText.innerHTML = "EDGE ONLINE — Pipeline Synchronized"; 
-        
-        executeCloudSynchronization();
         updateTelemetryHUDDisplayMetrics();
 
-        if (previousNetworkStateIsOnline !== true) {
-            previousNetworkStateIsOnline = true;
+        if (currentOnlineState !== previousNetworkStateIsOnline) {
+            previousNetworkStateIsOnline = currentOnlineState;
             if (!document.getElementById('cloud-ledger-panel').classList.contains('panel-hidden')) {
                 fetchLiveCloudDatabaseRecords();
             }
@@ -629,7 +584,7 @@
     window.addEventListener('online', forceNetworkInterfaceUpdate);
     window.addEventListener('offline', forceNetworkInterfaceUpdate);
 
-    const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 3); 
+    const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 3); // Bumped up database connection scheme version to 3
     dbOpenRequest.onupgradeneeded = (e) => {
         let db = e.target.result;
         if (!db.objectStoreNames.contains('reportsStore')) { db.createObjectStore('reportsStore', { keyPath: 'id' }); }
@@ -638,7 +593,7 @@
     dbOpenRequest.onsuccess = (e) => {
         indexedDatabase = e.target.result;
         indexedDatabase.onclose = () => { indexedDatabase = null; };
-        indexedDatabase.onversionchange = () => { if(indexedDatabase) { indexedDatabase.close(); indexedDatabase = null; } };
+        indexedDatabase.onversionchange = () => { indexedDatabase.close(); indexedDatabase = null; };
         
         refreshQueueCount();
         forceNetworkInterfaceUpdate();
@@ -649,15 +604,13 @@
 
     document.getElementById('sync-form').addEventListener('submit', (e) => {
         e.preventDefault();
-        if (!locationPermissionGranted) {
-            forceEnforcedLocationVerification(true);
-            return;
-        }
-
         const textPayload = document.getElementById('data-payload').value;
+        
+        // Split Date and Time strings for individual structural array dispatches
         const targetDate = document.getElementById('hud-live-date').textContent;
         const targetTime = document.getElementById('hud-live-time').textContent;
 
+        // Binds transaction packet securely to the 3 new tracking structures
         const record = { 
             id: crypto.randomUUID(), 
             reportData: textPayload, 
@@ -679,42 +632,40 @@
     });
 
     async function executeCloudSynchronization() {
-        if (!navigator.onLine || !indexedDatabase || !locationPermissionGranted || capturedVillageNameStr === "Unknown Location" || capturedVillageNameStr === "Acquiring village...") return;
+        if (!navigator.onLine || !indexedDatabase) return;
 
-        try {
-            const tx = indexedDatabase.transaction('reportsStore', 'readonly');
-            const store = tx.objectStore('reportsStore');
-            const fetchAllQuery = store.getAll();
+        const tx = indexedDatabase.transaction('reportsStore', 'readonly');
+        const store = tx.objectStore('reportsStore');
+        const fetchAllQuery = store.getAll();
 
-            fetchAllQuery.onsuccess = async () => {
-                const recordsQueue = fetchAllQuery.result;
-                if (recordsQueue.length === 0) return;
+        fetchAllQuery.onsuccess = async () => {
+            const recordsQueue = fetchAllQuery.result;
+            if (recordsQueue.length === 0) return;
 
-                for (const record of recordsQueue) {
-                    try {
-                        const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore`, {
-                            method: 'POST',
-                            headers: {
-                                'apikey': SUPABASE_ANON_KEY,
-                                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                                'Content-Type': 'application/json',
-                                'Prefer': 'return=minimal'
-                            },
-                            body: JSON.stringify(record)
-                        });
+            for (const record of recordsQueue) {
+                try {
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify(record)
+                    });
 
-                        if (response.ok && indexedDatabase) {
-                            const deleteTx = indexedDatabase.transaction('reportsStore', 'readwrite');
-                            deleteTx.objectStore('reportsStore').delete(record.id);
-                            deleteTx.oncomplete = () => {
-                                refreshQueueCount();
-                                fetchSilentMirrorUpdate();
-                            };
-                        }
-                    } catch (err) { console.error(err); }
-                }
-            };
-        } catch(e) { console.error(e); }
+                    if (response.ok && indexedDatabase) {
+                        const deleteTx = indexedDatabase.transaction('reportsStore', 'readwrite');
+                        deleteTx.objectStore('reportsStore').delete(record.id);
+                        deleteTx.oncomplete = () => {
+                            refreshQueueCount();
+                            fetchSilentMirrorUpdate();
+                        };
+                    }
+                } catch (err) { console.error(err); }
+            }
+        };
     }
 
     async function fetchSilentMirrorUpdate() {
@@ -724,10 +675,6 @@
                 method: 'GET',
                 headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
             });
-            
-            const contentType = response.headers.get("content-type");
-            if (!response.ok || !contentType || !contentType.includes("application/json")) return;
-
             const data = await response.json();
             if (data && data.length > 0 && indexedDatabase) {
                 const tx = indexedDatabase.transaction('cloudMirrorStore', 'readwrite');
@@ -741,25 +688,23 @@
 
     function refreshQueueCount() {
         if (!indexedDatabase) return;
-        try {
-            const tx = indexedDatabase.transaction('reportsStore', 'readonly');
-            const store = tx.objectStore('reportsStore');
-            
-            store.count().onsuccess = (ev) => { document.getElementById('counter').textContent = ev.target.result; };
-            store.getAll().onsuccess = (ev) => {
-                const list = ev.target.result;
-                loggerConsole.innerHTML = '';
-                if (list.length === 0) {
-                    loggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>';
-                    return;
-                }
-                list.forEach(obj => {
-                    loggerConsole.innerHTML += `<div style="border-left:2px solid var(--cyber-cyan); padding-left:10px; margin-bottom:10px; font-family:'JetBrains Mono', monospace; font-size:12px; color:#c7d2fe;">
-                        [IndexedDB Cache] ID: ${obj.id.substring(0,8)}... | Location: ${obj.village_name || 'Acquiring'} | Data: "${obj.reportData}"
-                    </div>`;
-                });
-            };
-        } catch(err) { console.error(err); }
+        const tx = indexedDatabase.transaction('reportsStore', 'readonly');
+        const store = tx.objectStore('reportsStore');
+        
+        store.count().onsuccess = (ev) => { document.getElementById('counter').textContent = ev.target.result; };
+        store.getAll().onsuccess = (ev) => {
+            const list = ev.target.result;
+            loggerConsole.innerHTML = '';
+            if (list.length === 0) {
+                loggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>';
+                return;
+            }
+            list.forEach(obj => {
+                loggerConsole.innerHTML += `<div style="border-left:2px solid var(--cyber-cyan); padding-left:10px; margin-bottom:10px; font-family:'JetBrains Mono', monospace; font-size:12px; color:#c7d2fe;">
+                    [IndexedDB Cache] ID: ${obj.id.substring(0,8)}... | Location: ${obj.village_name || 'Acquiring'} | Data: "${obj.reportData}"
+                </div>`;
+            });
+        };
     }
 
     function toggleActiveDashboardPanels(showCloudLedger) {
@@ -776,7 +721,6 @@
         }
     }
 
-    // 🔄 HYBRID SHIELD MATRIX: COMPLETELY PROTECTED FROM 400 OVERRIDES
     async function fetchLiveCloudDatabaseRecords() {
         const titleNode = document.getElementById('pipeline-title-node');
         const refreshActionBtn = document.getElementById('server-refresh-action-btn');
@@ -785,29 +729,37 @@
             titleNode.style.color = "var(--cyber-orange)"; 
             titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Offline Presence Mode)";
             refreshActionBtn.style.display = "none"; 
+            
             cloudLoggerConsole.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Device decoupled from network channels. Injecting cloudMirrorStore persistence layers...</div>';
-            loadLocalMirrorCacheFallback();
+            
+            if (!indexedDatabase) return;
+            const tx = indexedDatabase.transaction('cloudMirrorStore', 'readonly');
+            const store = tx.objectStore('cloudMirrorStore');
+            
+            store.getAll().onsuccess = (ev) => {
+                const mirroredOfflineData = ev.target.result;
+                if(mirroredOfflineData.length === 0) {
+                    cloudLoggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">No persistent mirrored cloud server data logs discovered inside device disk cache. Connect online once to synchronize parameters.</div>';
+                    return;
+                }
+                renderTableHTML(mirroredOfflineData, false); 
+            };
             return;
         }
 
         titleNode.style.color = "var(--cyber-emerald)";
         titleNode.textContent = "☁️ Real-time Cloud Supabase Server Records Ledger";
         refreshActionBtn.style.display = "flex";
+        
         cloudLoggerConsole.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Establishing secure gateway link to Supabase Server Ledger REST API...</div>';
         
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?select=*`, {
                 method: 'GET',
-                cache: 'no-store',
                 headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
             });
-            
-            const contentType = response.headers.get("content-type");
-            if (!response.ok || !contentType || !contentType.includes("application/json")) {
-                throw new Error("Invalid Outage HTML Target Intercepted");
-            }
-
             const data = await response.json();
+            
             if(data.length === 0) {
                 cloudLoggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">Cloud server database store table is currently empty.</div>';
                 return;
@@ -820,26 +772,11 @@
                     data.forEach(row => mirrorStore.put(row));
                 };
             }
+            
             renderTableHTML(data, true);
         } catch(err) {
-            console.warn("Handshake blocked. Pulling mirrored disk backups safely...", err);
-            titleNode.style.color = "var(--cyber-orange)";
-            titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Server Connection Congested)";
-            loadLocalMirrorCacheFallback();
+            cloudLoggerConsole.innerHTML = '<div style="color: var(--cyber-rose); font-style: italic;">⚠️ Gateway Handshake Failure. Check network configuration.</div>';
         }
-    }
-
-    function loadLocalMirrorCacheFallback() {
-        if (!indexedDatabase) return;
-        const tx = indexedDatabase.transaction('cloudMirrorStore', 'readonly');
-        tx.objectStore('cloudMirrorStore').getAll().onsuccess = (ev) => {
-            const mirroredOfflineData = ev.target.result;
-            if(mirroredOfflineData.length > 0) {
-                renderTableHTML(mirroredOfflineData, false);
-            } else {
-                cloudLoggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">No persistent mirrored cloud server data logs discovered inside device disk cache.</div>';
-            }
-        };
     }
 
     function renderTableHTML(data, isOnlineContext) {
@@ -856,6 +793,7 @@
             <tbody>`;
 
         data.forEach(row => {
+            // Safe alignment structures fallback configurations
             const villageName = row.village_name || "Unknown Post";
             const dateVal = row.entry_date || formatIsoStringToLocalSystemTime(row.timestamp).split(' ')[0];
             const timeVal = row.entry_time || formatIsoStringToLocalSystemTime(row.timestamp).split(' ').slice(1).join(' ');
@@ -875,11 +813,14 @@
         cloudLoggerConsole.innerHTML = tableHTML;
     }
 
+    // 🔒 GEOLOCATION BOUND SECURE ERASURE SEQ ENGINE
     function executeSecureLocationBoundErasure(recordId, registeredVillage, isOnlineContext) {
         if (!isOnlineContext) {
             alert(`Remote server entries erasure require server channel sovereignty. Action locked inside ${capturedVillageNameStr}.`);
             return;
         }
+
+        // Direct validation confirmation popup showcasing target location mapping bounds
         if (!confirm(`CRITICAL SECURITY WARNING:\n\nYou are executing a cloud ledger deletion sequence.\nOperation Source: 📍 ${capturedVillageNameStr}\nTarget Record Source: 📍 ${registeredVillage}\n\nAre you absolutely sure you want to wipe this ledger line from the server?`)) return;
         
         deleteCloudRecordFromServer(recordId);
