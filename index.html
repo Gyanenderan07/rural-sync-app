@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -98,12 +97,11 @@
             border: 1px solid rgba(165, 180, 252, 0.15);
         }
 
-        /* 📦 FIXED AUTO-GROW WIDTH BADGE FRAME CONTAINER PACKSETS */
         .badge {
             padding: 10px 20px; border-radius: 14px; font-size: 12px; font-weight: 700;
             display: flex; align-items: center; gap: 10px; backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); border: 1px solid transparent; 
-            background: rgba(5, 8, 16, 0.6); min-width: max-content; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(5, 8, 16, 0.6); min-width: max-content; transition: all 0.2s ease;
         }
         
         .badge.online-state { color: var(--cyber-emerald) !important; border-color: rgba(16, 185, 129, 0.25) !important; box-shadow: 0 4px 24px rgba(16, 185, 129, 0.08) !important; }
@@ -293,7 +291,7 @@
                 <div class="sync-hud-segment-row">
                     <div class="segment-mini-box">
                         <span class="segment-label">📍 Active Node Location</span>
-                        <span id="hud-live-location" class="segment-value" style="color: var(--cyber-cyan);">Awaiting Access...</span>
+                        <span id="hud-live-location" class="segment-value" style="color: var(--cyber-cyan); cursor: pointer;" onclick="forceEnforcedLocationVerification(true)">Tap to Grant Access</span>
                     </div>
                     <div class="segment-mini-box">
                         <span class="segment-label">📅 Transaction Date</span>
@@ -426,16 +424,19 @@
         } catch(e) { return isoString; }
     }
 
-    function forceEnforcedLocationVerification() {
+    // 📍 SILENT HANDSHAKE WATCH ENGINE (NO ALERT PROMPTS LOOP)
+    function forceEnforcedLocationVerification(triggerManualAlertOnBlock = false) {
         if (!navigator.geolocation) {
             capturedVillageNameStr = "Not Supported";
             document.getElementById('hud-live-location').textContent = capturedVillageNameStr;
             return;
         }
 
+        // Silent continuous execution loops
         navigator.geolocation.getCurrentPosition(
             async (position) => {
                 locationPermissionGranted = true;
+                document.getElementById('hud-live-location').style.color = "var(--cyber-cyan)";
                 document.getElementById('submit-btn-node').disabled = false;
                 document.getElementById('submit-btn-node').style.opacity = "1";
                 document.getElementById('submit-btn-node').textContent = "Deploy Transaction to Edge";
@@ -455,14 +456,17 @@
             },
             (error) => {
                 locationPermissionGranted = false;
-                document.getElementById('hud-live-location').textContent = "Access Blocked";
-                document.getElementById('hud-live-location').style.color = "var(--cyber-rose)";
+                document.getElementById('hud-live-location').textContent = "⚠️ Location Off";
+                document.getElementById('hud-live-location').style.color = "var(--cyber-orange)";
                 
                 document.getElementById('submit-btn-node').disabled = true;
                 document.getElementById('submit-btn-node').style.opacity = "0.4";
                 document.getElementById('submit-btn-node').textContent = "🔒 Locked — Enable Location Services";
                 
-                alert("📍 EdgeSync Security Shield Alert:\n\nPrecise location access is strictly required to sign infield metrics telemetry lines.\n\nPlease enable location tracking services in your system or smartphone browser privacy settings and refresh the page.");
+                // 🛑 STRICT GUARD: Alert pop-ups only prompt explicitly if the user triggers it manually via tap events
+                if (triggerManualAlertOnBlock) {
+                    alert("📍 Location Service Interrupted:\n\nEdgeSync requires active geolocation to verify field nodes. Please click the location icon in your browser address bar to change configuration to 'Allow' and reload!");
+                }
             },
             { enableHighAccuracy: true, timeout: 8000 }
         );
@@ -475,7 +479,7 @@
     }
     
     setInterval(invokeLiveClockTelemetry, 1000);
-    forceEnforcedLocationVerification();
+    forceEnforcedLocationVerification(false);
 
     async function updateTelemetryHUDDisplayMetrics() {
         const speedNode = document.getElementById('live-speed-telemetry');
@@ -485,46 +489,61 @@
         const throttleNode = document.getElementById('live-handshake-throttle');
         const isEcoChecked = document.getElementById('battery-toggle').checked;
 
-        if (!navigator.onLine) {
+        if (navigator.onLine === false) {
             speedNode.textContent = "0.00 Mbps (Disconnected)";
             speedNode.style.color = "var(--cyber-orange)";
             odometerNode.textContent = "0.0 KB/s";
             odometerNode.style.color = "var(--text-low)";
-        } else {
-            if (activeFetchAbortController) activeFetchAbortController.abort();
-            activeFetchAbortController = new AbortController();
+            return;
+        }
 
-            try {
-                const hostStartTime = Date.now();
-                await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?limit=1`, {
-                    method: 'HEAD',
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
-                    signal: activeFetchAbortController.signal
-                });
+        if (activeFetchAbortController) activeFetchAbortController.abort();
+        activeFetchAbortController = new AbortController();
+
+        try {
+            const hostStartTime = Date.now();
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/`, {
+                method: 'HEAD',
+                cache: 'no-store',
+                headers: { 
+                    'apikey': SUPABASE_ANON_KEY, 
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                },
+                signal: activeFetchAbortController.signal
+            });
+            
+            const contentType = response.headers.get("content-type");
+            if (!response.ok || (contentType && contentType.includes("text/html"))) {
+                throw new Error("Proxy Override Intercepted");
+            }
+
+            const computeDeltaDuration = (Date.now() - hostStartTime) / 1000;
+            let simulatedDownlinkMbps = Math.max(1.2, (2.4 / (computeDeltaDuration + 0.02)));
+            if(simulatedDownlinkMbps > 95) simulatedDownlinkMbps = 52.41;
+
+            speedNode.textContent = simulatedDownlinkMbps.toFixed(2) + " Mbps (Active Grid)";
+            speedNode.style.color = "var(--cyber-cyan)";
+
+            const calculatedKbsValue = (simulatedDownlinkMbps * 1024) / 8;
+            if (calculatedKbsValue >= 1024) {
+                const mbsValue = (calculatedKbsValue / 1024) * (0.94 + Math.random() * 0.12);
+                odometerNode.textContent = mbsValue.toFixed(1) + " MB/s";
+                odometerNode.style.color = "var(--cyber-emerald)";
+            } else {
+                const dynamicRenderKbs = calculatedKbsValue * (0.94 + Math.random() * 0.14);
+                odometerNode.textContent = dynamicRenderKbs.toFixed(1) + " KB/s";
+                odometerNode.style.color = "var(--cyber-cyan)";
+            }
+        } catch (e) {
+            if (e.name !== 'AbortError') {
+                speedNode.textContent = "0.00 Mbps (Disconnected)";
+                speedNode.style.color = "var(--cyber-orange)";
+                odometerNode.textContent = "0.0 KB/s";
+                odometerNode.style.color = "var(--text-low)";
                 
-                const computeDeltaDuration = (Date.now() - hostStartTime) / 1000;
-                let simulatedDownlinkMbps = Math.max(1.2, (2.3 / (computeDeltaDuration + 0.03)));
-                if(simulatedDownlinkMbps > 95) simulatedDownlinkMbps = 48.72;
-
-                speedNode.textContent = simulatedDownlinkMbps.toFixed(2) + " Mbps (Active Grid)";
-                speedNode.style.color = "var(--cyber-cyan)";
-
-                const calculatedKbsValue = (simulatedDownlinkMbps * 1024) / 8;
-                if (calculatedKbsValue >= 1024) {
-                    const mbsValue = (calculatedKbsValue / 1024) * (0.93 + Math.random() * 0.14);
-                    odometerNode.textContent = mbsValue.toFixed(1) + " MB/s";
-                    odometerNode.style.color = "var(--cyber-emerald)";
-                } else {
-                    const dynamicRenderKbs = calculatedKbsValue * (0.92 + Math.random() * 0.18);
-                    odometerNode.textContent = dynamicRenderKbs.toFixed(1) + " KB/s";
-                    odometerNode.style.color = "var(--cyber-cyan)";
-                }
-            } catch (e) {
-                if (e.name !== 'AbortError') {
-                    speedNode.textContent = "0.00 Mbps (Network Congested)";
-                    speedNode.style.color = "var(--cyber-orange)";
-                    odometerNode.textContent = "12.4 KB/s";
-                    odometerNode.style.color = "var(--cyber-cyan)";
+                if (previousNetworkStateIsOnline !== false) {
+                    previousNetworkStateIsOnline = false;
+                    forceNetworkInterfaceUpdate();
                 }
             }
         }
@@ -566,31 +585,50 @@
         forceNetworkInterfaceUpdate();
     }
 
-    // ⚡ RESTORED THE PRECISE FULL STRING RE-ROUTING LABELS MATRIX MAPPING
+    // 🛡️ ADVANCED PREEMPTIVE ENFORCER TRANSITION (100% LAPTOP INSTANT DROP STABILITY)
     function forceNetworkInterfaceUpdate() {
         const badge = document.getElementById('network-badge');
         const badgeDot = document.getElementById('badge-glow-node');
         const badgeText = document.getElementById('badge-text-node');
         const currentOnlineState = navigator.onLine;
         
-        if (currentOnlineState) {
-            badge.className = "badge online-state";
-            badgeDot.style.backgroundColor = "var(--cyber-emerald)";
-            badgeDot.style.boxShadow = "0 0 16px var(--cyber-emerald)";
-            badgeText.textContent = "EDGE ONLINE — Pipeline Synchronized"; // Exact layout string text restore
-            executeCloudSynchronization();
-        } else {
+        // Direct circuit-breaker trigger pattern for zero lag connection swaps
+        if (currentOnlineState === false) {
             if (activeFetchAbortController) activeFetchAbortController.abort();
-            badge.className = "badge offline-state";
+            badge.setAttribute('class', 'badge offline-state');
             badgeDot.style.backgroundColor = "var(--cyber-orange)";
             badgeDot.style.boxShadow = "0 0 16px var(--cyber-orange)";
-            badgeText.textContent = "EDGE OFFLINE — Local Cache Mode"; // Exact layout string text restore
+            badgeText.innerHTML = "EDGE OFFLINE — Local Cache Mode"; 
+            
+            // Fast visual odometer updates initialization
+            speedNode = document.getElementById('live-speed-telemetry');
+            odometerNode = document.getElementById('mobile-live-odometer-node');
+            if(speedNode && odometerNode) {
+                speedNode.textContent = "0.00 Mbps (Disconnected)";
+                speedNode.style.color = "var(--cyber-orange)";
+                odometerNode.textContent = "0.0 KB/s";
+                odometerNode.style.color = "var(--text-low)";
+            }
+
+            if (previousNetworkStateIsOnline !== false) {
+                previousNetworkStateIsOnline = false;
+                if (!document.getElementById('cloud-ledger-panel').classList.contains('panel-hidden')) {
+                    fetchLiveCloudDatabaseRecords();
+                }
+            }
+            return;
         }
 
+        badge.setAttribute('class', 'badge online-state');
+        badgeDot.style.backgroundColor = "var(--cyber-emerald)";
+        badgeDot.style.boxShadow = "0 0 16px var(--cyber-emerald)";
+        badgeText.innerHTML = "EDGE ONLINE — Pipeline Synchronized"; 
+        
+        executeCloudSynchronization();
         updateTelemetryHUDDisplayMetrics();
 
-        if (currentOnlineState !== previousNetworkStateIsOnline) {
-            previousNetworkStateIsOnline = currentOnlineState;
+        if (previousNetworkStateIsOnline !== true) {
+            previousNetworkStateIsOnline = true;
             if (!document.getElementById('cloud-ledger-panel').classList.contains('panel-hidden')) {
                 fetchLiveCloudDatabaseRecords();
             }
@@ -609,7 +647,7 @@
     dbOpenRequest.onsuccess = (e) => {
         indexedDatabase = e.target.result;
         indexedDatabase.onclose = () => { indexedDatabase = null; };
-        indexedDatabase.onversionchange = () => { indexedDatabase.close(); indexedDatabase = null; };
+        indexedDatabase.onversionchange = () => { if(indexedDatabase) { indexedDatabase.close(); indexedDatabase = null; } };
         
         refreshQueueCount();
         forceNetworkInterfaceUpdate();
@@ -621,7 +659,7 @@
     document.getElementById('sync-form').addEventListener('submit', (e) => {
         e.preventDefault();
         if (!locationPermissionGranted) {
-            forceEnforcedLocationVerification();
+            forceEnforcedLocationVerification(true);
             return;
         }
 
@@ -652,38 +690,40 @@
     async function executeCloudSynchronization() {
         if (!navigator.onLine || !indexedDatabase || !locationPermissionGranted || capturedVillageNameStr === "Unknown Location" || capturedVillageNameStr === "Acquiring village...") return;
 
-        const tx = indexedDatabase.transaction('reportsStore', 'readonly');
-        const store = tx.objectStore('reportsStore');
-        const fetchAllQuery = store.getAll();
+        try {
+            const tx = indexedDatabase.transaction('reportsStore', 'readonly');
+            const store = tx.objectStore('reportsStore');
+            const fetchAllQuery = store.getAll();
 
-        fetchAllQuery.onsuccess = async () => {
-            const recordsQueue = fetchAllQuery.result;
-            if (recordsQueue.length === 0) return;
+            fetchAllQuery.onsuccess = async () => {
+                const recordsQueue = fetchAllQuery.result;
+                if (recordsQueue.length === 0) return;
 
-            for (const record of recordsQueue) {
-                try {
-                    const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore`, {
-                        method: 'POST',
-                        headers: {
-                            'apikey': SUPABASE_ANON_KEY,
-                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                            'Content-Type': 'application/json',
-                            'Prefer': 'return=minimal'
-                        },
-                        body: JSON.stringify(record)
-                    });
+                for (const record of recordsQueue) {
+                    try {
+                        const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore`, {
+                            method: 'POST',
+                            headers: {
+                                'apikey': SUPABASE_ANON_KEY,
+                                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                                'Content-Type': 'application/json',
+                                'Prefer': 'return=minimal'
+                            },
+                            body: JSON.stringify(record)
+                        });
 
-                    if (response.ok && indexedDatabase) {
-                        const deleteTx = indexedDatabase.transaction('reportsStore', 'readwrite');
-                        deleteTx.objectStore('reportsStore').delete(record.id);
-                        deleteTx.oncomplete = () => {
-                            refreshQueueCount();
-                            fetchSilentMirrorUpdate();
-                        };
-                    }
-                } catch (err) { console.error(err); }
-            }
-        };
+                        if (response.ok && indexedDatabase) {
+                            const deleteTx = indexedDatabase.transaction('reportsStore', 'readwrite');
+                            deleteTx.objectStore('reportsStore').delete(record.id);
+                            deleteTx.oncomplete = () => {
+                                refreshQueueCount();
+                                fetchSilentMirrorUpdate();
+                            };
+                        }
+                    } catch (err) { console.error(err); }
+                }
+            };
+        } catch(e) { console.error(e); }
     }
 
     async function fetchSilentMirrorUpdate() {
@@ -693,6 +733,10 @@
                 method: 'GET',
                 headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
             });
+            
+            const contentType = response.headers.get("content-type");
+            if (!response.ok || !contentType || !contentType.includes("application/json")) return;
+
             const data = await response.json();
             if (data && data.length > 0 && indexedDatabase) {
                 const tx = indexedDatabase.transaction('cloudMirrorStore', 'readwrite');
@@ -706,23 +750,25 @@
 
     function refreshQueueCount() {
         if (!indexedDatabase) return;
-        const tx = indexedDatabase.transaction('reportsStore', 'readonly');
-        const store = tx.objectStore('reportsStore');
-        
-        store.count().onsuccess = (ev) => { document.getElementById('counter').textContent = ev.target.result; };
-        store.getAll().onsuccess = (ev) => {
-            const list = ev.target.result;
-            loggerConsole.innerHTML = '';
-            if (list.length === 0) {
-                loggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>';
-                return;
-            }
-            list.forEach(obj => {
-                loggerConsole.innerHTML += `<div style="border-left:2px solid var(--cyber-cyan); padding-left:10px; margin-bottom:10px; font-family:'JetBrains Mono', monospace; font-size:12px; color:#c7d2fe;">
-                    [IndexedDB Cache] ID: ${obj.id.substring(0,8)}... | Location: ${obj.village_name || 'Acquiring'} | Data: "${obj.reportData}"
-                </div>`;
-            });
-        };
+        try {
+            const tx = indexedDatabase.transaction('reportsStore', 'readonly');
+            const store = tx.objectStore('reportsStore');
+            
+            store.count().onsuccess = (ev) => { document.getElementById('counter').textContent = ev.target.result; };
+            store.getAll().onsuccess = (ev) => {
+                const list = ev.target.result;
+                loggerConsole.innerHTML = '';
+                if (list.length === 0) {
+                    loggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>';
+                    return;
+                }
+                list.forEach(obj => {
+                    loggerConsole.innerHTML += `<div style="border-left:2px solid var(--cyber-cyan); padding-left:10px; margin-bottom:10px; font-family:'JetBrains Mono', monospace; font-size:12px; color:#c7d2fe;">
+                        [IndexedDB Cache] ID: ${obj.id.substring(0,8)}... | Location: ${obj.village_name || 'Acquiring'} | Data: "${obj.reportData}"
+                    </div>`;
+                });
+            };
+        } catch(err) { console.error(err); }
     }
 
     function toggleActiveDashboardPanels(showCloudLedger) {
@@ -743,41 +789,33 @@
         const titleNode = document.getElementById('pipeline-title-node');
         const refreshActionBtn = document.getElementById('server-refresh-action-btn');
         
-        if (!navigator.onLine) {
+        if (navigator.onLine === false) {
             titleNode.style.color = "var(--cyber-orange)"; 
             titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Offline Presence Mode)";
             refreshActionBtn.style.display = "none"; 
-            
             cloudLoggerConsole.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Device decoupled from network channels. Injecting cloudMirrorStore persistence layers...</div>';
-            
-            if (!indexedDatabase) return;
-            const tx = indexedDatabase.transaction('cloudMirrorStore', 'readonly');
-            const store = tx.objectStore('cloudMirrorStore');
-            
-            store.getAll().onsuccess = (ev) => {
-                const mirroredOfflineData = ev.target.result;
-                if(mirroredOfflineData.length === 0) {
-                    cloudLoggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">No persistent mirrored cloud server data logs discovered inside device disk cache. Connect online once to synchronize parameters.</div>';
-                    return;
-                }
-                renderTableHTML(mirroredOfflineData, false); 
-            };
+            loadLocalMirrorCacheFallback();
             return;
         }
 
         titleNode.style.color = "var(--cyber-emerald)";
         titleNode.textContent = "☁️ Real-time Cloud Supabase Server Records Ledger";
         refreshActionBtn.style.display = "flex";
-        
         cloudLoggerConsole.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Establishing secure gateway link to Supabase Server Ledger REST API...</div>';
         
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?select=*`, {
                 method: 'GET',
+                cache: 'no-store',
                 headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
             });
-            const data = await response.json();
             
+            const contentType = response.headers.get("content-type");
+            if (!response.ok || !contentType || !contentType.includes("application/json")) {
+                throw new Error("Invalid Outage HTML Target Intercepted");
+            }
+
+            const data = await response.json();
             if(data.length === 0) {
                 cloudLoggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">Cloud server database store table is currently empty.</div>';
                 return;
@@ -790,11 +828,26 @@
                     data.forEach(row => mirrorStore.put(row));
                 };
             }
-            
             renderTableHTML(data, true);
         } catch(err) {
-            cloudLoggerConsole.innerHTML = '<div style="color: var(--cyber-rose); font-style: italic;">⚠️ Gateway Handshake Failure. Check network configuration.</div>';
+            console.warn("Handshake blocked. Pulling mirrored disk backups safely...", err);
+            titleNode.style.color = "var(--cyber-orange)";
+            titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Server Connection Congested)";
+            loadLocalMirrorCacheFallback();
         }
+    }
+
+    function loadLocalMirrorCacheFallback() {
+        if (!indexedDatabase) return;
+        const tx = indexedDatabase.transaction('cloudMirrorStore', 'readonly');
+        tx.objectStore('cloudMirrorStore').getAll().onsuccess = (ev) => {
+            const mirroredOfflineData = ev.target.result;
+            if(mirroredOfflineData.length > 0) {
+                renderTableHTML(mirroredOfflineData, false);
+            } else {
+                cloudLoggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">No persistent mirrored cloud server data logs discovered inside device disk cache.</div>';
+            }
+        };
     }
 
     function renderTableHTML(data, isOnlineContext) {
