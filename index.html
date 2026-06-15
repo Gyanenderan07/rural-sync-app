@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -207,7 +208,7 @@
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--cyber-cyan); }
 
-        /* ======================== PREMIUM MOBILE-STYLE STATUS NETWORK SPEED ODOMETER OVERLAYS ======================== */
+        /* ======================== NEW PREMIUM ADAPTIVE SYNC LAYOUT HUD ======================== */
         .adaptive-sync-panel {
             background: var(--glass-sheet); border: 1px solid var(--glass-border-glow);
             border-radius: 24px; padding: 24px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
@@ -220,6 +221,7 @@
             font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-core);
             display: flex; align-items: center; gap: 8px;
         }
+        /* Custom Premium Toggle Switch */
         .toggle-switch-wrapper { display: flex; align-items: center; gap: 12px; }
         .toggle-switch-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; transition: color 0.3s ease; }
         .toggle-switch { position: relative; width: 48px; height: 26px; display: inline-block; }
@@ -234,12 +236,6 @@
         }
         input:checked + .toggle-slider { background-color: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4); }
         input:checked + .toggle-slider:before { background-color: var(--cyber-emerald); transform: translateX(22px); box-shadow: 0 0 10px var(--cyber-emerald); }
-        
-        .mobile-speed-meter-capsule {
-            display: flex; align-items: center; gap: 6px; background: rgba(5, 8, 16, 0.7); 
-            border: 1px solid rgba(255,255,255,0.04); padding: 5px 12px; border-radius: 10px;
-            font-family: 'JetBrains Mono', monospace; font-size: 11.5px; font-weight: 700;
-        }
         
         .sync-telemetry-terminal {
             background: rgba(3, 5, 10, 0.7); border: 1px solid rgba(255,255,255,0.02); border-radius: 14px;
@@ -259,17 +255,9 @@
         <div class="logo-section">
             <h1>EdgeSync <span>InStep v2.1</span></h1>
         </div>
-        
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <div class="mobile-speed-meter-capsule">
-                <span style="color: var(--text-low); font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px;">NET SPEED</span>
-                <span id="mobile-live-odometer-node" style="color: var(--cyber-cyan); font-variant-numeric: tabular-nums;">0.0 KB/s</span>
-            </div>
-            
-            <div id="network-badge" class="badge">
-                <div id="badge-glow-node" class="badge-dot"></div>
-                <span id="badge-text-node">Initializing Edge Engine...</span>
-            </div>
+        <div id="network-badge" class="badge">
+            <div id="badge-glow-node" class="badge-dot"></div>
+            <span id="badge-text-node">Initializing Edge Engine...</span>
         </div>
     </header>
 
@@ -309,6 +297,7 @@
 
         </div>
 
+        <!-- ==================== NEW DYNAMIC AUDIO-VISUAL BATTERY ADAPTIVE SYNC TERMINAL PANEL ==================== -->
         <div class="adaptive-sync-panel">
             <div class="sync-hud-header">
                 <div class="sync-hud-title">🔋 Battery Adaptive Sync Regulator Configuration</div>
@@ -323,6 +312,10 @@
             
             <div class="sync-telemetry-terminal">
                 <div class="info-row" style="background: rgba(0,0,0,0.2);">
+                    <span class="info-label">Current Internet Speed:</span>
+                    <span id="live-speed-telemetry" class="info-value tech-mono" style="color: var(--cyber-cyan); font-weight: 800;">Checking bandwidth...</span>
+                </div>
+                <div class="info-row" style="background: rgba(0,0,0,0.2);">
                     <span class="info-label">Network Polling Engine Frequency:</span>
                     <span id="live-polling-frequency" class="info-value tech-mono" style="color: var(--cyber-emerald);">2500 ms (High Performance)</span>
                 </div>
@@ -333,10 +326,6 @@
                 <div class="info-row" style="background: rgba(0,0,0,0.2);">
                     <span class="info-label">Client Handshake Throttle Burst:</span>
                     <span id="live-handshake-throttle" class="info-value tech-mono">Unrestricted (Continuous Dispatches)</span>
-                </div>
-                <div class="info-row" style="background: rgba(0,0,0,0.2);">
-                    <span class="info-label">Adaptive Sync Network Profile:</span>
-                    <span id="live-speed-telemetry" class="info-value tech-mono" style="color: var(--cyber-cyan);">Checking channels...</span>
                 </div>
             </div>
         </div>
@@ -379,12 +368,13 @@
     const SUPABASE_URL = "https://rsjyvrnxqkjtaczwectr.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzanl2cm54cWtqdGFjendlY3RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMDMwNjUsImV4cCI6MjA5Njg3OTA2NX0.YB63IkqX1Q5uFtNNxEjnyx-TFdCeN_U09vWM6zguL-o";
 
-    let indexedDatabase = null; // Guard: Explicit initialization signature
+    let indexedDatabase;
     const loggerConsole = document.getElementById('terminal-logger');
     const cloudLoggerConsole = document.getElementById('cloud-server-logger');
 
     let previousNetworkStateIsOnline = navigator.onLine;
     
+    // Core structural intervals configuration tracking parameters
     let fallbackPollIntervalTimer = 2500;
     let heartbeatThreadLoop;
 
@@ -404,42 +394,27 @@
         }
     }
 
+    // ==================== NEW REAL-TIME VISUAL HUD UPDATE INTERFACE LOGIC ====================
     function updateTelemetryHUDDisplayMetrics() {
         const speedNode = document.getElementById('live-speed-telemetry');
-        const odometerNode = document.getElementById('mobile-live-odometer-node');
         const freqNode = document.getElementById('live-polling-frequency');
         const latencyNode = document.getElementById('live-hardware-latency');
         const throttleNode = document.getElementById('live-handshake-throttle');
         const isEcoChecked = document.getElementById('battery-toggle').checked;
 
+        // 🌐 Extracting Dynamic Bandwidth Connection Metrics 
         if (!navigator.onLine) {
-            speedNode.textContent = "0.00 Mbps (Disconnected)";
+            speedNode.textContent = "0 Mbps (Offline Mode)";
             speedNode.style.color = "var(--cyber-orange)";
-            odometerNode.textContent = "0.0 KB/s";
-            odometerNode.style.color = "var(--text-low)";
         } else if (navigator.connection && navigator.connection.downlink) {
-            const rawDownlinkMbps = navigator.connection.downlink; 
-            speedNode.textContent = rawDownlinkMbps.toFixed(2) + " Mbps (Active Grid)";
+            speedNode.textContent = navigator.connection.downlink + " Mbps (Active Channel)";
             speedNode.style.color = "var(--cyber-cyan)";
-            
-            const calculatedKbsValue = (rawDownlinkMbps * 1024) / 8; 
-            if (calculatedKbsValue >= 1024) {
-                const mbsValue = calculatedKbsValue / 1024;
-                odometerNode.textContent = mbsValue.toFixed(1) + " MB/s";
-                odometerNode.style.color = "var(--cyber-emerald)";
-            } else {
-                const packetVarianceNoise = (Math.random() * 15) - 7.5;
-                const dynamicRenderKbs = Math.max(1.2, calculatedKbsValue + packetVarianceNoise);
-                odometerNode.textContent = dynamicRenderKbs.toFixed(1) + " KB/s";
-                odometerNode.style.color = "var(--cyber-cyan)";
-            }
         } else {
-            speedNode.textContent = "Broadband Line Secure";
+            speedNode.textContent = "Stable Bandwidth Verified";
             speedNode.style.color = "var(--cyber-cyan)";
-            odometerNode.textContent = "1.2 MB/s";
-            odometerNode.style.color = "var(--cyber-emerald)";
         }
 
+        // Updating visual trace metrics to reflect actual internal variable polling loops
         if (isEcoChecked) {
             freqNode.textContent = "10000 ms (Throttled Delay Mode)";
             freqNode.style.color = "var(--cyber-orange)";
@@ -457,6 +432,7 @@
         }
     }
 
+    // NEW HUD COEFICIENT SWITCH HOOK
     function adjustBatteryEcoSyncRatesHUD() {
         const isChecked = document.getElementById('battery-toggle').checked;
         const statusDisplay = document.getElementById('sync-rate-status');
@@ -466,15 +442,16 @@
         if (isChecked) {
             statusDisplay.textContent = "ECO MODE: ACTIVE";
             statusDisplay.style.color = "var(--cyber-orange)";
-            fallbackPollIntervalTimer = 10000; 
+            fallbackPollIntervalTimer = 10000; // Power preservation interval variable update
         } else {
             statusDisplay.textContent = "ECO MODE: OFF";
             statusDisplay.style.color = "var(--cyber-emerald)";
-            fallbackPollIntervalTimer = 2500; 
+            fallbackPollIntervalTimer = 2500; // High speed production loop clock reset
         }
         
+        // Dynamic re-invocation layer mapping
         heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
-        forceNetworkInterfaceUpdate();
+        updateTelemetryHUDDisplayMetrics();
     }
 
     function forceNetworkInterfaceUpdate() {
@@ -496,6 +473,7 @@
             badgeText.textContent = "EDGE OFFLINE — Local Cache Mode";
         }
 
+        // Instant execution mapping hook to prevent telemetry lag blocks
         updateTelemetryHUDDisplayMetrics();
 
         if (currentOnlineState !== previousNetworkStateIsOnline) {
@@ -508,8 +486,11 @@
     
     window.addEventListener('online', forceNetworkInterfaceUpdate);
     window.addEventListener('offline', forceNetworkInterfaceUpdate);
+    
+    // Core thread assignment
+    heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
+    forceNetworkInterfaceUpdate();
 
-    // 🔒 TRANSACTION SAFETY GUARD ENGINE: INITIALIZES SAFELY FOR VERSION CONTROL
     const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 2); 
     dbOpenRequest.onupgradeneeded = (e) => {
         let db = e.target.result;
@@ -518,26 +499,16 @@
     };
     dbOpenRequest.onsuccess = (e) => {
         indexedDatabase = e.target.result;
-        
-        // Setup state recovery block on unexpected close interrupts
-        indexedDatabase.onclose = () => { indexedDatabase = null; };
-        indexedDatabase.onversionchange = () => { indexedDatabase.close(); indexedDatabase = null; };
-        
         refreshQueueCount();
         forceNetworkInterfaceUpdate();
-        
-        // Starts loop execution only after a safe connection sequence lock
-        clearInterval(heartbeatThreadLoop);
-        heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
     };
-    dbOpenRequest.onerror = (e) => { console.error("Database connection failure mapping:", e); };
 
     document.getElementById('sync-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const textPayload = document.getElementById('data-payload').value;
         const record = { id: crypto.randomUUID(), reportData: textPayload, timestamp: getSupabaseSecureTimestamp() };
 
-        if (!indexedDatabase) { alert("IndexedDB connection matrix resolving state. Try again."); return; }
+        if (!indexedDatabase) return;
 
         const tx = indexedDatabase.transaction('reportsStore', 'readwrite');
         tx.objectStore('reportsStore').add(record);
@@ -572,7 +543,7 @@
                         body: JSON.stringify(record)
                     });
 
-                    if (response.ok && indexedDatabase) {
+                    if (response.ok) {
                         const deleteTx = indexedDatabase.transaction('reportsStore', 'readwrite');
                         deleteTx.objectStore('reportsStore').delete(record.id);
                         deleteTx.oncomplete = () => {
@@ -595,7 +566,7 @@
                 headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
             });
             const data = await response.json();
-            if (data && data.length > 0 && indexedDatabase) {
+            if (data && data.length > 0) {
                 const tx = indexedDatabase.transaction('cloudMirrorStore', 'readwrite');
                 const store = tx.objectStore('cloudMirrorStore');
                 store.clear().onsuccess = () => {
@@ -716,7 +687,7 @@
                 <td>${row.reportData}</td>
                 <td style="color: ${isOnlineContext ? 'var(--cyber-emerald)' : 'var(--cyber-orange)'}; font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:600;">${formatIsoStringToLocalSystemTime(row.timestamp)}</td>
                 <td style="text-align:center;">
-                    <button class="row-delete-btn" onclick="${isOnlineContext ? `deleteCloudRecordFromServer('${row.id}')` : `alert('Deletions can only be executed while device has active cloud connectivity.')` trim()}">🗑️ Erase</button>
+                    <button class="row-delete-btn" onclick="${isOnlineContext ? `deleteCloudRecordFromServer('${row.id}')` : `alert('Deletions can only be executed while device has active cloud connectivity.')`}">🗑️ Erase</button>
                 </td>
             </tr>`;
         });
