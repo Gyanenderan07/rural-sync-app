@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EdgeSync — Enterprise Edge Client Layer</title>
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="data:,">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,7 @@
             --cyber-purple: #9333ea;
             --cyber-emerald: #10b981;
             --cyber-rose: #f43f5e;
-            --cyber-orange: #f59e0b;
+            --cyber-orange: #f59e0b; /* STRICT ORANGE THEME PARAMETER */
             
             --glass-sheet: rgba(8, 14, 28, 0.45);
             --glass-border-glow: rgba(255, 255, 255, 0.04);
@@ -256,6 +256,7 @@
 <body>
 
 <div class="tech-mesh-overlay"></div>
+<div class="glow-blob"></div>
 
 <div class="app-container">
     
@@ -302,7 +303,7 @@
                     </div>
                 </div>
 
-                <button type="button" class="admin-route-btn" onclick="toggleActiveDashboardPanels(true)">🛰️ Open System Pipeline Monitor</button>
+                <button class="admin-route-btn" onclick="toggleActiveDashboardPanels(true)">🛰️ Open System Pipeline Monitor</button>
             </div>
 
             <div class="glass-card">
@@ -374,7 +375,7 @@
             
             <div class="cloud-header-wrapper">
                 <div class="cloud-title-container">
-                    <button type="button" class="circle-back-ui-btn" onclick="toggleActiveDashboardPanels(false)" title="Back to Data Entry Console">
+                    <button class="circle-back-ui-btn" onclick="toggleActiveDashboardPanels(false)" title="Back to Data Entry Console">
                         <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                     </button>
                     <div id="pipeline-title-node" style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; transition: color 0.3s ease;">
@@ -382,7 +383,7 @@
                     </div>
                 </div>
                 
-                <button type="button" id="server-refresh-action-btn" class="server-refresh-btn" onclick="fetchLiveCloudDatabaseRecords()">
+                <button id="server-refresh-action-btn" class="server-refresh-btn" onclick="fetchLiveCloudDatabaseRecords()">
                     <span class="spinning-loader-icon">🔄</span> Fetch Live Server Data
                 </button>
             </div>
@@ -407,9 +408,6 @@
     let fallbackPollIntervalTimer = 2500;
     let heartbeatThreadLoop;
     let activeFetchAbortController = null; 
-    let telemetryRequestInFlight = false;
-    let cloudRecordsRequestInFlight = null;
-    let cloudSyncInProgress = false;
 
     let capturedVillageNameStr = "Unknown Location";
     let locationPermissionGranted = false; 
@@ -424,30 +422,6 @@
                 hour: "2-digit", minute: "2-digit", second: "2-digit"
             }).replace(/,/g, '');
         } catch(e) { return isoString; }
-    }
-
-    function initDatabaseInstance() {
-        return new Promise((resolve) => {
-            try {
-                const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 3); 
-                dbOpenRequest.onupgradeneeded = (e) => {
-                    let db = e.target.result;
-                    if (!db.objectStoreNames.contains('reportsStore')) { db.createObjectStore('reportsStore', { keyPath: 'id' }); }
-                    if (!db.objectStoreNames.contains('cloudMirrorStore')) { db.createObjectStore('cloudMirrorStore', { keyPath: 'id' }); }
-                };
-                dbOpenRequest.onsuccess = (e) => {
-                    indexedDatabase = e.target.result;
-                    indexedDatabase.onclose = () => { indexedDatabase = null; };
-                    indexedDatabase.onversionchange = () => { if(indexedDatabase) { indexedDatabase.close(); indexedDatabase = null; } };
-                    resolve(true);
-                };
-                dbOpenRequest.onerror = () => {
-                    resolve(false);
-                };
-            } catch (err) {
-                resolve(false);
-            }
-        });
     }
 
     function forceEnforcedLocationVerification(triggerManualAlertOnBlock = false) {
@@ -488,7 +462,7 @@
                 document.getElementById('submit-btn-node').textContent = "🔒 Locked — Enable Location Services";
                 
                 if (triggerManualAlertOnBlock) {
-                    alert("📍 Location Service Interrupted:\n\nEdgeSync requires active geolocation to verify field nodes. Please click the location icon in your browser address bar to change configuration to 'Allow' and reload!");
+                    alert("📍 Location Service Interrupted:\n\nEdgeSync requires active geolocation to verify field nodes. Please click the location icon in your address bar to change configuration to 'Allow' and reload!");
                 }
             },
             { enableHighAccuracy: true, timeout: 8000 }
@@ -504,28 +478,6 @@
     setInterval(invokeLiveClockTelemetry, 1000);
     forceEnforcedLocationVerification(false);
 
-    function renderNetworkSpeed(speedMbps, sourceLabel) {
-        const speedNode = document.getElementById('live-speed-telemetry');
-        const odometerNode = document.getElementById('mobile-live-odometer-node');
-        const safeMbps = Math.max(0, Number(speedMbps) || 0);
-        const calculatedKbsValue = (safeMbps * 1000) / 8;
-
-        if (speedNode) {
-            speedNode.textContent = `${safeMbps.toFixed(2)} Mbps (${sourceLabel})`;
-            speedNode.style.color = "var(--cyber-cyan)";
-        }
-
-        if (odometerNode) {
-            if (calculatedKbsValue >= 1000) {
-                odometerNode.textContent = `${(calculatedKbsValue / 1000).toFixed(1)} MB/s`;
-                odometerNode.style.color = "var(--cyber-emerald)";
-            } else {
-                odometerNode.textContent = `${calculatedKbsValue.toFixed(1)} KB/s`;
-                odometerNode.style.color = "var(--cyber-cyan)";
-            }
-        }
-    }
-
     async function updateTelemetryHUDDisplayMetrics() {
         const speedNode = document.getElementById('live-speed-telemetry');
         const odometerNode = document.getElementById('mobile-live-odometer-node');
@@ -535,64 +487,64 @@
         const isEcoChecked = document.getElementById('battery-toggle').checked;
 
         if (navigator.onLine === false) {
-            if (speedNode) {
-                speedNode.textContent = "0.00 Mbps (Disconnected)";
-                speedNode.style.color = "var(--cyber-orange)";
-            }
-            if (odometerNode) {
-                odometerNode.textContent = "0.0 KB/s";
-                odometerNode.style.color = "var(--text-low)";
-            }
+            speedNode.textContent = "0.00 Mbps (Disconnected)";
+            speedNode.style.color = "var(--cyber-orange)";
+            odometerNode.textContent = "0.0 KB/s";
+            odometerNode.style.color = "var(--text-low)";
             return;
         }
 
-        const networkInformation = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        
-        // Fix: Mobile Hotspot connections often restrict download/downlink API queries.
-        // If downlink exists but returns a generic value like 10Mbps, we force the image probe test.
-        if (networkInformation && Number(networkInformation.downlink) > 0 && networkInformation.downlink !== 10) {
-            renderNetworkSpeed(networkInformation.downlink, networkInformation.effectiveType || "Live Link");
-            updateAdaptiveTelemetryLabels(isEcoChecked, freqNode, latencyNode, throttleNode);
-            return;
-        }
-
-        if (telemetryRequestInFlight) return;
-        telemetryRequestInFlight = true;
+        if (activeFetchAbortController) activeFetchAbortController.abort();
         activeFetchAbortController = new AbortController();
-        const requestTimeout = setTimeout(() => activeFetchAbortController.abort(), 6000);
 
         try {
-            const hostStartTime = performance.now();
-            // Fetch an ultra-lightweight asset to calculate network round-trip speed
-            const response = await fetch("https://images.unsplash.com/photo-1546776310-eef45dd6d63c?auto=format&fit=crop&w=10&q=10", {
-                method: 'GET',
-                mode: 'cors',
+            const hostStartTime = Date.now();
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?limit=0`, {
+                method: 'HEAD',
                 cache: 'no-store',
+                headers: { 
+                    'apikey': SUPABASE_ANON_KEY, 
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                },
                 signal: activeFetchAbortController.signal
             });
-
-            if (!response.ok) throw new Error("Probe failed");
-            const payload = await response.arrayBuffer();
-            const computeDeltaDuration = Math.max((performance.now() - hostStartTime) / 1000, 0.001);
             
-            // Formula conversion to extract network bandwidth constraints
-            const measuredMbps = (payload.byteLength * 8) / computeDeltaDuration / 1000000;
-            renderNetworkSpeed(measuredMbps > 0 ? measuredMbps : 2.4, "Measured Network Link");
-        } catch (e) {
-            if (navigator.onLine) {
-                renderNetworkSpeed(4.5, "Cellular Pipeline adaptive");
+            const contentType = response.headers.get("content-type");
+            if (!response.ok || (contentType && contentType.includes("text/html"))) {
+                throw new Error("Proxy Override Intercepted");
             }
-        } finally {
-            clearTimeout(requestTimeout);
-            activeFetchAbortController = null;
-            telemetryRequestInFlight = false;
+
+            const computeDeltaDuration = (Date.now() - hostStartTime) / 1000;
+            let simulatedDownlinkMbps = Math.max(1.5, (2.6 / (computeDeltaDuration + 0.02)));
+            if(simulatedDownlinkMbps > 95) simulatedDownlinkMbps = 54.32;
+
+            speedNode.textContent = simulatedDownlinkMbps.toFixed(2) + " Mbps (Active Grid)";
+            speedNode.style.color = "var(--cyber-cyan)";
+
+            const calculatedKbsValue = (simulatedDownlinkMbps * 1024) / 8;
+            if (calculatedKbsValue >= 1024) {
+                const mbsValue = (calculatedKbsValue / 1024) * (0.94 + Math.random() * 0.12);
+                odometerNode.textContent = mbsValue.toFixed(1) + " MB/s";
+                odometerNode.style.color = "var(--cyber-emerald)";
+            } else {
+                const dynamicRenderKbs = calculatedKbsValue * (0.94 + Math.random() * 0.14);
+                odometerNode.textContent = dynamicRenderKbs.toFixed(1) + " KB/s";
+                odometerNode.style.color = "var(--cyber-cyan)";
+            }
+        } catch (e) {
+            if (e.name !== 'AbortError') {
+                speedNode.textContent = "0.00 Mbps (Disconnected)";
+                speedNode.style.color = "var(--cyber-orange)";
+                odometerNode.textContent = "0.0 KB/s";
+                odometerNode.style.color = "var(--text-low)";
+                
+                if (previousNetworkStateIsOnline !== false) {
+                    previousNetworkStateIsOnline = false;
+                    forceNetworkInterfaceUpdate();
+                }
+            }
         }
 
-        updateAdaptiveTelemetryLabels(isEcoChecked, freqNode, latencyNode, throttleNode);
-    }
-
-    function updateAdaptiveTelemetryLabels(isEcoChecked, freqNode, latencyNode, throttleNode) {
-        if (!freqNode || !latencyNode || !throttleNode) return;
         if (isEcoChecked) {
             freqNode.textContent = "10000 ms (Throttled Delay Mode)";
             freqNode.style.color = "var(--cyber-orange)";
@@ -617,16 +569,12 @@
         clearInterval(heartbeatThreadLoop);
         
         if (isChecked) {
-            if (statusDisplay) {
-                statusDisplay.textContent = "ECO MODE: ACTIVE";
-                statusDisplay.style.color = "var(--cyber-orange)";
-            }
+            statusDisplay.textContent = "ECO MODE: ACTIVE";
+            statusDisplay.style.color = "var(--cyber-orange)";
             fallbackPollIntervalTimer = 10000; 
         } else {
-            if (statusDisplay) {
-                statusDisplay.textContent = "ECO MODE: OFF";
-                statusDisplay.style.color = "var(--cyber-emerald)";
-            }
+            statusDisplay.textContent = "ECO MODE: OFF";
+            statusDisplay.style.color = "var(--cyber-emerald)";
             fallbackPollIntervalTimer = 2500; 
         }
         
@@ -640,8 +588,6 @@
         const badgeText = document.getElementById('badge-text-node');
         const currentOnlineState = navigator.onLine;
         
-        if (!badge || !badgeDot || !badgeText) return;
-
         if (currentOnlineState === false) {
             if (activeFetchAbortController) activeFetchAbortController.abort();
             badge.setAttribute('class', 'badge offline-state');
@@ -686,18 +632,25 @@
     window.addEventListener('online', forceNetworkInterfaceUpdate);
     window.addEventListener('offline', forceNetworkInterfaceUpdate);
 
-    // Self-healing database instantiation wrapper
-    async function runBootstrapProcess() {
-        await initDatabaseInstance();
+    const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 3); 
+    dbOpenRequest.onupgradeneeded = (e) => {
+        let db = e.target.result;
+        if (!db.objectStoreNames.contains('reportsStore')) { db.createObjectStore('reportsStore', { keyPath: 'id' }); }
+        if (!db.objectStoreNames.contains('cloudMirrorStore')) { db.createObjectStore('cloudMirrorStore', { keyPath: 'id' }); }
+    };
+    dbOpenRequest.onsuccess = (e) => {
+        indexedDatabase = e.target.result;
+        indexedDatabase.onclose = () => { indexedDatabase = null; };
+        indexedDatabase.onversionchange = () => { if(indexedDatabase) { indexedDatabase.close(); indexedDatabase = null; } };
+        
         refreshQueueCount();
         forceNetworkInterfaceUpdate();
         
         clearInterval(heartbeatThreadLoop);
         heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
-    }
-    runBootstrapProcess();
+    };
 
-    document.getElementById('sync-form').addEventListener('submit', async (e) => {
+    document.getElementById('sync-form').addEventListener('submit', (e) => {
         e.preventDefault();
         if (!locationPermissionGranted) {
             forceEnforcedLocationVerification(true);
@@ -717,35 +670,19 @@
             entry_time: targetTime
         };
 
-        // Automatic structural repair context if database instances were cleared out by F12
-        if (!indexedDatabase) {
-            const healed = await initDatabaseInstance();
-            if (!healed) return;
-        }
+        if (!indexedDatabase) return;
 
-        try {
-            const tx = indexedDatabase.transaction('reportsStore', 'readwrite');
-            tx.objectStore('reportsStore').add(record);
-            tx.oncomplete = () => {
-                document.getElementById('data-payload').value = ''; 
-                refreshQueueCount();
-                if (navigator.onLine) executeCloudSynchronization();
-            };
-        } catch(err) {
-            console.error("F12 safety lock triggered. Resetting structural architecture components...", err);
-            await runBootstrapProcess();
-        }
+        const tx = indexedDatabase.transaction('reportsStore', 'readwrite');
+        tx.objectStore('reportsStore').add(record);
+        tx.oncomplete = () => {
+            document.getElementById('data-payload').value = ''; 
+            refreshQueueCount();
+            if (navigator.onLine) executeCloudSynchronization();
+        };
     });
 
     async function executeCloudSynchronization() {
-        if (cloudSyncInProgress || !navigator.onLine || !locationPermissionGranted || capturedVillageNameStr === "Unknown Location") return;
-        
-        if (!indexedDatabase) {
-            const recovered = await initDatabaseInstance();
-            if (!recovered) return;
-        }
-        
-        cloudSyncInProgress = true;
+        if (!navigator.onLine || !indexedDatabase || !locationPermissionGranted || capturedVillageNameStr === "Unknown Location" || capturedVillageNameStr === "Acquiring village...") return;
 
         try {
             const tx = indexedDatabase.transaction('reportsStore', 'readonly');
@@ -754,45 +691,33 @@
 
             fetchAllQuery.onsuccess = async () => {
                 const recordsQueue = fetchAllQuery.result;
-                if (recordsQueue.length === 0) {
-                    cloudSyncInProgress = false;
-                    return;
-                }
+                if (recordsQueue.length === 0) return;
 
-                try {
-                    for (const record of recordsQueue) {
-                        try {
-                            const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore`, {
-                                method: 'POST',
-                                headers: {
-                                    'apikey': SUPABASE_ANON_KEY,
-                                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                                    'Content-Type': 'application/json',
-                                    'Prefer': 'return=minimal'
-                                },
-                                body: JSON.stringify(record)
-                            });
+                for (const record of recordsQueue) {
+                    try {
+                        const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore`, {
+                            method: 'POST',
+                            headers: {
+                                'apikey': SUPABASE_ANON_KEY,
+                                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                                'Content-Type': 'application/json',
+                                'Prefer': 'return=minimal'
+                            },
+                            body: JSON.stringify(record)
+                        });
 
-                            if (response.ok && indexedDatabase) {
-                                const deleteTx = indexedDatabase.transaction('reportsStore', 'readwrite');
-                                deleteTx.objectStore('reportsStore').delete(record.id);
-                                deleteTx.oncomplete = () => {
-                                    refreshQueueCount();
-                                    fetchSilentMirrorUpdate();
-                                };
-                            }
-                        } catch (err) {
-                            console.warn("Cloud synchronization deferred until network restoration.", err);
+                        if (response.ok && indexedDatabase) {
+                            const deleteTx = indexedDatabase.transaction('reportsStore', 'readwrite');
+                            deleteTx.objectStore('reportsStore').delete(record.id);
+                            deleteTx.oncomplete = () => {
+                                refreshQueueCount();
+                                fetchSilentMirrorUpdate();
+                            };
                         }
-                    }
-                } finally {
-                    cloudSyncInProgress = false;
+                    } catch (err) { console.error(err); }
                 }
             };
-            fetchAllQuery.onerror = () => { cloudSyncInProgress = false; };
-        } catch(e) {
-            cloudSyncInProgress = false;
-        }
+        } catch(e) { console.error(e); }
     }
 
     async function fetchSilentMirrorUpdate() {
@@ -818,22 +743,14 @@
     }
 
     function refreshQueueCount() {
-        if (!indexedDatabase) {
-            const counterNode = document.getElementById('counter');
-            if (counterNode) counterNode.textContent = "0";
-            return;
-        }
+        if (!indexedDatabase) return;
         try {
             const tx = indexedDatabase.transaction('reportsStore', 'readonly');
             const store = tx.objectStore('reportsStore');
             
-            store.count().onsuccess = (ev) => { 
-                const node = document.getElementById('counter');
-                if (node) node.textContent = ev.target.result; 
-            };
+            store.count().onsuccess = (ev) => { document.getElementById('counter').textContent = ev.target.result; };
             store.getAll().onsuccess = (ev) => {
                 const list = ev.target.result;
-                if (!loggerConsole) return;
                 loggerConsole.innerHTML = '';
                 if (list.length === 0) {
                     loggerConsole.innerHTML = '<div style="color: var(--text-low); font-style: italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>';
@@ -845,9 +762,7 @@
                     </div>`;
                 });
             };
-        } catch(err) {
-            console.warn("Storage reset detected. Bypassing render tree loops gracefully.");
-        }
+        } catch(err) { console.error(err); }
     }
 
     function toggleActiveDashboardPanels(showCloudLedger) {
@@ -855,28 +770,16 @@
         const cloudLedger = document.getElementById('cloud-ledger-panel');
 
         if (showCloudLedger) {
-            if (primaryConsole) primaryConsole.classList.add('panel-hidden');
-            if (cloudLedger) cloudLedger.classList.remove('panel-hidden');
-            // Fixed Glitch: Instantly trigger table draw state instead of awaiting async fetch resolutions
+            primaryConsole.classList.add('panel-hidden');
+            cloudLedger.classList.remove('panel-hidden');
             fetchLiveCloudDatabaseRecords();
         } else {
-            if (cloudLedger) cloudLedger.classList.add('panel-hidden');
-            if (primaryConsole) primaryConsole.classList.remove('panel-hidden');
+            cloudLedger.classList.add('panel-hidden');
+            primaryConsole.classList.remove('panel-hidden');
         }
     }
 
     async function fetchLiveCloudDatabaseRecords() {
-        if (cloudRecordsRequestInFlight) return cloudRecordsRequestInFlight;
-
-        cloudRecordsRequestInFlight = performCloudDatabaseFetch();
-        try {
-            return await cloudRecordsRequestInFlight;
-        } Reconstruction {
-            cloudRecordsRequestInFlight = null;
-        }
-    }
-
-    async function performCloudDatabaseFetch() {
         const titleNode = document.getElementById('pipeline-title-node');
         const cloudServerLogger = document.getElementById('cloud-server-logger');
         const refreshActionBtn = document.getElementById('server-refresh-action-btn');
@@ -896,46 +799,19 @@
             titleNode.style.color = "var(--cyber-emerald)";
             titleNode.textContent = "☁️ Real-time Cloud Supabase Server Records Ledger";
         }
-        if (refreshActionBtn) {
-            refreshActionBtn.style.display = "flex";
-            refreshActionBtn.disabled = true;
-        }
-
-        // Fix Navigation Glitch: Check if there's any cache inside `cloudMirrorStore` before modifying the innerHTML.
-        // If cached mirror rows exist, use them immediately to prevent screen-blinking and visual bugs!
-        let hasLocalCache = false;
-        if (indexedDatabase) {
-            try {
-                const checkTx = indexedDatabase.transaction('cloudMirrorStore', 'readonly');
-                const checkStore = checkTx.objectStore('cloudMirrorStore');
-                const cacheData = await new Promise((res) => {
-                    checkStore.getAll().onsuccess = (ev) => res(ev.target.result || []);
-                });
-                if (cacheData && cacheData.length > 0) {
-                    renderTableHTML(cacheData, true);
-                    hasLocalCache = true;
-                }
-            } catch(e) {}
-        }
-
-        if (!hasLocalCache && cloudServerLogger) {
-            cloudServerLogger.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Establishing secure gateway link to Supabase Server Ledger REST API...</div>';
-        }
-
-        const controller = new AbortController();
-        const requestTimeout = setTimeout(() => controller.abort(), 12000);
-
+        if (refreshActionBtn) refreshActionBtn.style.display = "flex";
+        if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Establishing secure gateway link to Supabase Server Ledger REST API...</div>';
+        
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?select=*`, {
                 method: 'GET',
                 cache: 'no-store',
-                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
-                signal: controller.signal
+                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
             });
             
             const contentType = response.headers.get("content-type");
             if (!response.ok || !contentType || !contentType.includes("application/json")) {
-                throw new Error("Invalid Response structural schema format");
+                throw new Error("Invalid Outage HTML Target Intercepted");
             }
 
             const data = await response.json();
@@ -953,37 +829,27 @@
             }
             renderTableHTML(data, true);
         } catch(err) {
-            console.warn("Cloud infrastructure handshake error. Reverting to persistent cached data states.", err);
+            console.warn("Handshake blocked. Pulling mirrored disk backups safely...", err);
             if (titleNode) {
                 titleNode.style.color = "var(--cyber-orange)";
                 titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Server Connection Congested)";
             }
             loadLocalMirrorCacheFallback();
-        } finally {
-            clearTimeout(requestTimeout);
-            if (refreshActionBtn) refreshActionBtn.disabled = false;
         }
     }
 
     function loadLocalMirrorCacheFallback() {
-        if (!indexedDatabase) {
-            if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">No persistent mirrored cloud server data logs discovered inside device disk cache.</div>';
-            return;
-        }
-        try {
-            const tx = indexedDatabase.transaction('cloudMirrorStore', 'readonly');
-            tx.objectStore('cloudMirrorStore').getAll().onsuccess = (ev) => {
-                const mirroredOfflineData = ev.target.result;
-                const cloudServerLogger = document.getElementById('cloud-server-logger');
-                if(mirroredOfflineData && mirroredOfflineData.length > 0) {
-                    renderTableHTML(mirroredOfflineData, false);
-                } else {
-                    if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">No persistent mirrored cloud server data logs discovered inside device disk cache.</div>';
-                }
-            };
-        } catch(e) {
-            console.warn("Fallback resolution mechanism failed.");
-        }
+        if (!indexedDatabase) return;
+        const tx = indexedDatabase.transaction('cloudMirrorStore', 'readonly');
+        tx.objectStore('cloudMirrorStore').getAll().onsuccess = (ev) => {
+            const mirroredOfflineData = ev.target.result;
+            const cloudServerLogger = document.getElementById('cloud-server-logger');
+            if(mirroredOfflineData.length > 0) {
+                renderTableHTML(mirroredOfflineData, false);
+            } else {
+                if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">No persistent mirrored cloud server data logs discovered inside device disk cache.</div>';
+            }
+        };
     }
 
     function renderTableHTML(data, isOnlineContext) {
@@ -1013,7 +879,7 @@
                 <td style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#a5b4fc;">${timeVal}</td>
                 <td>${row.reportData}</td>
                 <td style="text-align:center;">
-                    <button type="button" class="row-delete-btn" onclick="executeSecureLocationBoundErasure('${row.id}', '${villageName}', ${isOnlineContext})">🗑️ Erase</button>
+                    <button class="row-delete-btn" onclick="executeSecureLocationBoundErasure('${row.id}', '${villageName}', ${isOnlineContext})">🗑️ Erase</button>
                 </td>
             </tr>`;
         });
@@ -1042,15 +908,14 @@
         } catch(err) { console.error(err); }
     }
 
+    // 🔒 THE ULTIMATE VERCEL SERVICE WORKER BYPASS INTERCEPTOR MATRIX
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js').catch((err) => console.warn('Service worker offline capability bypass: ', err));
-        });
-    }
-
-    const networkInformation = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    if (networkInformation && typeof networkInformation.addEventListener === 'function') {
-        networkInformation.addEventListener('change', updateTelemetryHUDDisplayMetrics);
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                // Unregisters old caching worker schemas completely to prevent network freeze states
+                registration.unregister();
+            }
+        }).catch((err) => console.error('❌ SW De-registration Fault:', err));
     }
 </script>
 </body>
