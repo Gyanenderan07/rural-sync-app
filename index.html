@@ -101,13 +101,13 @@
             padding: 10px 20px; border-radius: 14px; font-size: 12px; font-weight: 700;
             display: flex; align-items: center; gap: 10px; backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); border: 1px solid transparent; 
-            background: rgba(5, 8, 16, 0.6); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(5, 8, 16, 0.6); transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
         .badge.online-state { color: var(--cyber-emerald) !important; border-color: rgba(16, 185, 129, 0.25) !important; box-shadow: 0 4px 24px rgba(16, 185, 129, 0.08) !important; }
         .badge.offline-state { color: var(--cyber-orange) !important; border-color: rgba(245, 158, 11, 0.25) !important; box-shadow: 0 4px 24px rgba(245, 158, 11, 0.08) !important; }
 
-        .badge-dot { width: 8px; height: 8px; border-radius: 50%; transition: all 0.3s ease; animation: coreBlinkGlow 1.6s infinite ease-in-out; }
+        .badge-dot { width: 8px; height: 8px; border-radius: 50%; transition: all 0.25s ease; animation: coreBlinkGlow 1.6s infinite ease-in-out; }
         @keyframes coreBlinkGlow { 0%, 100% { opacity: 0.4; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.25); } }
 
         .dashboard-grid {
@@ -207,7 +207,7 @@
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--cyber-cyan); }
 
-        /* ======================== NEW PREMIUM ADAPTIVE SYNC LAYOUT HUD ======================== */
+        /* ======================== PREMIUM MOBILE-STYLE STATUS NETWORK SPEED ODOMETER OVERLAYS ======================== */
         .adaptive-sync-panel {
             background: var(--glass-sheet); border: 1px solid var(--glass-border-glow);
             border-radius: 24px; padding: 24px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
@@ -268,7 +268,7 @@
             
             <div id="network-badge" class="badge">
                 <div id="badge-glow-node" class="badge-dot"></div>
-                <span id="badge-text-node">Checking...</span>
+                <span id="badge-text-node">EDGE ONLINE</span>
             </div>
         </div>
     </header>
@@ -384,13 +384,11 @@
     const cloudLoggerConsole = document.getElementById('cloud-server-logger');
 
     let previousNetworkStateIsOnline = navigator.onLine;
-    
     let fallbackPollIntervalTimer = 2500;
     let heartbeatThreadLoop;
+    let activeFetchAbortController = null; // Guard: Prevents closing loop locks during disconnection
 
-    function getSupabaseSecureTimestamp() {
-        return new Date().toISOString();
-    }
+    function getSupabaseSecureTimestamp() { return new Date().toISOString(); }
 
     function formatIsoStringToLocalSystemTime(isoString) {
         if(!isoString) return "N/A";
@@ -399,12 +397,10 @@
                 hour12: true, year: "numeric", month: "2-digit", day: "2-digit",
                 hour: "2-digit", minute: "2-digit", second: "2-digit"
             }).replace(/,/g, '');
-        } catch(e) {
-            return isoString;
-        }
+        } catch(e) { return isoString; }
     }
 
-    // 📱 UNIVERSAL HIGH-FIDELITY SPEED TELEMETRY ENGINE (DESKTOP & MOBILE COMPATIBLE)
+    // 📱 RE-ENGINEERED INSTANT RESPONSE ODOMETER SIMULATION RATIO MATRICES
     async function updateTelemetryHUDDisplayMetrics() {
         const speedNode = document.getElementById('live-speed-telemetry');
         const odometerNode = document.getElementById('mobile-live-odometer-node');
@@ -419,39 +415,41 @@
             odometerNode.textContent = "0.0 KB/s";
             odometerNode.style.color = "var(--text-low)";
         } else {
-            // High Fidelity active loop cross-origin speed simulation engine
             const hostStartTime = Date.now();
+            if (activeFetchAbortController) activeFetchAbortController.abort();
+            activeFetchAbortController = new AbortController();
+
             try {
-                // Precision HEAD request tracking payload to measure actual network latency
                 await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?limit=1`, {
                     method: 'HEAD',
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+                    signal: activeFetchAbortController.signal
                 });
-                const computeDeltaDuration = (Date.now() - hostStartTime) / 1000;
                 
-                // Calculates simulated bytes ratio map relative to physical adapter round trip durations
-                let simulatedDownlinkMbps = Math.max(0.4, (2.5 / (computeDeltaDuration + 0.1)));
-                if(simulatedDownlinkMbps > 100) simulatedDownlinkMbps = 42.4;
+                const computeDeltaDuration = (Date.now() - hostStartTime) / 1000;
+                let simulatedDownlinkMbps = Math.max(0.6, (1.8 / (computeDeltaDuration + 0.05)));
+                if(simulatedDownlinkMbps > 80) simulatedDownlinkMbps = 34.21;
 
                 speedNode.textContent = simulatedDownlinkMbps.toFixed(2) + " Mbps (Active Grid)";
                 speedNode.style.color = "var(--cyber-cyan)";
 
                 const calculatedKbsValue = (simulatedDownlinkMbps * 1024) / 8;
                 if (calculatedKbsValue >= 1024) {
-                    const mbsValue = (calculatedKbsValue / 1024) * (0.9 + Math.random() * 0.2);
+                    const mbsValue = (calculatedKbsValue / 1024) * (0.91 + Math.random() * 0.18);
                     odometerNode.textContent = mbsValue.toFixed(1) + " MB/s";
                     odometerNode.style.color = "var(--cyber-emerald)";
                 } else {
-                    const dynamicRenderKbs = calculatedKbsValue * (0.85 + Math.random() * 0.3);
+                    const dynamicRenderKbs = calculatedKbsValue * (0.88 + Math.random() * 0.24);
                     odometerNode.textContent = dynamicRenderKbs.toFixed(1) + " KB/s";
                     odometerNode.style.color = "var(--cyber-cyan)";
                 }
             } catch (e) {
-                // Fail-safe fallbacks if server has network throttle congestion loops
-                speedNode.textContent = "Local Link Authenticated";
-                speedNode.style.color = "var(--cyber-cyan)";
-                odometerNode.textContent = "64.2 KB/s";
-                odometerNode.style.color = "var(--cyber-cyan)";
+                if (e.name !== 'AbortError') {
+                    speedNode.textContent = "0.00 Mbps (Network Severed)";
+                    speedNode.style.color = "var(--cyber-orange)";
+                    odometerNode.textContent = "0.0 KB/s";
+                    odometerNode.style.color = "var(--text-low)";
+                }
             }
         }
 
@@ -492,7 +490,7 @@
         forceNetworkInterfaceUpdate();
     }
 
-    // ⚡ FIX ACTIVE INDICATOR DUAL MATRIX FOR DYNAMIC COLOR AND TEXT RESPONSES
+    // ⚡ BULLETPROOF INTERCEPTOR CONTROL FOR BOTH LAPTOP AND SMARTPHONES
     function forceNetworkInterfaceUpdate() {
         const badge = document.getElementById('network-badge');
         const badgeDot = document.getElementById('badge-glow-node');
@@ -503,13 +501,15 @@
             badge.className = "badge online-state";
             badgeDot.style.backgroundColor = "var(--cyber-emerald)";
             badgeDot.style.boxShadow = "0 0 16px var(--cyber-emerald)";
-            badgeText.textContent = "EDGE ONLINE"; // Strict direct dynamic update mapping text execution
+            badgeText.textContent = "EDGE ONLINE"; 
             executeCloudSynchronization();
         } else {
+            // Instant absolute hardware cutoff injection
+            if (activeFetchAbortController) activeFetchAbortController.abort();
             badge.className = "badge offline-state";
             badgeDot.style.backgroundColor = "var(--cyber-orange)";
             badgeDot.style.boxShadow = "0 0 16px var(--cyber-orange)";
-            badgeText.textContent = "EDGE OFFLINE"; // Strict direct dynamic update mapping text execution
+            badgeText.textContent = "EDGE OFFLINE"; 
         }
 
         updateTelemetryHUDDisplayMetrics();
@@ -522,6 +522,7 @@
         }
     }
     
+    // Explicit event pipeline structural force overrides
     window.addEventListener('online', forceNetworkInterfaceUpdate);
     window.addEventListener('offline', forceNetworkInterfaceUpdate);
 
@@ -533,7 +534,6 @@
     };
     dbOpenRequest.onsuccess = (e) => {
         indexedDatabase = e.target.result;
-        
         indexedDatabase.onclose = () => { indexedDatabase = null; };
         indexedDatabase.onversionchange = () => { indexedDatabase.close(); indexedDatabase = null; };
         
@@ -543,14 +543,13 @@
         clearInterval(heartbeatThreadLoop);
         heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
     };
-    dbOpenRequest.onerror = (e) => { console.error("Database connection failure mapping:", e); };
 
     document.getElementById('sync-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const textPayload = document.getElementById('data-payload').value;
         const record = { id: crypto.randomUUID(), reportData: textPayload, timestamp: getSupabaseSecureTimestamp() };
 
-        if (!indexedDatabase) { alert("IndexedDB connection matrix resolving state. Try again."); return; }
+        if (!indexedDatabase) return;
 
         const tx = indexedDatabase.transaction('reportsStore', 'readwrite');
         tx.objectStore('reportsStore').add(record);
@@ -593,9 +592,7 @@
                             fetchSilentMirrorUpdate();
                         };
                     }
-                } catch (err) {
-                    console.error("Cloud pipe transmission fault:", err);
-                }
+                } catch (err) { console.error(err); }
             }
         };
     }
@@ -739,10 +736,7 @@
     }
 
     async function deleteCloudRecordFromServer(recordId) {
-        if (!navigator.onLine) {
-            alert("Edge Node is offline. Remote operations require active server channels.");
-            return;
-        }
+        if (!navigator.onLine) return;
         if (!confirm("Are you absolutely sure you want to permanently erase this ledger line directly from the cloud backend server store?")) return;
 
         try {
@@ -750,15 +744,8 @@
                 method: 'DELETE',
                 headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
             });
-            if (response.ok) {
-                fetchLiveCloudDatabaseRecords();
-            } else {
-                alert("Database transactional server layer rejected execution.");
-            }
-        } catch(err) {
-            console.error("Wipe out sequence tracking error:", err);
-            alert("Failed to target cloud pipeline endpoints.");
-        }
+            if (response.ok) fetchLiveCloudDatabaseRecords();
+        } catch(err) { console.error(err); }
     }
 
     if ('serviceWorker' in navigator) {
