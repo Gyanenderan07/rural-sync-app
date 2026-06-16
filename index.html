@@ -26,10 +26,6 @@
             --text-core: #f8fafc;
             --text-low: #64748b;
             
-            --neon-glow-cyan: rgba(6, 182, 212, 0.25);
-            --neon-glow-indigo: rgba(79, 70, 229, 0.2);
-            --neon-glow-rose: rgba(244, 63, 94, 0.25);
-            
             --fluid-gradient: linear-gradient(135deg, var(--cyber-indigo) 0%, var(--cyber-cyan) 50%, var(--cyber-purple) 100%);
             --blue-gradient-btn: linear-gradient(135deg, #0077ff 0%, #00ddff 100%);
             --blue-glow-aesthetic: rgba(0, 221, 255, 0.35);
@@ -43,7 +39,7 @@
             color: var(--text-core);
             min-height: 100vh;
             overflow-x: hidden;
-            padding: 50px 24px;
+            padding: 60px 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -75,7 +71,7 @@
             background-size: 32px 32px; z-index: -1; pointer-events: none;
         }
 
-        .app-container { width: 100%; max-width: 1100px; position: relative; z-index: 1; }
+        .app-container { width: 100%; max-width: 1200px; position: relative; z-index: 1; }
 
         header {
             display: flex; justify-content: space-between; align-items: center;
@@ -111,48 +107,49 @@
         @keyframes coreBlinkGlow { 0%, 100% { opacity: 0.4; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.25); } }
 
         .dashboard-grid {
-            display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px;
+            display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px;
             animation: sectionScrollReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            align-items: start;
         }
         @keyframes sectionScrollReveal {
             from { opacity: 0; transform: translateY(24px); filter: blur(4px); }
             to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
-        @media (max-width: 868px) { .dashboard-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 920px) { .dashboard-grid { grid-template-columns: 1fr; gap: 32px; } }
 
         .glass-card {
             background: var(--glass-sheet); border: 1px solid var(--glass-border-glow);
-            border-radius: 24px; padding: 32px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 28px; padding: 40px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative; overflow: hidden;
         }
         .glass-card::before {
             content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, rgba(255,255,255,0.015) 0%, transparent 100%); pointer-events: none;
         }
-        .glass-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.09); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55); }
+        .glass-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.09); box-shadow: 0 34px 70px rgba(0, 0, 0, 0.6); }
 
         .card-title {
-            font-size: 13px; font-weight: 800; color: var(--text-low); margin-bottom: 24px;
+            font-size: 13.5px; font-weight: 800; color: var(--text-low); margin-bottom: 28px;
             text-transform: uppercase; letter-spacing: 1.5px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
         }
 
         textarea {
-            width: 100%; height: 150px; background: rgba(3, 5, 10, 0.6); border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px; padding: 18px; color: var(--text-core); font-family: inherit; font-size: 15px; line-height: 1.6; resize: none; outline: none; margin-bottom: 24px;
+            width: 100%; height: 165px; background: rgba(3, 5, 10, 0.6); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 18px; padding: 22px; color: var(--text-core); font-family: inherit; font-size: 15px; line-height: 1.6; resize: none; outline: none; margin-bottom: 28px;
         }
         textarea:focus { border-color: rgba(6, 182, 212, 0.4); background: rgba(3, 5, 10, 0.85); box-shadow: 0 0 24px rgba(6, 182, 212, 0.08), inset 0 2px 4px rgba(0,0,0,0.5); }
 
         button {
-            width: 100%; background: var(--blue-gradient-btn); color: #ffffff; border: none; padding: 16px; border-radius: 14px;
-            font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 8px 24px rgba(0, 119, 255, 0.25);
+            width: 100%; background: var(--blue-gradient-btn); color: #ffffff; border: none; padding: 18px; border-radius: 16px;
+            font-size: 15.5px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 8px 24px rgba(0, 119, 255, 0.25);
         }
         button:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0, 221, 255, 0.4); }
         button:active { transform: translateY(0px) scale(0.98); }
 
         .admin-route-btn {
             width: 100%; background: transparent; color: var(--cyber-cyan); border: 1px dashed rgba(6, 182, 212, 0.3);
-            padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 18px;
+            padding: 16px; border-radius: 16px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 24px;
             display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: none;
         }
         .admin-route-btn:hover { background: rgba(6, 182, 212, 0.03); border-color: var(--cyber-cyan); box-shadow: 0 0 20px rgba(6, 182, 212, 0.12); transform: scale(1.005); }
@@ -167,7 +164,7 @@
 
         .server-refresh-btn {
             background: rgba(6, 182, 212, 0.04) !important; color: var(--cyber-cyan) !important; border: 1px solid rgba(6, 182, 212, 0.25) !important;
-            padding: 10px 22px; font-size: 13px; width: auto; border-radius: 10px; box-shadow: none !important; display: flex; align-items: center; gap: 8px;
+            padding: 12px 24px; font-size: 13px; width: auto; border-radius: 12px; box-shadow: none !important; display: flex; align-items: center; gap: 8px;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
         .server-refresh-btn:hover { background: var(--blue-gradient-btn) !important; color: #030712 !important; font-weight: 700 !important; border-color: transparent !important; transform: translateY(-2px); box-shadow: 0 8px 24px var(--blue-glow-aesthetic) !important; }
@@ -176,23 +173,23 @@
 
         .row-delete-btn {
             background: transparent !important; color: var(--cyber-rose) !important; border: 1px solid rgba(244, 63, 94, 0.2) !important;
-            padding: 6px 14px !important; font-size: 12px !important; width: auto !important; font-weight: 600 !important; box-shadow: none !important; border-radius: 8px !important;
+            padding: 8px 16px !important; font-size: 12px !important; width: auto !important; font-weight: 600 !important; box-shadow: none !important; border-radius: 10px !important;
         }
         .row-delete-btn:hover { background: rgba(244, 63, 94, 0.08) !important; border-color: var(--cyber-rose) !important; box-shadow: 0 0 15px var(--neon-glow-rose) !important; }
 
-        .pipeline-container { display: flex; flex-direction: column; gap: 14px; }
-        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; background: rgba(3, 5, 10, 0.4); border: 1px solid rgba(255, 255, 255, 0.02); border-radius: 12px; }
-        .info-label { font-size: 13px; color: var(--text-low); font-weight: 500; }
-        .info-value { font-size: 13px; font-weight: 700; color: var(--text-core); }
+        .pipeline-container { display: flex; flex-direction: column; gap: 18px; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; background: rgba(3, 5, 10, 0.4); border: 1px solid rgba(255, 255, 255, 0.02); border-radius: 14px; }
+        .info-label { font-size: 13.5px; color: var(--text-low); font-weight: 500; }
+        .info-value { font-size: 13.5px; font-weight: 700; color: var(--text-core); }
         .tech-mono { font-family: 'JetBrains Mono', monospace; color: var(--cyber-cyan); }
 
         .queue-terminal {
-            background: rgba(3, 5, 10, 0.7); border: 1px solid rgba(255,255,255,0.03); border-radius: 16px;
-            padding: 20px; height: 190px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.7; color: #67e8f9; box-shadow: inset 0 4px 20px rgba(0,0,0,0.6);
+            background: rgba(3, 5, 10, 0.7); border: 1px solid rgba(255,255,255,0.03); border-radius: 18px;
+            padding: 24px; height: 210px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.8; color: #67e8f9; box-shadow: inset 0 4px 20px rgba(0,0,0,0.6);
         }
 
         .cloud-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-        .cloud-table th, .cloud-table td { padding: 16px 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .cloud-table th, .cloud-table td { padding: 18px 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.03); }
         .cloud-table th { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); letter-spacing: 1px; background: rgba(0,0,0,0.15); }
         .cloud-table td { font-size: 13.5px; color: #cbd5e1; }
         .cloud-table tr { transition: background 0.2s ease; }
@@ -207,23 +204,23 @@
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--cyber-cyan); }
 
-        .sync-hud-segment-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
-        @media(max-width: 600px) { .sync-hud-segment-row { grid-template-columns: 1fr; } }
+        .sync-hud-segment-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+        @media(max-width: 650px) { .sync-hud-segment-row { grid-template-columns: 1fr; gap: 14px; } }
         
         .segment-mini-box {
-            background: rgba(5, 8, 16, 0.6); border: 1px solid rgba(255,255,255,0.03); border-radius: 14px;
-            padding: 14px; display: flex; flex-direction: column; gap: 4px; transition: border 0.3s ease;
+            background: rgba(5, 8, 16, 0.6); border: 1px solid rgba(255,255,255,0.03); border-radius: 16px;
+            padding: 16px 20px; display: flex; flex-direction: column; gap: 6px; transition: border 0.3s ease;
         }
         .segment-mini-box:hover { border-color: rgba(6, 182, 212, 0.2); }
         .segment-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); letter-spacing: 0.5px; }
-        .segment-value { font-size: 13.5px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: #f8fafc; }
+        .segment-value { font-size: 14px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: #f8fafc; word-break: break-word; }
 
         .adaptive-sync-panel {
             background: var(--glass-sheet); border: 1px solid var(--glass-border-glow);
-            border-radius: 24px; padding: 24px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); margin-top: 32px;
+            border-radius: 28px; padding: 32px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); margin-top: 40px;
         }
-        .sync-hud-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .sync-hud-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .sync-hud-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-core); }
         .toggle-switch-wrapper { display: flex; align-items: center; gap: 12px; }
         .toggle-switch-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; }
@@ -242,15 +239,15 @@
         
         .mobile-speed-meter-capsule {
             display: flex; align-items: center; gap: 6px; background: rgba(5, 8, 16, 0.7); 
-            border: 1px solid rgba(255,255,255,0.04); padding: 5px 12px; border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.04); padding: 6px 14px; border-radius: 11px;
             font-family: 'JetBrains Mono', monospace; font-size: 11.5px; font-weight: 700;
         }
         
         .sync-telemetry-terminal {
-            background: rgba(3, 5, 10, 0.7); border: 1px solid rgba(255,255,255,0.02); border-radius: 14px;
-            padding: 16px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+            background: rgba(3, 5, 10, 0.7); border: 1px solid rgba(255,255,255,0.02); border-radius: 16px;
+            padding: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;
         }
-        @media (max-width: 550px) { .sync-telemetry-terminal { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) { .sync-telemetry-terminal { grid-template-columns: 1fr; gap: 18px; } }
     </style>
 </head>
 <body>
@@ -362,7 +359,7 @@
             </div>
         </div>
 
-        <div class="glass-card" style="margin-top: 32px;">
+        <div class="glass-card" style="margin-top: 40px;">
             <div class="card-title">🖥️ Live Client Store Payload Telemetry Logs (IndexedDB Node Trace)</div>
             <div class="queue-terminal" id="terminal-logger">
                 <div style="color: var(--text-low); font-style: italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>
@@ -400,26 +397,13 @@
     const SUPABASE_URL = "https://rsjyvrnxqkjtaczwectr.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzanl2cm54cWtqdGFjendlY3RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMDMwNjUsImV4cCI6MjA5Njg3OTA2NX0.YB63IkqX1Q5uFtNNxEjnyx-TFdCeN_U09vWM6zguL-o";
 
-    async function fetchWithTimeout(url, options = {}, timeout = 8000) {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), timeout);
-        try {
-            return await fetch(url, { ...options, signal: controller.signal });
-        } finally {
-            clearTimeout(timer);
-        }
-    }
-
-
-
     let indexedDatabase = null; 
     const loggerConsole = document.getElementById('terminal-logger');
     const cloudLoggerConsole = document.getElementById('cloud-server-logger');
 
     let previousNetworkStateIsOnline = navigator.onLine;
-    let fallbackPollIntervalTimer = 15000;
-    let telemetryBusy = false;
-    let heartbeatThreadLoop;
+    let fallbackPollIntervalTimer = 2500;
+    let heartbeatThreadLoop = null;
     let activeFetchAbortController = null; 
 
     let capturedVillageNameStr = "Unknown Location";
@@ -456,9 +440,12 @@
                 const lon = position.coords.longitude;
 
                 try {
-                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1`);
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1&accept-language=en`);
                     const geoJSON = await res.json();
-                    capturedVillageNameStr = geoJSON.address.village || geoJSON.address.suburb || geoJSON.address.county || geoJSON.address.town || "Remote Outpost";
+                    
+                    const addr = geoJSON.address || {};
+                    capturedVillageNameStr = addr.neighbourhood || addr.residential || addr.suburb || addr.village || addr.town || addr.road || "Remote Outpost";
+                    
                     document.getElementById('hud-live-location').textContent = capturedVillageNameStr;
                 } catch (err) {
                     capturedVillageNameStr = "Infield Grid Alpha";
@@ -475,7 +462,7 @@
                 document.getElementById('submit-btn-node').textContent = "🔒 Locked — Enable Location Services";
                 
                 if (triggerManualAlertOnBlock) {
-                    alert("📍 Location Service Interrupted:\n\nEdgeSync requires active geolocation to verify field nodes. Please click the location icon in your address bar to change configuration to 'Allow' and reload!");
+                    alert("📍 Location Service Interrupted:\n\nEdgeSync requires active geolocation to verify field nodes. Please click the location icon in your browser address bar to change configuration to 'Allow' and reload!");
                 }
             },
             { enableHighAccuracy: true, timeout: 8000 }
@@ -491,6 +478,7 @@
     setInterval(invokeLiveClockTelemetry, 1000);
     forceEnforcedLocationVerification(false);
 
+    // 🔒 HIGH-SPEED STABLE PING MATRIX — ZERO OVERLAP TIMEOUTS
     async function updateTelemetryHUDDisplayMetrics() {
         const speedNode = document.getElementById('live-speed-telemetry');
         const odometerNode = document.getElementById('mobile-live-odometer-node');
@@ -499,6 +487,7 @@
         const throttleNode = document.getElementById('live-handshake-throttle');
         const isEcoChecked = document.getElementById('battery-toggle').checked;
 
+        // Strict hardware validation layer shortcut
         if (navigator.onLine === false) {
             speedNode.textContent = "0.00 Mbps (Disconnected)";
             speedNode.style.color = "var(--cyber-orange)";
@@ -512,7 +501,7 @@
 
         try {
             const hostStartTime = Date.now();
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?limit=0`, {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?limit=0&_t=${hostStartTime}`, {
                 method: 'HEAD',
                 cache: 'no-store',
                 headers: { 
@@ -553,7 +542,7 @@
                 
                 if (previousNetworkStateIsOnline !== false) {
                     previousNetworkStateIsOnline = false;
-                    forceNetworkInterfaceUpdate();
+                    executeForcedBadgeDOMShift(false);
                 }
             }
         }
@@ -584,7 +573,7 @@
         if (isChecked) {
             statusDisplay.textContent = "ECO MODE: ACTIVE";
             statusDisplay.style.color = "var(--cyber-orange)";
-            fallbackPollIntervalTimer = 30000; 
+            fallbackPollIntervalTimer = 10000; 
         } else {
             statusDisplay.textContent = "ECO MODE: OFF";
             statusDisplay.style.color = "var(--cyber-emerald)";
@@ -595,18 +584,31 @@
         forceNetworkInterfaceUpdate();
     }
 
-    function forceNetworkInterfaceUpdate() {
+    function executeForcedBadgeDOMShift(isOnline) {
         const badge = document.getElementById('network-badge');
         const badgeDot = document.getElementById('badge-glow-node');
         const badgeText = document.getElementById('badge-text-node');
+        if(!badge || !badgeDot || !badgeText) return;
+
+        if (isOnline) {
+            badge.setAttribute('class', 'badge online-state');
+            badgeDot.style.backgroundColor = "var(--cyber-emerald)";
+            badgeDot.style.boxShadow = "0 0 16px var(--cyber-emerald)";
+            badgeText.innerHTML = "EDGE ONLINE — Pipeline Synchronized";
+        } else {
+            badge.setAttribute('class', 'badge offline-state');
+            badgeDot.style.backgroundColor = "var(--cyber-orange)";
+            badgeDot.style.boxShadow = "0 0 16px var(--cyber-orange)";
+            badgeText.innerHTML = "EDGE OFFLINE — Local Cache Mode";
+        }
+    }
+
+    function forceNetworkInterfaceUpdate() {
         const currentOnlineState = navigator.onLine;
         
         if (currentOnlineState === false) {
             if (activeFetchAbortController) activeFetchAbortController.abort();
-            badge.setAttribute('class', 'badge offline-state');
-            badgeDot.style.backgroundColor = "var(--cyber-orange)";
-            badgeDot.style.boxShadow = "0 0 16px var(--cyber-orange)";
-            badgeText.innerHTML = "EDGE OFFLINE — Local Cache Mode"; 
+            executeForcedBadgeDOMShift(false);
             
             const speedNode = document.getElementById('live-speed-telemetry');
             const odometerNode = document.getElementById('mobile-live-odometer-node');
@@ -626,11 +628,7 @@
             return;
         }
 
-        badge.setAttribute('class', 'badge online-state');
-        badgeDot.style.backgroundColor = "var(--cyber-emerald)";
-        badgeDot.style.boxShadow = "0 0 16px var(--cyber-emerald)";
-        badgeText.innerHTML = "EDGE ONLINE — Pipeline Synchronized"; 
-        
+        executeForcedBadgeDOMShift(true);
         executeCloudSynchronization();
         updateTelemetryHUDDisplayMetrics();
 
@@ -642,8 +640,20 @@
         }
     }
     
-    window.addEventListener('online', forceNetworkInterfaceUpdate);
-    window.addEventListener('offline', forceNetworkInterfaceUpdate);
+    // 🛡️ RE-DOCKING EVENT HANDLERS TO RECTIFY INSTANT TOGGLE DROP ANOMALIES
+    window.addEventListener('online', () => { 
+        clearInterval(heartbeatThreadLoop);
+        previousNetworkStateIsOnline = false; 
+        forceNetworkInterfaceUpdate(); 
+        heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
+    });
+    
+    window.addEventListener('offline', () => { 
+        clearInterval(heartbeatThreadLoop);
+        previousNetworkStateIsOnline = true; 
+        forceNetworkInterfaceUpdate(); 
+        heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
+    });
 
     const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 3); 
     dbOpenRequest.onupgradeneeded = (e) => {
@@ -690,7 +700,7 @@
         tx.oncomplete = () => {
             document.getElementById('data-payload').value = ''; 
             refreshQueueCount();
-            if (navigator.onLine && locationPermissionGranted) { executeCloudSynchronization(); }
+            if (navigator.onLine) executeCloudSynchronization();
         };
     });
 
@@ -921,14 +931,14 @@
         } catch(err) { console.error(err); }
     }
 
-    // 🔒 THE ULTIMATE VERCEL SERVICE WORKER BYPASS INTERCEPTOR MATRIX
+    // 🔒 PWA SECURE OFFLINE LAYER EMBEDDED HANDSHAKE SEQUENCE
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            for(let registration of registrations) {
-                // Unregisters old caching worker schemas completely to prevent network freeze states
-                registration.unregister();
-            }
-        }).catch((err) => console.error('❌ SW De-registration Fault:', err));
+        window.addEventListener('load', () => {
+            // Direct embedded runtime deployment loop to ensure offline execution mappings
+            navigator.serviceWorker.register('/sw.js', { scope: '/' })
+            .then((reg) => console.log('✓ EdgeSync PWA Layer Armed and Synchronized Securely', reg.scope))
+            .catch((err) => console.error('❌ PWA SW Registration Fault:', err));
+        });
     }
 </script>
 </body>
