@@ -351,96 +351,110 @@ transform:scale(1.01);
 
 </style>
 
-<style id="ultimate-luxury-refresh">
-:root{
---canvas-bg:#0f0b08;
---primary:#d4a574;
---secondary:#6b8f71;
---accent:#f4e3c1;
 
---cyber-indigo:#d4a574;
---cyber-cyan:#f4e3c1;
---cyber-purple:#6b8f71;
---cyber-emerald:#b8c99d;
---cyber-rose:#c97b63;
---text-core:#f8f4ee;
---text-low:#b8ada1;
+
+
+<style id="premium-black-gold-theme">
+:root{
+--canvas-bg:#0b0d10;
+--cyber-indigo:#d6b36a;
+--cyber-cyan:#efe3c2;
+--cyber-purple:#8f7a53;
+--cyber-emerald:#d6b36a;
+--cyber-rose:#c8a25a;
+--cyber-orange:#f0c674;
+--text-core:#f5f1e8;
+--text-low:#9c9588;
+--glass-sheet:rgba(18,20,24,.55);
+--glass-border:rgba(255,255,255,.08);
 }
 
 body{
 background:
-radial-gradient(circle at 15% 20%, rgba(212,165,116,.18), transparent 35%),
-radial-gradient(circle at 85% 15%, rgba(107,143,113,.18), transparent 35%),
-radial-gradient(circle at 50% 100%, rgba(244,227,193,.10), transparent 45%),
-linear-gradient(180deg,#0f0b08,#17120e,#0d0907) !important;
-padding-top:120px;
+radial-gradient(circle at 20% 20%, rgba(214,179,106,.10), transparent 35%),
+radial-gradient(circle at 80% 10%, rgba(255,255,255,.04), transparent 30%),
+linear-gradient(180deg,#0b0d10,#111418,#0a0c0f)!important;
+padding-top:95px!important;
 }
 
 header{
-position:fixed !important;
+position:fixed!important;
 top:0;left:0;right:0;
-width:100%;
-height:82px;
-padding:0 48px;
+height:78px;
+padding:0 40px;
+background:rgba(10,12,15,.75)!important;
+backdrop-filter:blur(24px) saturate(180%);
+border-bottom:1px solid rgba(214,179,106,.12)!important;
+box-shadow:0 8px 40px rgba(0,0,0,.45)!important;
 z-index:9999;
-background:rgba(18,14,11,.55) !important;
-backdrop-filter:blur(35px) saturate(180%);
--webkit-backdrop-filter:blur(35px) saturate(180%);
-border-bottom:1px solid rgba(244,227,193,.12);
-box-shadow:0 10px 60px rgba(0,0,0,.35);
-}
-
-.glass-card,.adaptive-sync-panel{
-background:linear-gradient(135deg,
-rgba(255,255,255,.08),
-rgba(255,255,255,.025)) !important;
-backdrop-filter:blur(50px) saturate(180%);
--webkit-backdrop-filter:blur(50px) saturate(180%);
-border:1px solid rgba(244,227,193,.10) !important;
-box-shadow:
-0 30px 100px rgba(0,0,0,.35),
-inset 0 1px 0 rgba(255,255,255,.12),
-inset 0 -1px 0 rgba(255,255,255,.03);
-border-radius:32px !important;
-}
-
-button{
-background:linear-gradient(135deg,#d4a574,#c97b63) !important;
-box-shadow:0 20px 50px rgba(212,165,116,.25) !important;
-}
-
-button:hover{
-box-shadow:0 25px 70px rgba(201,123,99,.35) !important;
-transform:translateY(-4px);
-}
-
-.segment-mini-box,.info-row{
-background:rgba(255,255,255,.03) !important;
-border:1px solid rgba(244,227,193,.06) !important;
 }
 
 .logo-section h1{
-background:linear-gradient(135deg,#f4e3c1,#d4a574) !important;
+background:linear-gradient(135deg,#ffffff,#d6b36a)!important;
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
 }
 
-.badge{
-background:rgba(255,255,255,.04) !important;
+.logo-section span{
+background:rgba(214,179,106,.08)!important;
+border-color:rgba(214,179,106,.15)!important;
+color:#d6b36a!important;
+}
+
+.glass-card,.adaptive-sync-panel{
+background:
+linear-gradient(135deg,
+rgba(255,255,255,.045),
+rgba(255,255,255,.015))!important;
+backdrop-filter:blur(28px) saturate(180%);
+border:1px solid rgba(255,255,255,.08)!important;
+border-radius:30px!important;
+box-shadow:
+0 25px 80px rgba(0,0,0,.45),
+inset 0 1px 0 rgba(255,255,255,.06)!important;
+}
+
+.glass-card:hover{
+transform:translateY(-6px);
+border-color:rgba(214,179,106,.22)!important;
+}
+
+button{
+background:linear-gradient(135deg,#b8934d,#e1c07a)!important;
+color:#111!important;
+font-weight:800!important;
+box-shadow:0 15px 40px rgba(214,179,106,.22)!important;
+}
+
+button:hover{
+transform:translateY(-3px)!important;
+box-shadow:0 20px 60px rgba(214,179,106,.35)!important;
+}
+
+textarea,
+.info-row,
+.segment-mini-box,
+.queue-terminal{
+background:rgba(255,255,255,.025)!important;
+border-color:rgba(255,255,255,.05)!important;
+}
+
+.card-title,
+.segment-label{
+color:#d6b36a!important;
+}
+
+.tech-mono,
+#mobile-live-odometer-node{
+color:#efe3c2!important;
 }
 
 .cloud-table tr:hover td{
-background:rgba(212,165,116,.08) !important;
-}
-
-textarea{
-background:rgba(255,255,255,.025) !important;
-border:1px solid rgba(244,227,193,.08) !important;
+background:rgba(214,179,106,.08)!important;
 }
 
 .tech-mesh-overlay{
-opacity:.35;
-filter:blur(.3px);
+opacity:.15!important;
 }
 </style>
 
