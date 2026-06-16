@@ -400,12 +400,25 @@
     const SUPABASE_URL = "https://rsjyvrnxqkjtaczwectr.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzanl2cm54cWtqdGFjendlY3RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMDMwNjUsImV4cCI6MjA5Njg3OTA2NX0.YB63IkqX1Q5uFtNNxEjnyx-TFdCeN_U09vWM6zguL-o";
 
+    async function fetchWithTimeout(url, options = {}, timeout = 8000) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeout);
+        try {
+            return await fetch(url, { ...options, signal: controller.signal });
+        } finally {
+            clearTimeout(timer);
+        }
+    }
+
+
+
     let indexedDatabase = null; 
     const loggerConsole = document.getElementById('terminal-logger');
     const cloudLoggerConsole = document.getElementById('cloud-server-logger');
 
     let previousNetworkStateIsOnline = navigator.onLine;
-    let fallbackPollIntervalTimer = 2500;
+    let fallbackPollIntervalTimer = 15000;
+    let telemetryBusy = false;
     let heartbeatThreadLoop;
     let activeFetchAbortController = null; 
 
@@ -571,7 +584,7 @@
         if (isChecked) {
             statusDisplay.textContent = "ECO MODE: ACTIVE";
             statusDisplay.style.color = "var(--cyber-orange)";
-            fallbackPollIntervalTimer = 10000; 
+            fallbackPollIntervalTimer = 30000; 
         } else {
             statusDisplay.textContent = "ECO MODE: OFF";
             statusDisplay.style.color = "var(--cyber-emerald)";
@@ -677,7 +690,7 @@
         tx.oncomplete = () => {
             document.getElementById('data-payload').value = ''; 
             refreshQueueCount();
-            if (navigator.onLine) executeCloudSynchronization();
+            if (navigator.onLine && locationPermissionGranted) { executeCloudSynchronization(); }
         };
     });
 
