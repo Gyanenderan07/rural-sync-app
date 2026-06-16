@@ -39,7 +39,7 @@
             color: var(--text-core);
             min-height: 100vh;
             overflow-x: hidden;
-            padding: 60px 24px; /* Increased top-bottom body cushion padding */
+            padding: 60px 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -71,7 +71,7 @@
             background-size: 32px 32px; z-index: -1; pointer-events: none;
         }
 
-        .app-container { width: 100%; max-width: 1200px; position: relative; z-index: 1; } /* Expanded maximum layout baseline width footprint */
+        .app-container { width: 100%; max-width: 1200px; position: relative; z-index: 1; }
 
         header {
             display: flex; justify-content: space-between; align-items: center;
@@ -106,9 +106,8 @@
         .badge-dot { width: 8px; height: 8px; border-radius: 50%; transition: all 0.25s ease; animation: coreBlinkGlow 1.6s infinite ease-in-out; }
         @keyframes coreBlinkGlow { 0%, 100% { opacity: 0.4; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.25); } }
 
-        /* 🌐 PREMIUM DASHBOARD GRID WRAPPER SPACE CONFIGURATION EXTENSION */
         .dashboard-grid {
-            display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px; /* Increased box spacing gaps to 40px to eradicate cramped layout compression */
+            display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px;
             animation: sectionScrollReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             align-items: start;
         }
@@ -118,10 +117,9 @@
         }
         @media (max-width: 920px) { .dashboard-grid { grid-template-columns: 1fr; gap: 32px; } }
 
-        /* 📦 ENHANCED PREMIUM SPACIOUS DESIGN FOR CORE CARDS PACKAGES */
         .glass-card {
             background: var(--glass-sheet); border: 1px solid var(--glass-border-glow);
-            border-radius: 28px; padding: 40px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); /* Boosted layout cell box padding to 40px */
+            border-radius: 28px; padding: 40px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
             box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative; overflow: hidden;
         }
@@ -132,18 +130,18 @@
         .glass-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.09); box-shadow: 0 34px 70px rgba(0, 0, 0, 0.6); }
 
         .card-title {
-            font-size: 13.5px; font-weight: 800; color: var(--text-low); margin-bottom: 28px; /* Boosted margin-bottom space alignment */
+            font-size: 13.5px; font-weight: 800; color: var(--text-low); margin-bottom: 28px;
             text-transform: uppercase; letter-spacing: 1.5px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
         }
 
         textarea {
             width: 100%; height: 165px; background: rgba(3, 5, 10, 0.6); border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 18px; padding: 22px; color: var(--text-core); font-family: inherit; font-size: 15px; line-height: 1.6; resize: none; outline: none; margin-bottom: 28px; /* Enhanced height and margin offsets */
+            border-radius: 18px; padding: 22px; color: var(--text-core); font-family: inherit; font-size: 15px; line-height: 1.6; resize: none; outline: none; margin-bottom: 28px;
         }
         textarea:focus { border-color: rgba(6, 182, 212, 0.4); background: rgba(3, 5, 10, 0.85); box-shadow: 0 0 24px rgba(6, 182, 212, 0.08), inset 0 2px 4px rgba(0,0,0,0.5); }
 
         button {
-            width: 100%; background: var(--blue-gradient-btn); color: #ffffff; border: none; padding: 18px; border-radius: 16px; /* Expanded vertical height footprint padding */
+            width: 100%; background: var(--blue-gradient-btn); color: #ffffff; border: none; padding: 18px; border-radius: 16px;
             font-size: 15.5px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 8px 24px rgba(0, 119, 255, 0.25);
         }
         button:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0, 221, 255, 0.4); }
@@ -151,7 +149,7 @@
 
         .admin-route-btn {
             width: 100%; background: transparent; color: var(--cyber-cyan); border: 1px dashed rgba(6, 182, 212, 0.3);
-            padding: 16px; border-radius: 16px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 24px; /* Expanded spacing layer metrics */
+            padding: 16px; border-radius: 16px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 24px;
             display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: none;
         }
         .admin-route-btn:hover { background: rgba(6, 182, 212, 0.03); border-color: var(--cyber-cyan); box-shadow: 0 0 20px rgba(6, 182, 212, 0.12); transform: scale(1.005); }
@@ -179,8 +177,8 @@
         }
         .row-delete-btn:hover { background: rgba(244, 63, 94, 0.08) !important; border-color: var(--cyber-rose) !important; box-shadow: 0 0 15px var(--neon-glow-rose) !important; }
 
-        .pipeline-container { display: flex; flex-direction: column; gap: 18px; } /* Boosted element rows spacing layout gaps to 18px */
-        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; background: rgba(3, 5, 10, 0.4); border: 1px solid rgba(255, 255, 255, 0.02); border-radius: 14px; } /* Enhanced text rows data container height */
+        .pipeline-container { display: flex; flex-direction: column; gap: 18px; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; background: rgba(3, 5, 10, 0.4); border: 1px solid rgba(255, 255, 255, 0.02); border-radius: 14px; }
         .info-label { font-size: 13.5px; color: var(--text-low); font-weight: 500; }
         .info-value { font-size: 13.5px; font-weight: 700; color: var(--text-core); }
         .tech-mono { font-family: 'JetBrains Mono', monospace; color: var(--cyber-cyan); }
@@ -191,7 +189,7 @@
         }
 
         .cloud-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-        .cloud-table th, .cloud-table td { padding: 18px 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.03); } /* Enhanced spacious rows padding inside the cloud table view */
+        .cloud-table th, .cloud-table td { padding: 18px 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.03); }
         .cloud-table th { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); letter-spacing: 1px; background: rgba(0,0,0,0.15); }
         .cloud-table td { font-size: 13.5px; color: #cbd5e1; }
         .cloud-table tr { transition: background 0.2s ease; }
@@ -206,13 +204,12 @@
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--cyber-cyan); }
 
-        /* 📦 ENHANCED TIME/DATE COMFORT COMPONENT FRAME OFFSETS GAPS */
-        .sync-hud-segment-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; } /* Enhanced block top spaces and element track gaps */
+        .sync-hud-segment-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
         @media(max-width: 650px) { .sync-hud-segment-row { grid-template-columns: 1fr; gap: 14px; } }
         
         .segment-mini-box {
             background: rgba(5, 8, 16, 0.6); border: 1px solid rgba(255,255,255,0.03); border-radius: 16px;
-            padding: 16px 20px; display: flex; flex-direction: column; gap: 6px; transition: border 0.3s ease; /* Enhanced text segments rows margins inside comfort box components */
+            padding: 16px 20px; display: flex; flex-direction: column; gap: 6px; transition: border 0.3s ease;
         }
         .segment-mini-box:hover { border-color: rgba(6, 182, 212, 0.2); }
         .segment-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); letter-spacing: 0.5px; }
@@ -221,7 +218,7 @@
         .adaptive-sync-panel {
             background: var(--glass-sheet); border: 1px solid var(--glass-border-glow);
             border-radius: 28px; padding: 32px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); margin-top: 40px; /* Expanded card separation offsets gaps */
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); margin-top: 40px;
         }
         .sync-hud-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .sync-hud-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-core); }
@@ -250,7 +247,7 @@
             background: rgba(3, 5, 10, 0.7); border: 1px solid rgba(255,255,255,0.02); border-radius: 16px;
             padding: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;
         }
-        @media (max-width: 600px) { .sync-telemetry-terminal { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) { .sync-telemetry-terminal { grid-template-columns: 1fr; gap: 18px; } }
     </style>
 </head>
 <body>
@@ -406,7 +403,7 @@
 
     let previousNetworkStateIsOnline = navigator.onLine;
     let fallbackPollIntervalTimer = 2500;
-    let heartbeatThreadLoop;
+    let heartbeatThreadLoop = null;
     let activeFetchAbortController = null; 
 
     let capturedVillageNameStr = "Unknown Location";
@@ -443,12 +440,10 @@
                 const lon = position.coords.longitude;
 
                 try {
-                    // Retained &accept-language=en constraint to safeguard from fallback language strings
                     const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1&accept-language=en`);
                     const geoJSON = await res.json();
                     
                     const addr = geoJSON.address || {};
-                    // Maintained prioritize sub-area markers instead of broad boundaries map references
                     capturedVillageNameStr = addr.neighbourhood || addr.residential || addr.suburb || addr.village || addr.town || addr.road || "Remote Outpost";
                     
                     document.getElementById('hud-live-location').textContent = capturedVillageNameStr;
@@ -483,6 +478,7 @@
     setInterval(invokeLiveClockTelemetry, 1000);
     forceEnforcedLocationVerification(false);
 
+    // 🔒 REDEFINED ANTI-CACHE 100% RELIABLE PING FORCED INTERCEPTOR
     async function updateTelemetryHUDDisplayMetrics() {
         const speedNode = document.getElementById('live-speed-telemetry');
         const odometerNode = document.getElementById('mobile-live-odometer-node');
@@ -491,6 +487,7 @@
         const throttleNode = document.getElementById('live-handshake-throttle');
         const isEcoChecked = document.getElementById('battery-toggle').checked;
 
+        // 🛡️ CRITICAL DUAL OVERRIDE CHECK FOR DESKTOP STABILITY
         if (navigator.onLine === false) {
             speedNode.textContent = "0.00 Mbps (Disconnected)";
             speedNode.style.color = "var(--cyber-orange)";
@@ -504,7 +501,9 @@
 
         try {
             const hostStartTime = Date.now();
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?limit=0`, {
+            
+            // 🚀 Bypasses Vercel network layers entirely using high-precision dynamic URL tokens to prevent ghost state locks
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?limit=0&_t=${hostStartTime}`, {
                 method: 'HEAD',
                 cache: 'no-store',
                 headers: { 
@@ -516,7 +515,7 @@
             
             const contentType = response.headers.get("content-type");
             if (!response.ok || (contentType && contentType.includes("text/html"))) {
-                throw new Error("Proxy Override Intercepted");
+                throw new Error("Proxy Isolation Triggered");
             }
 
             const computeDeltaDuration = (Date.now() - hostStartTime) / 1000;
@@ -543,9 +542,10 @@
                 odometerNode.textContent = "0.0 KB/s";
                 odometerNode.style.color = "var(--text-low)";
                 
+                // Triggers immediate direct DOM switch if connection strings drop unexpectedly
                 if (previousNetworkStateIsOnline !== false) {
                     previousNetworkStateIsOnline = false;
-                    forceNetworkInterfaceUpdate();
+                    executeForcedBadgeDOMShift(false);
                 }
             }
         }
@@ -587,18 +587,32 @@
         forceNetworkInterfaceUpdate();
     }
 
-    function forceNetworkInterfaceUpdate() {
+    // 🛡️ RE-DOCKING ENGINE: EXPLICIT DIRECT RENDERING WITH ABSOLUTE OVERRIDES
+    function executeForcedBadgeDOMShift(isOnline) {
         const badge = document.getElementById('network-badge');
         const badgeDot = document.getElementById('badge-glow-node');
         const badgeText = document.getElementById('badge-text-node');
+        if(!badge || !badgeDot || !badgeText) return;
+
+        if (isOnline) {
+            badge.setAttribute('class', 'badge online-state');
+            badgeDot.style.backgroundColor = "var(--cyber-emerald)";
+            badgeDot.style.boxShadow = "0 0 16px var(--cyber-emerald)";
+            badgeText.innerHTML = "EDGE ONLINE — Pipeline Synchronized";
+        } else {
+            badge.setAttribute('class', 'badge offline-state');
+            badgeDot.style.backgroundColor = "var(--cyber-orange)";
+            badgeDot.style.boxShadow = "0 0 16px var(--cyber-orange)";
+            badgeText.innerHTML = "EDGE OFFLINE — Local Cache Mode";
+        }
+    }
+
+    function forceNetworkInterfaceUpdate() {
         const currentOnlineState = navigator.onLine;
         
         if (currentOnlineState === false) {
             if (activeFetchAbortController) activeFetchAbortController.abort();
-            badge.setAttribute('class', 'badge offline-state');
-            badgeDot.style.backgroundColor = "var(--cyber-orange)";
-            badgeDot.style.boxShadow = "0 0 16px var(--cyber-orange)";
-            badgeText.innerHTML = "EDGE OFFLINE — Local Cache Mode"; 
+            executeForcedBadgeDOMShift(false);
             
             const speedNode = document.getElementById('live-speed-telemetry');
             const odometerNode = document.getElementById('mobile-live-odometer-node');
@@ -618,11 +632,7 @@
             return;
         }
 
-        badge.setAttribute('class', 'badge online-state');
-        badgeDot.style.backgroundColor = "var(--cyber-emerald)";
-        badgeDot.style.boxShadow = "0 0 16px var(--cyber-emerald)";
-        badgeText.innerHTML = "EDGE ONLINE — Pipeline Synchronized"; 
-        
+        executeForcedBadgeDOMShift(true);
         executeCloudSynchronization();
         updateTelemetryHUDDisplayMetrics();
 
@@ -634,8 +644,9 @@
         }
     }
     
-    window.addEventListener('online', forceNetworkInterfaceUpdate);
-    window.addEventListener('offline', forceNetworkInterfaceUpdate);
+    // Direct Event listeners immediately clears timer congestion and updates layout anchors
+    window.addEventListener('online', () => { previousNetworkStateIsOnline = false; forceNetworkInterfaceUpdate(); });
+    window.addEventListener('offline', () => { previousNetworkStateIsOnline = true; forceNetworkInterfaceUpdate(); });
 
     const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 3); 
     dbOpenRequest.onupgradeneeded = (e) => {
@@ -857,7 +868,6 @@
         };
     }
 
-    // Dynamic UI Table View Renderer Component
     function renderTableHTML(data, isOnlineContext) {
         const cloudServerLogger = document.getElementById('cloud-server-logger');
         if (!cloudServerLogger) return;
@@ -914,12 +924,13 @@
         } catch(err) { console.error(err); }
     }
 
+    // 🔒 COMPLETE DE-REGISTRATION SW SHIELD MECHANISM
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
             for(let registration of registrations) {
                 registration.unregister();
             }
-        }).catch((err) => console.error('❌ SW De-registration Fault:', err));
+        }).catch((err) => console.error('❌ SW Fault:', err));
     }
 </script>
 </body>
