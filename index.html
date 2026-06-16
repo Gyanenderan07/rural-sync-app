@@ -582,62 +582,65 @@ el.style.color='#c084fc';
 </script>
 
 
-<style id="elite-v3-fixes">
-#hud-live-location{color:#00e5ff!important;font-weight:800!important;}
-#hud-live-date,#hud-live-time{color:#39ff88!important;font-weight:800!important;}
-
-textarea{color:#d9d9df!important;}
-textarea::placeholder{color:#bfc3d4!important;opacity:1!important;}
-
-.pipeline-container::after{
-content:'';
-display:block;
-height:120px;
-margin-top:10px;
-border-radius:20px;
-background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(255,255,255,.02));
-border:1px solid rgba(255,255,255,.05);
+<style id="elite-v3-patch">
+textarea,
+textarea::placeholder{
+color:#d8dbe3 !important;
 }
 
-#live-polling-frequency,
-#live-hardware-latency,
-#live-handshake-throttle{
-color:#ffb347!important;
-font-weight:800!important;
+#hud-live-date,
+#hud-live-time{
+color:#39ff88 !important;
+font-weight:800 !important;
+}
+
+#hud-live-location{
+color:#ffb84d !important;
+font-weight:800 !important;
+text-shadow:0 0 12px rgba(255,184,77,.25);
 }
 
 #live-speed-telemetry{
-color:#39ff88!important;
-font-weight:800!important;
+color:#39ff88 !important;
+font-weight:800 !important;
 }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
-setInterval(()=>{
+function updateTelemetryColors(){
+
 const eco=document.getElementById('battery-toggle');
-const polling=document.getElementById('live-polling-frequency');
+const freq=document.getElementById('live-polling-frequency');
 const latency=document.getElementById('live-hardware-latency');
 const throttle=document.getElementById('live-handshake-throttle');
 const profile=document.getElementById('live-speed-telemetry');
-const speed=document.getElementById('mobile-live-odometer-node');
+const net=document.getElementById('mobile-live-odometer-node');
 
-if(eco&&eco.checked){
-if(polling) polling.style.color='#39ff88';
-if(latency) latency.style.color='#39ff88';
-if(throttle) throttle.style.color='#39ff88';
+if(profile){
+profile.style.color='#39ff88';
+}
+
+if(net){
+net.style.color=navigator.onLine ? '#39ff88' : '#ff9f43';
+}
+
+if(eco && eco.checked){
+[freq,latency,throttle].forEach(el=>{
+if(el) el.style.color='#39ff88';
+});
 }else{
-if(polling) polling.style.color='#ffb347';
-if(latency) latency.style.color='#ffb347';
-if(throttle) throttle.style.color='#ffb347';
+[freq,latency,throttle].forEach(el=>{
+if(el) el.style.color='#ff9f43';
+});
 }
 
-if(profile) profile.style.color='#39ff88';
-
-if(speed){
-speed.style.color=navigator.onLine?'#39ff88':'#ff9f43';
+if(profile){
+profile.style.color='#39ff88';
 }
-},300);
+}
+setInterval(updateTelemetryColors,500);
+updateTelemetryColors();
 });
 </script>
 
