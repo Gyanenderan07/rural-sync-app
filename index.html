@@ -13,25 +13,36 @@
     
     <style>
         :root {
-            --canvas-bg: #05070f;
-            --cyber-indigo: #6366f1;
+            --canvas-bg: #02040a;
+            --cyber-indigo: #4f46e5;
             --cyber-cyan: #06b6d4;
-            --cyber-purple: #a855f7;
+            --cyber-purple: #9333ea;
             --cyber-emerald: #10b981;
             --cyber-rose: #f43f5e;
             --cyber-orange: #f59e0b;
             
-            --glass-sheet: rgba(10, 16, 32, 0.45);
-            --glass-border: rgba(255, 255, 255, 0.05);
-            --glass-border-hover: rgba(255, 255, 255, 0.12);
+            --glass-sheet: rgba(6, 10, 20, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.035);
+            --glass-border-hover: rgba(6, 182, 212, 0.25);
             --text-core: #f8fafc;
-            --text-low: #94a3b8;
+            --text-low: #64748b;
             
-            --3d-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            --3d-shadow-hover: 0 40px 80px -15px rgba(6, 182, 212, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            --neon-glow-cyan: rgba(6, 182, 212, 0.15);
+            --neon-glow-indigo: rgba(79, 70, 229, 0.1);
+            --neon-glow-rose: rgba(244, 63, 94, 0.15);
             
-            --blue-gradient-btn: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
-            --transition-smooth: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            --fluid-gradient: linear-gradient(135deg, var(--cyber-indigo) 0%, var(--cyber-cyan) 50%, var(--cyber-purple) 100%);
+            --blue-gradient-btn: linear-gradient(135deg, #0055ff 0%, #00bfff 100%);
+            --blue-glow-aesthetic: rgba(0, 191, 255, 0.25);
+            
+            /* Advanced Motion Primitives */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-premium: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-micro: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Spatial Layer Shadows */
+            --shadow-spatial: 0 30px 70px -20px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+            --shadow-spatial-hover: 0 40px 90px -15px rgba(6, 182, 212, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.06);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,7 +53,7 @@
             color: var(--text-core);
             min-height: 100vh;
             overflow-x: hidden;
-            padding: clamp(24px, 5vw, 64px) clamp(16px, 4vw, 40px);
+            padding: clamp(24px, 5vw, 80px) clamp(16px, 4vw, 48px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -50,30 +61,30 @@
             letter-spacing: -0.01em;
         }
 
-        /* Cinematic Background Blobs */
+        /* Ambient Fluid Lighting Fields */
         body::before {
-            content: ""; position: fixed; top: -10%; left: -5%; width: 50vw; height: 50vw;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            content: ""; position: fixed; top: -15%; left: -10%; width: 65vw; height: 65vw;
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.12) 0%, transparent 65%);
             z-index: -2; pointer-events: none; filter: blur(80px);
-            animation: spatialOrbit 20s infinite alternate ease-in-out;
+            animation: orbOrbitActive 28s infinite alternate ease-in-out;
         }
 
         body::after {
-            content: ""; position: fixed; bottom: -10%; right: -5%; width: 45vw; height: 45vw;
-            background: radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, transparent 70%);
+            content: ""; position: fixed; bottom: -15%; right: -10%; width: 55vw; height: 55vw;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 65%);
             z-index: -2; pointer-events: none; filter: blur(70px);
-            animation: spatialOrbit 15s infinite alternate-reverse ease-in-out;
+            animation: orbOrbitActive 22s infinite alternate-reverse ease-in-out;
         }
 
-        @keyframes spatialOrbit {
-            0% { transform: translate(0, 0) scale(1); filter: blur(80px); }
-            100% { transform: translate(60px, -40px) scale(1.1); filter: blur(100px); }
+        @keyframes orbOrbitActive {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(60px, -40px) scale(1.08); }
         }
 
         .tech-mesh-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 0);
-            background-size: 24px 24px; z-index: -1; pointer-events: none;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 0);
+            background-size: 40px 40px; z-index: -1; pointer-events: none;
         }
 
         .app-container { 
@@ -83,198 +94,190 @@
             z-index: 1;
             display: flex;
             flex-direction: column;
-            gap: clamp(24px, 4vw, 40px);
+            gap: clamp(32px, 5vw, 56px);
         }
 
         header {
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            width: 100%; 
-            padding-bottom: 32px;
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; padding-bottom: 32px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            flex-wrap: wrap; gap: 24px;
         }
 
         .logo-section h1 {
-            font-size: clamp(22px, 3vw, 28px); font-weight: 800; letter-spacing: -1px;
-            background: linear-gradient(135deg, #ffffff 40%, #cbd5e1 100%);
+            font-size: 24px; font-weight: 800; letter-spacing: -1.2px;
+            background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             display: flex; align-items: center; gap: 12px;
         }
 
         .logo-section span {
-            font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
             background: rgba(255, 255, 255, 0.03);
-            color: #cbd5e1; padding: 6px 14px; border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+            color: #cbd5e1; padding: 5px 12px; border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         .badge {
-            padding: 12px 24px; border-radius: 16px; font-size: 13px; font-weight: 600;
-            display: flex; align-items: center; gap: 12px; backdrop-filter: blur(20px);
+            padding: 10px 20px; border-radius: 14px; font-size: 12px; font-weight: 600;
+            display: flex; align-items: center; gap: 10px; backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); border: 1px solid transparent; 
-            background: rgba(5, 8, 16, 0.5); min-width: max-content; transition: var(--transition-smooth);
+            background: rgba(4, 6, 12, 0.4); min-width: max-content; transition: var(--transition-premium);
         }
         
-        .badge.online-state { color: var(--cyber-emerald) !important; border-color: rgba(16, 185, 129, 0.15) !important; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.05); }
-        .badge.offline-state { color: var(--cyber-orange) !important; border-color: rgba(245, 158, 11, 0.15) !important; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.05); }
+        .badge.online-state { color: var(--cyber-emerald) !important; border-color: rgba(16, 185, 129, 0.2) !important; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.04); }
+        .badge.offline-state { color: var(--cyber-orange) !important; border-color: rgba(245, 158, 11, 0.2) !important; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.04); }
 
-        .badge-dot { width: 8px; height: 8px; border-radius: 50%; animation: coreBlinkGlow 2s infinite ease-in-out; }
-        @keyframes coreBlinkGlow { 0%, 100% { opacity: 0.5; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.3); } }
+        .badge-dot { width: 6px; height: 6px; border-radius: 50%; transition: var(--transition-premium); animation: coreBlinkGlow 2s infinite ease-in-out; }
+        @keyframes coreBlinkGlow { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.25); } }
 
         .dashboard-grid {
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); 
-            gap: clamp(24px, 4vw, 36px);
+            grid-template-columns: 1.25fr 1fr; 
+            gap: clamp(24px, 4vw, 40px);
             width: 100%;
+            animation: sectionScrollReveal 0.8s var(--ease-out-expo) forwards;
         }
+        @keyframes sectionScrollReveal {
+            from { opacity: 0; transform: translateY(30px); filter: blur(5px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+        @media (max-width: 968px) { .dashboard-grid { grid-template-columns: 1fr; } }
 
         .glass-card {
-            background: var(--glass-sheet); 
-            border: 1px solid var(--glass-border);
-            border-radius: 28px; 
-            padding: clamp(24px, 4vw, 36px); 
-            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-            box-shadow: var(--3d-shadow); 
-            transition: var(--transition-smooth);
-            position: relative; 
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            background: var(--glass-sheet); border: 1px solid var(--glass-border);
+            border-radius: 28px; padding: clamp(24px, 4vw, 40px); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
+            box-shadow: var(--shadow-spatial); transition: var(--transition-premium);
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: space-between;
         }
-
-        .glass-card:hover { 
-            transform: translateY(-6px) scale(1.01); 
-            border-color: var(--glass-border-hover); 
-            box-shadow: var(--3d-shadow-hover); 
+        .glass-card::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 100%); pointer-events: none;
         }
+        .glass-card:hover { transform: translateY(-4px); border-color: var(--glass-border-hover); box-shadow: var(--shadow-spatial-hover); }
 
         .card-title {
-            font-size: 12px; font-weight: 700; color: var(--text-low); margin-bottom: 28px;
-            text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; justify-content: space-between;
+            font-size: 11px; font-weight: 700; color: var(--text-low); margin-bottom: 28px;
+            text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
         }
 
         textarea {
-            width: 100%; height: 160px; background: rgba(3, 5, 10, 0.4); border: 1px solid rgba(255, 255, 255, 0.04);
+            width: 100%; height: 160px; background: rgba(2, 4, 8, 0.5); border: 1px solid rgba(255, 255, 255, 0.03);
             border-radius: 18px; padding: 20px; color: var(--text-core); font-family: inherit; font-size: 15px; line-height: 1.6; resize: none; outline: none; margin-bottom: 28px;
-            transition: var(--transition-smooth); box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
+            transition: var(--transition-premium); box-shadow: inset 0 3px 12px rgba(0,0,0,0.3);
         }
-        textarea:focus { border-color: rgba(6, 182, 212, 0.3); background: rgba(3, 5, 10, 0.6); box-shadow: 0 0 30px rgba(6, 182, 212, 0.05), inset 0 2px 8px rgba(0,0,0,0.4); }
+        textarea:focus { border-color: rgba(6, 182, 212, 0.35); background: rgba(2, 4, 8, 0.75); box-shadow: 0 0 30px rgba(6, 182, 212, 0.05), inset 0 3px 12px rgba(0,0,0,0.5); }
 
         button {
-            width: 100%; background: var(--blue-gradient-btn); color: #ffffff; border: none; padding: 18px; border-radius: 18px;
-            font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.5px; transition: var(--transition-smooth); 
-            box-shadow: 0 12px 30px rgba(79, 70, 229, 0.25); position: relative; overflow: hidden;
+            width: 100%; background: var(--blue-gradient-btn); color: #ffffff; border: none; padding: 18px; border-radius: 16px;
+            font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: var(--transition-premium); box-shadow: 0 10px 25px rgba(0, 85, 255, 0.2);
         }
-        button:hover { transform: translateY(-3px); box-shadow: 0 16px 36px rgba(6, 182, 212, 0.35); }
+        button:hover { transform: translateY(-2px); box-shadow: 0 15px 35px rgba(0, 191, 255, 0.35); }
         button:active { transform: translateY(0px) scale(0.98); }
 
         .admin-route-btn {
-            width: 100%; background: rgba(255,255,255,0.02); color: var(--cyber-cyan); border: 1px solid rgba(6, 182, 212, 0.2);
-            padding: 16px; border-radius: 18px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 24px;
-            display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: none;
+            width: 100%; background: rgba(255, 255, 255, 0.01); color: var(--cyber-cyan); border: 1px solid rgba(6, 182, 212, 0.15);
+            padding: 16px; border-radius: 16px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 24px;
+            display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: none; transition: var(--transition-premium);
         }
-        .admin-route-btn:hover { background: rgba(6, 182, 212, 0.06); border-color: var(--cyber-cyan); transform: translateY(-2px); }
+        .admin-route-btn:hover { background: rgba(6, 182, 212, 0.04); border-color: var(--cyber-cyan); box-shadow: 0 0 25px rgba(6, 182, 212, 0.08); transform: translateY(-1px); }
 
         .circle-back-ui-btn {
-            width: 48px; height: 48px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); color: var(--text-core);
+            width: 48px; height: 48px; background: rgba(2, 4, 8, 0.4); border: 1px solid rgba(255, 255, 255, 0.06); color: var(--text-core);
             border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
-            transition: var(--transition-smooth);
+            transition: var(--transition-premium); box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
-        .circle-back-ui-btn:hover { background: rgba(6, 182, 212, 0.1); border-color: var(--cyber-cyan); color: var(--cyber-cyan); transform: scale(1.05); }
-        .circle-back-ui-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .circle-back-ui-btn:hover { background: rgba(6, 182, 212, 0.08); border-color: var(--cyber-cyan); color: var(--cyber-cyan); transform: scale(1.05); }
+        .circle-back-ui-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
         .server-refresh-btn {
-            background: rgba(6, 182, 212, 0.05) !important; color: var(--cyber-cyan) !important; border: 1px solid rgba(6, 182, 212, 0.2) !important;
-            padding: 12px 24px; font-size: 13px; width: auto; border-radius: 14px; box-shadow: none !important; display: flex; align-items: center; gap: 8px;
-            transition: var(--transition-smooth) !important;
+            background: rgba(6, 182, 212, 0.04) !important; color: var(--cyber-cyan) !important; border: 1px solid rgba(6, 182, 212, 0.2) !important;
+            padding: 12px 24px; font-size: 13px; width: auto; border-radius: 12px; box-shadow: none !important; display: flex; align-items: center; gap: 8px;
+            transition: var(--transition-premium) !important;
         }
-        .server-refresh-btn:hover { background: var(--blue-gradient-btn) !important; color: #ffffff !important; border-color: transparent !important; transform: translateY(-2px); }
-        .spinning-loader-icon { display: inline-block; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .server-refresh-btn:hover { background: var(--blue-gradient-btn) !important; color: #ffffff !important; border-color: transparent !important; transform: translateY(-2px); box-shadow: 0 10px 25px var(--blue-glow-aesthetic) !important; }
+        .spinning-loader-icon { display: inline-block; transition: transform 0.6s var(--ease-out-expo); }
         .server-refresh-btn:hover .spinning-loader-icon { transform: rotate(180deg); }
 
         .row-delete-btn {
             background: transparent !important; color: var(--cyber-rose) !important; border: 1px solid rgba(244, 63, 94, 0.15) !important;
             padding: 8px 16px !important; font-size: 12px !important; width: auto !important; font-weight: 600 !important; box-shadow: none !important; border-radius: 10px !important;
-            transition: var(--transition-smooth) !important;
+            transition: var(--transition-micro) !important;
         }
-        .row-delete-btn:hover { background: rgba(244, 63, 94, 0.08) !important; border-color: var(--cyber-rose) !important; transform: scale(1.02); }
+        .row-delete-btn:hover { background: rgba(244, 63, 94, 0.06) !important; border-color: var(--cyber-rose) !important; box-shadow: 0 0 15px var(--neon-glow-rose) !important; }
 
         .pipeline-container { display: flex; flex-direction: column; gap: 16px; width: 100%; }
-        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; background: rgba(5, 8, 16, 0.3); border: 1px solid rgba(255, 255, 255, 0.02); border-radius: 16px; backdrop-filter: blur(10px); }
-        .info-label { font-size: 13.5px; color: var(--text-low); font-weight: 500; }
-        .info-value { font-size: 13.5px; font-weight: 700; color: var(--text-core); }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; background: rgba(2, 4, 8, 0.3); border: 1px solid rgba(255, 255, 255, 0.01); border-radius: 16px; backdrop-filter: blur(12px); }
+        .info-label { font-size: 13px; color: var(--text-low); font-weight: 500; }
+        .info-value { font-size: 13px; font-weight: 700; color: var(--text-core); }
         .tech-mono { font-family: 'JetBrains Mono', monospace; color: var(--cyber-cyan); }
 
         .queue-terminal {
-            background: rgba(3, 5, 10, 0.5); border: 1px solid rgba(255,255,255,0.02); border-radius: 20px;
-            padding: 24px; height: 220px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8; color: #67e8f9; box-shadow: inset 0 4px 30px rgba(0,0,0,0.4);
+            background: rgba(2, 4, 8, 0.5); border: 1px solid rgba(255,255,255,0.015); border-radius: 20px;
+            padding: 24px; height: 210px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8; color: #67e8f9; box-shadow: inset 0 4px 24px rgba(0,0,0,0.5);
+            width: 100%;
         }
 
-        .cloud-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 5px; }
-        .cloud-table th { padding: 18px 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); letter-spacing: 1.5px; text-align: left; background: rgba(0,0,0,0.1); }
-        .cloud-table td { padding: 20px 16px; font-size: 14px; color: #cbd5e1; background: rgba(255,255,255,0.01); border-top: 1px solid rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .cloud-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 5px; }
+        .cloud-table th { padding: 16px 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); letter-spacing: 1.5px; text-align: left; }
+        .cloud-table td { padding: 20px; font-size: 14px; color: #cbd5e1; background: rgba(255, 255, 255, 0.015); border-top: 1px solid rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.02); transition: var(--transition-micro); }
         .cloud-table tr td:first-child { border-left: 1px solid rgba(255,255,255,0.02); border-top-left-radius: 14px; border-bottom-left-radius: 14px; }
         .cloud-table tr td:last-child { border-right: 1px solid rgba(255,255,255,0.02); border-top-right-radius: 14px; border-bottom-right-radius: 14px; }
-        .cloud-table tr { transition: var(--transition-smooth); }
-        .cloud-table tr:hover td { background: rgba(255,255,255,0.03); color: #ffffff; }
+        .cloud-table tr:hover td { background: rgba(255,255,255,0.035); color: #ffffff; }
 
-        .cloud-header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 36px; flex-wrap: wrap; gap: 20px; }
+        .cloud-header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; gap: 20px; flex-wrap: wrap; }
         .cloud-title-container { display: flex; align-items: center; gap: 20px; }
         
         .panel-hidden { display: none !important; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--cyber-cyan); }
 
-        .sync-hud-segment-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 24px; width: 100%; }
+        .sync-hud-segment-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 24px; width: 100%; }
         
         .segment-mini-box {
-            background: rgba(5, 8, 16, 0.4); border: 1px solid rgba(255,255,255,0.02); border-radius: 18px;
-            padding: 18px; display: flex; flex-direction: column; gap: 6px; transition: var(--transition-smooth);
+            background: rgba(4, 6, 12, 0.4); border: 1px solid rgba(255,255,255,0.015); border-radius: 18px;
+            padding: 18px; display: flex; flex-direction: column; gap: 6px; transition: var(--transition-premium);
         }
-        .segment-mini-box:hover { border-color: rgba(6, 182, 212, 0.2); background: rgba(5, 8, 16, 0.6); }
+        .segment-mini-box:hover { border-color: rgba(6, 182, 212, 0.15); background: rgba(4, 6, 12, 0.6); }
         .segment-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); letter-spacing: 0.8px; }
         .segment-value { font-size: 14px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: #f8fafc; }
 
         .adaptive-sync-panel {
             background: var(--glass-sheet); border: 1px solid var(--glass-border);
-            border-radius: 28px; padding: clamp(24px, 4vw, 36px); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-            box-shadow: var(--3d-shadow); margin-top: 8px; transition: var(--transition-smooth);
+            border-radius: 28px; padding: clamp(24px, 4vw, 40px); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
+            box-shadow: var(--shadow-spatial); width: 100%; transition: var(--transition-premium);
         }
-        .adaptive-sync-panel:hover { border-color: var(--glass-border-hover); box-shadow: var(--3d-shadow-hover); }
+        .adaptive-sync-panel:hover { border-color: var(--glass-border-hover); box-shadow: var(--shadow-spatial-hover); }
         
         .sync-hud-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
         .sync-hud-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-core); }
         .toggle-switch-wrapper { display: flex; align-items: center; gap: 14px; }
         .toggle-switch-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; }
-        
-        .toggle-switch { position: relative; width: 54px; height: 30px; display: inline-block; }
+        .toggle-switch { position: relative; width: 52px; height: 28px; display: inline-block; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider {
             position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); transition: var(--transition-smooth); border-radius: 30px;
+            background-color: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); transition: var(--transition-premium); border-radius: 24px;
         }
         .toggle-slider:before {
-            position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px;
-            background-color: #cbd5e1; transition: var(--transition-smooth); border-radius: 50%;
+            position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px;
+            background-color: #cbd5e1; transition: var(--transition-premium); border-radius: 50%;
         }
         input:checked + .toggle-slider { background-color: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); }
-        input:checked + .toggle-slider:before { background-color: var(--cyber-emerald); transform: translateX(24px); box-shadow: 0 0 15px var(--cyber-emerald); }
+        input:checked + .toggle-slider:before { background-color: var(--cyber-emerald); transform: translateX(24px); box-shadow: 0 0 12px var(--cyber-emerald); }
         
         .mobile-speed-meter-capsule {
-            display: flex; align-items: center; gap: 8px; background: rgba(5, 8, 16, 0.5); 
-            border: 1px solid rgba(255,255,255,0.04); padding: 8px 16px; border-radius: 14px;
+            display: flex; align-items: center; gap: 8px; background: rgba(4, 6, 12, 0.5); 
+            border: 1px solid rgba(255,255,255,0.04); padding: 6px 14px; border-radius: 12px;
             font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;
         }
         
         .sync-telemetry-terminal {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; width: 100%;
         }
     </style>
 </head>
@@ -302,7 +305,7 @@
         </div>
     </header>
 
-    <div id="primary-console-panel">
+    <div id="primary-console-panel" style="display: flex; flex-direction: column; gap: clamp(24px, 4vw, 40px);">
         <div class="dashboard-grid">
             
             <div class="glass-card">
@@ -378,8 +381,8 @@
                     <span id="live-hardware-latency" class="info-value tech-mono">Minimal (~0.04s)</span>
                 </div>
                 <div class="info-row" style="background: rgba(0,0,0,0.15);">
-                    <span class="info-label">Handshake Throttle Burst:</span>
-                    <span id="live-handshake-throttle" class="info-value tech-mono">Unrestricted</span>
+                    <span class="info-label">Client Handshake Throttle Burst:</span>
+                    <span id="live-handshake-throttle" class="info-value tech-mono">Unrestricted (Continuous)</span>
                 </div>
                 <div class="info-row" style="background: rgba(0,0,0,0.15);">
                     <span class="info-label">Adaptive Sync Network Profile:</span>
@@ -388,7 +391,7 @@
             </div>
         </div>
 
-        <div class="glass-card" style="margin-top: 8px;">
+        <div class="glass-card">
             <div class="card-title">🖥️ Live Client Store Payload Telemetry Logs (IndexedDB Node Trace)</div>
             <div class="queue-terminal" id="terminal-logger">
                 <div style="color: var(--text-low); font-style: italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>
@@ -397,14 +400,14 @@
     </div>
 
     <div id="cloud-ledger-panel" class="panel-hidden">
-        <div class="glass-card" style="animation: spatialOrbit 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;">
+        <div class="glass-card" style="animation: sectionScrollReveal 0.6s var(--ease-out-expo) forwards;">
             
             <div class="cloud-header-wrapper">
                 <div class="cloud-title-container">
                     <button class="circle-back-ui-btn" onclick="toggleActiveDashboardPanels(false)" title="Back to Data Entry Console">
                         <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                     </button>
-                    <div id="pipeline-title-node" style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; transition: var(--transition-smooth);">
+                    <div id="pipeline-title-node" style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; transition: var(--transition-premium);">
                         ☁️ Real-time Cloud Supabase Server Records Ledger
                     </div>
                 </div>
@@ -414,7 +417,7 @@
                 </button>
             </div>
             
-            <div class="queue-terminal" id="cloud-server-logger" style="height: 480px; color: #a7f3d0; background: rgba(3, 5, 11, 0.85);">
+            <div class="queue-terminal" id="cloud-server-logger" style="height: 480px; color: #a7f3d0; background: rgba(2, 4, 8, 0.85);">
                 <div style="color: var(--text-low); font-style: italic;">Querying cloud storage pipeline nodes...</div>
             </div>
         </div>
@@ -572,14 +575,14 @@
         }
 
         if (isEcoChecked) {
-            freqNode.textContent = "10000 ms (Throttled Delay)";
+            freqNode.textContent = "10000 ms (Throttled)";
             freqNode.style.color = "var(--cyber-orange)";
             latencyNode.textContent = "Extended Optimized (~4.20s)";
             latencyNode.style.color = "var(--cyber-orange)";
             throttleNode.textContent = "Preservation Caps Locked";
             throttleNode.style.color = "var(--cyber-orange)";
         } else {
-            freqNode.textContent = "2500 ms (High Performance)";
+            freqNode.textContent = "2500 ms (High Perf)";
             freqNode.style.color = "var(--cyber-emerald)";
             latencyNode.textContent = "Minimal Base (~0.04s)";
             latencyNode.style.color = "var(--text-core)";
@@ -619,7 +622,7 @@
             badge.setAttribute('class', 'badge offline-state');
             badgeDot.style.backgroundColor = "var(--cyber-orange)";
             badgeDot.style.boxShadow = "0 0 16px var(--cyber-orange)";
-            badgeText.innerHTML = "EDGE OFFLINE — Local Cache"; 
+            badgeText.innerHTML = "EDGE OFFLINE — Local Cache Mode"; 
             
             const speedNode = document.getElementById('live-speed-telemetry');
             const odometerNode = document.getElementById('mobile-live-odometer-node');
@@ -642,7 +645,7 @@
         badge.setAttribute('class', 'badge online-state');
         badgeDot.style.backgroundColor = "var(--cyber-emerald)";
         badgeDot.style.boxShadow = "0 0 16px var(--cyber-emerald)";
-        badgeText.innerHTML = "EDGE ONLINE — Pipeline Sync"; 
+        badgeText.innerHTML = "EDGE ONLINE — Pipeline Synchronized"; 
         
         executeCloudSynchronization();
         updateTelemetryHUDDisplayMetrics();
@@ -783,8 +786,8 @@
                     return;
                 }
                 list.forEach(obj => {
-                    loggerConsole.innerHTML += `<div style="border-left:3px solid var(--cyber-cyan); padding-left:14px; margin-bottom:14px; font-family:'JetBrains Mono', monospace; font-size:13px; color:#c7d2fe;">
-                        [Cache Node] ID: ${obj.id.substring(0,8)}... | Location: ${obj.village_name || 'Acquiring'} <br> Payload: "${obj.reportData}"
+                    loggerConsole.innerHTML += `<div style="border-left:3px solid var(--cyber-cyan); padding-left:14px; margin-bottom:14px; font-family:'JetBrains Mono', monospace; font-size:12px; color:#cbd5e1; line-height: 1.6;">
+                        [IndexedDB Cache] ID: ${obj.id.substring(0,8)}... | Location: ${obj.village_name || 'Acquiring'} <br> Data: "${obj.reportData}"
                     </div>`;
                 });
             };
@@ -813,10 +816,10 @@
         if (navigator.onLine === false) {
             if (titleNode) {
                 titleNode.style.color = "var(--cyber-orange)"; 
-                titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger";
+                titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Offline)";
             }
             if (refreshActionBtn) refreshActionBtn.style.display = "none"; 
-            if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace; padding: 10px;">Device disconnected. Injected safe mirror persistence layers cache.</div>';
+            if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Device decoupled from network channels. Injecting cloudMirrorStore persistence layers...</div>';
             loadLocalMirrorCacheFallback();
             return;
         }
@@ -826,7 +829,7 @@
             titleNode.textContent = "☁️ Real-time Cloud Supabase Server Records Ledger";
         }
         if (refreshActionBtn) refreshActionBtn.style.display = "flex";
-        if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace; padding: 10px;">Establishing link gateway to Supabase Server Ledger...</div>';
+        if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Establishing secure gateway link to Supabase Server Ledger REST API...</div>';
         
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?select=*`, {
@@ -837,12 +840,12 @@
             
             const contentType = response.headers.get("content-type");
             if (!response.ok || !contentType || !contentType.includes("application/json")) {
-                throw new Error("Invalid Outage Target");
+                throw new Error("Invalid Outage HTML Target Intercepted");
             }
 
             const data = await response.json();
             if(data.length === 0) {
-                if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">Cloud database store is currently empty.</div>';
+                if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">Cloud server database store table is currently empty.</div>';
                 return;
             }
             
@@ -855,10 +858,10 @@
             }
             renderTableHTML(data, true);
         } catch(err) {
-            console.warn("Handshake blocked. Pulling mirrored backups...", err);
+            console.warn("Handshake blocked. Pulling mirrored disk backups safely...", err);
             if (titleNode) {
                 titleNode.style.color = "var(--cyber-orange)";
-                titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Congested)";
+                titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Server Congested)";
             }
             loadLocalMirrorCacheFallback();
         }
@@ -873,7 +876,7 @@
             if(mirroredOfflineData.length > 0) {
                 renderTableHTML(mirroredOfflineData, false);
             } else {
-                if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">No persistent mirrored cloud discovery logs inside device storage.</div>';
+                if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">No persistent mirrored cloud server data logs discovered inside device disk cache.</div>';
             }
         };
     }
@@ -885,10 +888,10 @@
         let tableHTML = `<table class="cloud-table">
             <thead>
                 <tr>
-                    <th>📦 Node Location</th>
+                    <th>📦 Infield Node Location</th>
                     <th>📅 Entry Date</th>
                     <th>🕒 Entry Time</th>
-                    <th>Payload Log</th>
+                    <th>Synchronized Payload Log</th>
                     <th style="text-align:center;">Action</th>
                 </tr>
             </thead>
@@ -900,10 +903,10 @@
             const timeVal = row.entry_time || formatIsoStringToLocalSystemTime(row.timestamp).split(' ').slice(1).join(' ');
 
             tableHTML += `<tr>
-                <td style="font-weight:700; color: var(--cyber-cyan);">📍 ${villageName}</td>
+                <td style="font-weight:700; color: var(--cyber-cyan); font-size:13px;">📍 ${villageName}</td>
                 <td style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#cbd5e1;">${dateVal}</td>
                 <td style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#a5b4fc;">${timeVal}</td>
-                <td>${row.reportData}</td>
+                <td style="line-height: 1.5;">${row.reportData}</td>
                 <td style="text-align:center;">
                     <button class="row-delete-btn" onclick="executeSecureLocationBoundErasure('${row.id}', '${villageName}', ${isOnlineContext})">🗑️ Erase</button>
                 </td>
