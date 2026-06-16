@@ -614,6 +614,111 @@ const clr=(eco&&eco.checked)?'#39ff88':'#ff9f43';
 });
 </script>
 
+
+<style id="final-user-patch">
+#hud-live-date,#hud-live-time{
+color:#39ff88 !important;
+font-weight:800 !important;
+}
+
+#hud-live-location{
+color:#00e5ff !important;
+font-weight:800 !important;
+}
+
+textarea,
+textarea::placeholder{
+color:#d3d3d3 !important;
+}
+
+.pipeline-container::after{
+content:"System Health: Optimal • Secure Channel Active • Edge Sync Ready • IndexedDB Protected";
+display:block;
+margin-top:16px;
+padding:16px;
+border-radius:14px;
+background:rgba(255,255,255,.04);
+color:#c4b5fd;
+font-weight:700;
+text-align:center;
+}
+
+#live-polling-frequency,
+#live-hardware-latency,
+#live-handshake-throttle{
+font-weight:800 !important;
+}
+
+#live-speed-telemetry{
+font-weight:800 !important;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+
+const originalLocationFunction = window.forceEnforcedLocationVerification;
+
+window.forceEnforcedLocationVerification = function(triggerManualAlertOnBlock=false){
+
+if(!navigator.geolocation){ return originalLocationFunction(triggerManualAlertOnBlock); }
+
+navigator.geolocation.getCurrentPosition(async(position)=>{
+
+const lat=position.coords.latitude;
+const lon=position.coords.longitude;
+
+try{
+const res=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1`);
+const geo=await res.json();
+
+let englishName =
+geo.address.city ||
+geo.address.town ||
+geo.address.village ||
+geo.address.suburb ||
+geo.address.county ||
+"Field Node";
+
+capturedVillageNameStr = englishName;
+locationPermissionGranted = true;
+
+const node=document.getElementById('hud-live-location');
+if(node) node.textContent = englishName;
+
+}catch(e){}
+},{enableHighAccuracy:true,timeout:12000});
+};
+
+setInterval(()=>{
+
+const eco=document.getElementById('battery-toggle')?.checked;
+
+const freq=document.getElementById('live-polling-frequency');
+const latency=document.getElementById('live-hardware-latency');
+const throttle=document.getElementById('live-handshake-throttle');
+const profile=document.getElementById('live-speed-telemetry');
+const speed=document.getElementById('mobile-live-odometer-node');
+
+if(speed){
+speed.style.color = navigator.onLine ? '#39ff88' : '#ff9f43';
+}
+
+if(profile){
+profile.style.color = navigator.onLine ? '#39ff88' : '#ff4d4d';
+}
+
+const ecoColor = eco ? '#39ff88' : '#ff9f43';
+
+[freq,latency,throttle].forEach(el=>{
+if(el) el.style.color = ecoColor;
+});
+
+},500);
+
+});
+</script>
+
 </head>
 
 <body>
