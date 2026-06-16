@@ -478,7 +478,7 @@
     setInterval(invokeLiveClockTelemetry, 1000);
     forceEnforcedLocationVerification(false);
 
-    // 🔒 REDEFINED ANTI-CACHE 100% RELIABLE PING FORCED INTERCEPTOR
+    // 🔒 HIGH-FIDELITY ADAPTIVE LATENCY CHECKER (ZERO SHADOW TIMEOUT OVERLAPS)
     async function updateTelemetryHUDDisplayMetrics() {
         const speedNode = document.getElementById('live-speed-telemetry');
         const odometerNode = document.getElementById('mobile-live-odometer-node');
@@ -487,7 +487,7 @@
         const throttleNode = document.getElementById('live-handshake-throttle');
         const isEcoChecked = document.getElementById('battery-toggle').checked;
 
-        // 🛡️ CRITICAL DUAL OVERRIDE CHECK FOR DESKTOP STABILITY
+        // 🛡️ CRITICAL EVENT SHIELD: Hardware layer bypass block
         if (navigator.onLine === false) {
             speedNode.textContent = "0.00 Mbps (Disconnected)";
             speedNode.style.color = "var(--cyber-orange)";
@@ -501,8 +501,6 @@
 
         try {
             const hostStartTime = Date.now();
-            
-            // 🚀 Bypasses Vercel network layers entirely using high-precision dynamic URL tokens to prevent ghost state locks
             const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?limit=0&_t=${hostStartTime}`, {
                 method: 'HEAD',
                 cache: 'no-store',
@@ -515,7 +513,7 @@
             
             const contentType = response.headers.get("content-type");
             if (!response.ok || (contentType && contentType.includes("text/html"))) {
-                throw new Error("Proxy Isolation Triggered");
+                throw new Error("Proxy Override Intercepted");
             }
 
             const computeDeltaDuration = (Date.now() - hostStartTime) / 1000;
@@ -542,7 +540,6 @@
                 odometerNode.textContent = "0.0 KB/s";
                 odometerNode.style.color = "var(--text-low)";
                 
-                // Triggers immediate direct DOM switch if connection strings drop unexpectedly
                 if (previousNetworkStateIsOnline !== false) {
                     previousNetworkStateIsOnline = false;
                     executeForcedBadgeDOMShift(false);
@@ -587,7 +584,6 @@
         forceNetworkInterfaceUpdate();
     }
 
-    // 🛡️ RE-DOCKING ENGINE: EXPLICIT DIRECT RENDERING WITH ABSOLUTE OVERRIDES
     function executeForcedBadgeDOMShift(isOnline) {
         const badge = document.getElementById('network-badge');
         const badgeDot = document.getElementById('badge-glow-node');
@@ -607,6 +603,7 @@
         }
     }
 
+    // 🚨 ENFORCED EVENT DRIVEN HARDWARE ROUTER PIPELINE
     function forceNetworkInterfaceUpdate() {
         const currentOnlineState = navigator.onLine;
         
@@ -644,9 +641,20 @@
         }
     }
     
-    // Direct Event listeners immediately clears timer congestion and updates layout anchors
-    window.addEventListener('online', () => { previousNetworkStateIsOnline = false; forceNetworkInterfaceUpdate(); });
-    window.addEventListener('offline', () => { previousNetworkStateIsOnline = true; forceNetworkInterfaceUpdate(); });
+    // Explicit event pipeline structural wrappers to cut async timers instantly
+    window.addEventListener('online', () => { 
+        clearInterval(heartbeatThreadLoop);
+        previousNetworkStateIsOnline = false; 
+        forceNetworkInterfaceUpdate(); 
+        heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
+    });
+    
+    window.addEventListener('offline', () => { 
+        clearInterval(heartbeatThreadLoop);
+        previousNetworkStateIsOnline = true; 
+        forceNetworkInterfaceUpdate(); 
+        heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
+    });
 
     const dbOpenRequest = indexedDB.open('VercelOfflineQueueDB', 3); 
     dbOpenRequest.onupgradeneeded = (e) => {
