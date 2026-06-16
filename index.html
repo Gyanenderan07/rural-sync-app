@@ -582,51 +582,35 @@ el.style.color='#c084fc';
 </script>
 
 
-<style id="user-requested-v3-fixes">
+<style id="user-v3-enhancements">
 #hud-live-date,#hud-live-time{color:#39ff88!important;font-weight:800!important;}
-#hud-live-location{color:#ffd166!important;font-weight:800!important;}
-textarea{color:#e5e7eb!important;}
-textarea::placeholder{color:#cbd5e1!important;opacity:.95;}
+#hud-live-location{color:#00e5ff!important;font-weight:800!important;}
+textarea{color:#d9d9d9!important;}
+textarea::placeholder{color:#bfbfbf!important;}
 .pipeline-container::after{
-content:"EDGE SYNC STATUS • REAL-TIME PIPELINE";
-display:flex;align-items:center;justify-content:center;
-height:72px;margin-top:12px;border-radius:16px;
-background:linear-gradient(135deg,rgba(57,255,136,.08),rgba(168,85,247,.08));
-border:1px solid rgba(255,255,255,.06);
-font-size:12px;letter-spacing:2px;font-weight:700;color:#c4b5fd;
-}
-#live-polling-frequency,#live-hardware-latency,#live-handshake-throttle{
-color:#ff9f43!important;font-weight:800!important;
-}
-#live-speed-telemetry{
-color:#39ff88!important;font-weight:800!important;
+content:"System Status • Edge Ready • IndexedDB Active • Secure Sync";
+display:block;padding:16px;margin-top:16px;border-radius:14px;
+background:rgba(255,255,255,.03);text-align:center;color:#c4b5fd;font-weight:700;
 }
 </style>
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
 setInterval(()=>{
 const eco=document.getElementById('battery-toggle');
-const polling=document.getElementById('live-polling-frequency');
-const latency=document.getElementById('live-hardware-latency');
-const throttle=document.getElementById('live-handshake-throttle');
-const profile=document.getElementById('live-speed-telemetry');
-const net=document.getElementById('mobile-live-odometer-node');
+const freq=document.getElementById('live-polling-frequency');
+const lat=document.getElementById('live-hardware-latency');
+const thr=document.getElementById('live-handshake-throttle');
+const prof=document.getElementById('live-speed-telemetry');
+const speed=document.getElementById('mobile-live-odometer-node');
 
-if(eco&&eco.checked){
-if(polling) polling.style.color='#39ff88';
-if(latency) latency.style.color='#39ff88';
-if(throttle) throttle.style.color='#39ff88';
-}else{
-if(polling) polling.style.color='#ff9f43';
-if(latency) latency.style.color='#ff9f43';
-if(throttle) throttle.style.color='#ff9f43';
-}
-if(profile) profile.style.color='#39ff88';
-if(net){
-if(navigator.onLine){net.style.color='#39ff88';}
-else{net.style.color='#ff9f43';}
-}
-},250);
+if(speed){speed.style.color=navigator.onLine?'#39ff88':'#ff9f43';}
+
+if(prof){prof.style.color=navigator.onLine?'#39ff88':'#ff4d4d';}
+
+const clr=(eco&&eco.checked)?'#39ff88':'#ff9f43';
+[freq,lat,thr].forEach(e=>{if(e)e.style.color=clr;});
+
+},500);
 });
 </script>
 
