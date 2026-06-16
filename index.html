@@ -13,26 +13,25 @@
     
     <style>
         :root {
-            --canvas-bg: #030712;
-            --cyber-indigo: #4f46e5;
+            --canvas-bg: #05070f;
+            --cyber-indigo: #6366f1;
             --cyber-cyan: #06b6d4;
-            --cyber-purple: #9333ea;
+            --cyber-purple: #a855f7;
             --cyber-emerald: #10b981;
             --cyber-rose: #f43f5e;
-            --cyber-orange: #f59e0b; /* STRICT ORANGE THEME PARAMETER */
+            --cyber-orange: #f59e0b;
             
-            --glass-sheet: rgba(8, 14, 28, 0.45);
-            --glass-border-glow: rgba(255, 255, 255, 0.04);
+            --glass-sheet: rgba(10, 16, 32, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --glass-border-hover: rgba(255, 255, 255, 0.12);
             --text-core: #f8fafc;
-            --text-low: #64748b;
+            --text-low: #94a3b8;
             
-            --neon-glow-cyan: rgba(6, 182, 212, 0.25);
-            --neon-glow-indigo: rgba(79, 70, 229, 0.2);
-            --neon-glow-rose: rgba(244, 63, 94, 0.25);
+            --3d-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            --3d-shadow-hover: 0 40px 80px -15px rgba(6, 182, 212, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
             
-            --fluid-gradient: linear-gradient(135deg, var(--cyber-indigo) 0%, var(--cyber-cyan) 50%, var(--cyber-purple) 100%);
-            --blue-gradient-btn: linear-gradient(135deg, #0077ff 0%, #00ddff 100%);
-            --blue-glow-aesthetic: rgba(0, 221, 255, 0.35);
+            --blue-gradient-btn: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            --transition-smooth: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,220 +42,245 @@
             color: var(--text-core);
             min-height: 100vh;
             overflow-x: hidden;
-            padding: 50px 24px;
+            padding: clamp(24px, 5vw, 64px) clamp(16px, 4vw, 40px);
             display: flex;
             flex-direction: column;
             align-items: center;
             position: relative;
+            letter-spacing: -0.01em;
         }
 
+        /* Cinematic Background Blobs */
         body::before {
-            content: ""; position: fixed; top: -20%; left: -10%; width: 60vw; height: 60vw;
-            background: radial-gradient(circle, rgba(79, 70, 229, 0.18) 0%, transparent 70%);
-            z-index: -2; pointer-events: none; filter: blur(60px);
-            animation: orbOrbitActive 25s infinite alternate ease-in-out;
+            content: ""; position: fixed; top: -10%; left: -5%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            z-index: -2; pointer-events: none; filter: blur(80px);
+            animation: spatialOrbit 20s infinite alternate ease-in-out;
         }
 
         body::after {
-            content: ""; position: fixed; bottom: -10%; right: -10%; width: 50vw; height: 50vw;
-            background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
-            z-index: -2; pointer-events: none; filter: blur(50px);
-            animation: orbOrbitActive 20s infinite alternate-reverse ease-in-out;
+            content: ""; position: fixed; bottom: -10%; right: -5%; width: 45vw; height: 45vw;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, transparent 70%);
+            z-index: -2; pointer-events: none; filter: blur(70px);
+            animation: spatialOrbit 15s infinite alternate-reverse ease-in-out;
         }
 
-        @keyframes orbOrbitActive {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(80px, -60px) scale(1.15); }
+        @keyframes spatialOrbit {
+            0% { transform: translate(0, 0) scale(1); filter: blur(80px); }
+            100% { transform: translate(60px, -40px) scale(1.1); filter: blur(100px); }
         }
 
         .tech-mesh-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 0), linear-gradient(rgba(255, 255, 255, 0.005) 1px, transparent 1px);
-            background-size: 32px 32px; z-index: -1; pointer-events: none;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 0);
+            background-size: 24px 24px; z-index: -1; pointer-events: none;
         }
 
-        .app-container { width: 100%; max-width: 1100px; position: relative; z-index: 1; }
+        .app-container { 
+            width: 100%; 
+            max-width: 1200px; 
+            position: relative; 
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(24px, 4vw, 40px);
+        }
 
         header {
-            display: flex; justify-content: space-between; align-items: center;
-            width: 100%; margin-bottom: 50px; padding-bottom: 24px;
-            border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: 100%; 
+            padding-bottom: 32px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         }
 
         .logo-section h1 {
-            font-size: 26px; font-weight: 800; letter-spacing: -1px;
-            background: linear-gradient(135deg, #ffffff 30%, #a5b4fc 100%);
+            font-size: clamp(22px, 3vw, 28px); font-weight: 800; letter-spacing: -1px;
+            background: linear-gradient(135deg, #ffffff 40%, #cbd5e1 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            display: flex; align-items: center; gap: 10px;
+            display: flex; align-items: center; gap: 12px;
         }
 
         .logo-section span {
-            font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-            background: linear-gradient(90deg, rgba(79, 70, 229, 0.25), rgba(6, 182, 212, 0.25));
-            color: #c7d2fe; padding: 4px 10px; border-radius: 6px;
-            border: 1px solid rgba(165, 180, 252, 0.15);
+            font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.03);
+            color: #cbd5e1; padding: 6px 14px; border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
         }
 
         .badge {
-            padding: 10px 20px; border-radius: 14px; font-size: 12px; font-weight: 700;
-            display: flex; align-items: center; gap: 10px; backdrop-filter: blur(20px);
+            padding: 12px 24px; border-radius: 16px; font-size: 13px; font-weight: 600;
+            display: flex; align-items: center; gap: 12px; backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); border: 1px solid transparent; 
-            background: rgba(5, 8, 16, 0.6); min-width: max-content; transition: all 0.2s ease;
+            background: rgba(5, 8, 16, 0.5); min-width: max-content; transition: var(--transition-smooth);
         }
         
-        .badge.online-state { color: var(--cyber-emerald) !important; border-color: rgba(16, 185, 129, 0.25) !important; box-shadow: 0 4px 24px rgba(16, 185, 129, 0.08) !important; }
-        .badge.offline-state { color: var(--cyber-orange) !important; border-color: rgba(245, 158, 11, 0.25) !important; box-shadow: 0 4px 24px rgba(245, 158, 11, 0.08) !important; }
+        .badge.online-state { color: var(--cyber-emerald) !important; border-color: rgba(16, 185, 129, 0.15) !important; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.05); }
+        .badge.offline-state { color: var(--cyber-orange) !important; border-color: rgba(245, 158, 11, 0.15) !important; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.05); }
 
-        .badge-dot { width: 8px; height: 8px; border-radius: 50%; transition: all 0.25s ease; animation: coreBlinkGlow 1.6s infinite ease-in-out; }
-        @keyframes coreBlinkGlow { 0%, 100% { opacity: 0.4; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.25); } }
+        .badge-dot { width: 8px; height: 8px; border-radius: 50%; animation: coreBlinkGlow 2s infinite ease-in-out; }
+        @keyframes coreBlinkGlow { 0%, 100% { opacity: 0.5; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.3); } }
 
         .dashboard-grid {
-            display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px;
-            animation: sectionScrollReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); 
+            gap: clamp(24px, 4vw, 36px);
+            width: 100%;
         }
-        @keyframes sectionScrollReveal {
-            from { opacity: 0; transform: translateY(24px); filter: blur(4px); }
-            to { opacity: 1; transform: translateY(0); filter: blur(0); }
-        }
-        @media (max-width: 868px) { .dashboard-grid { grid-template-columns: 1fr; } }
 
         .glass-card {
-            background: var(--glass-sheet); border: 1px solid var(--glass-border-glow);
-            border-radius: 24px; padding: 32px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative; overflow: hidden;
+            background: var(--glass-sheet); 
+            border: 1px solid var(--glass-border);
+            border-radius: 28px; 
+            padding: clamp(24px, 4vw, 36px); 
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            box-shadow: var(--3d-shadow); 
+            transition: var(--transition-smooth);
+            position: relative; 
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        .glass-card::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.015) 0%, transparent 100%); pointer-events: none;
+
+        .glass-card:hover { 
+            transform: translateY(-6px) scale(1.01); 
+            border-color: var(--glass-border-hover); 
+            box-shadow: var(--3d-shadow-hover); 
         }
-        .glass-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.09); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55); }
 
         .card-title {
-            font-size: 13px; font-weight: 800; color: var(--text-low); margin-bottom: 24px;
-            text-transform: uppercase; letter-spacing: 1.5px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+            font-size: 12px; font-weight: 700; color: var(--text-low); margin-bottom: 28px;
+            text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; justify-content: space-between;
         }
 
         textarea {
-            width: 100%; height: 150px; background: rgba(3, 5, 10, 0.6); border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px; padding: 18px; color: var(--text-core); font-family: inherit; font-size: 15px; line-height: 1.6; resize: none; outline: none; margin-bottom: 24px;
+            width: 100%; height: 160px; background: rgba(3, 5, 10, 0.4); border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 18px; padding: 20px; color: var(--text-core); font-family: inherit; font-size: 15px; line-height: 1.6; resize: none; outline: none; margin-bottom: 28px;
+            transition: var(--transition-smooth); box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
         }
-        textarea:focus { border-color: rgba(6, 182, 212, 0.4); background: rgba(3, 5, 10, 0.85); box-shadow: 0 0 24px rgba(6, 182, 212, 0.08), inset 0 2px 4px rgba(0,0,0,0.5); }
+        textarea:focus { border-color: rgba(6, 182, 212, 0.3); background: rgba(3, 5, 10, 0.6); box-shadow: 0 0 30px rgba(6, 182, 212, 0.05), inset 0 2px 8px rgba(0,0,0,0.4); }
 
         button {
-            width: 100%; background: var(--blue-gradient-btn); color: #ffffff; border: none; padding: 16px; border-radius: 14px;
-            font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 8px 24px rgba(0, 119, 255, 0.25);
+            width: 100%; background: var(--blue-gradient-btn); color: #ffffff; border: none; padding: 18px; border-radius: 18px;
+            font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.5px; transition: var(--transition-smooth); 
+            box-shadow: 0 12px 30px rgba(79, 70, 229, 0.25); position: relative; overflow: hidden;
         }
-        button:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0, 221, 255, 0.4); }
+        button:hover { transform: translateY(-3px); box-shadow: 0 16px 36px rgba(6, 182, 212, 0.35); }
         button:active { transform: translateY(0px) scale(0.98); }
 
         .admin-route-btn {
-            width: 100%; background: transparent; color: var(--cyber-cyan); border: 1px dashed rgba(6, 182, 212, 0.3);
-            padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 18px;
-            display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: none;
+            width: 100%; background: rgba(255,255,255,0.02); color: var(--cyber-cyan); border: 1px solid rgba(6, 182, 212, 0.2);
+            padding: 16px; border-radius: 18px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 24px;
+            display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: none;
         }
-        .admin-route-btn:hover { background: rgba(6, 182, 212, 0.03); border-color: var(--cyber-cyan); box-shadow: 0 0 20px rgba(6, 182, 212, 0.12); transform: scale(1.005); }
+        .admin-route-btn:hover { background: rgba(6, 182, 212, 0.06); border-color: var(--cyber-cyan); transform: translateY(-2px); }
 
         .circle-back-ui-btn {
-            width: 44px; height: 44px; background: rgba(3, 7, 18, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-core);
+            width: 48px; height: 48px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); color: var(--text-core);
             border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            transition: var(--transition-smooth);
         }
-        .circle-back-ui-btn:hover { background: rgba(6, 182, 212, 0.1); border-color: var(--cyber-cyan); color: var(--cyber-cyan); box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); transform: scale(1.05); }
-        .circle-back-ui-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .circle-back-ui-btn:hover { background: rgba(6, 182, 212, 0.1); border-color: var(--cyber-cyan); color: var(--cyber-cyan); transform: scale(1.05); }
+        .circle-back-ui-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
         .server-refresh-btn {
-            background: rgba(6, 182, 212, 0.04) !important; color: var(--cyber-cyan) !important; border: 1px solid rgba(6, 182, 212, 0.25) !important;
-            padding: 10px 22px; font-size: 13px; width: auto; border-radius: 10px; box-shadow: none !important; display: flex; align-items: center; gap: 8px;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            background: rgba(6, 182, 212, 0.05) !important; color: var(--cyber-cyan) !important; border: 1px solid rgba(6, 182, 212, 0.2) !important;
+            padding: 12px 24px; font-size: 13px; width: auto; border-radius: 14px; box-shadow: none !important; display: flex; align-items: center; gap: 8px;
+            transition: var(--transition-smooth) !important;
         }
-        .server-refresh-btn:hover { background: var(--blue-gradient-btn) !important; color: #030712 !important; font-weight: 700 !important; border-color: transparent !important; transform: translateY(-2px); box-shadow: 0 8px 24px var(--blue-glow-aesthetic) !important; }
-        .spinning-loader-icon { display: inline-block; transition: transform 0.6s ease; }
+        .server-refresh-btn:hover { background: var(--blue-gradient-btn) !important; color: #ffffff !important; border-color: transparent !important; transform: translateY(-2px); }
+        .spinning-loader-icon { display: inline-block; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .server-refresh-btn:hover .spinning-loader-icon { transform: rotate(180deg); }
 
         .row-delete-btn {
-            background: transparent !important; color: var(--cyber-rose) !important; border: 1px solid rgba(244, 63, 94, 0.2) !important;
-            padding: 6px 14px !important; font-size: 12px !important; width: auto !important; font-weight: 600 !important; box-shadow: none !important; border-radius: 8px !important;
+            background: transparent !important; color: var(--cyber-rose) !important; border: 1px solid rgba(244, 63, 94, 0.15) !important;
+            padding: 8px 16px !important; font-size: 12px !important; width: auto !important; font-weight: 600 !important; box-shadow: none !important; border-radius: 10px !important;
+            transition: var(--transition-smooth) !important;
         }
-        .row-delete-btn:hover { background: rgba(244, 63, 94, 0.08) !important; border-color: var(--cyber-rose) !important; box-shadow: 0 0 15px var(--neon-glow-rose) !important; }
+        .row-delete-btn:hover { background: rgba(244, 63, 94, 0.08) !important; border-color: var(--cyber-rose) !important; transform: scale(1.02); }
 
-        .pipeline-container { display: flex; flex-direction: column; gap: 14px; }
-        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; background: rgba(3, 5, 10, 0.4); border: 1px solid rgba(255, 255, 255, 0.02); border-radius: 12px; }
-        .info-label { font-size: 13px; color: var(--text-low); font-weight: 500; }
-        .info-value { font-size: 13px; font-weight: 700; color: var(--text-core); }
+        .pipeline-container { display: flex; flex-direction: column; gap: 16px; width: 100%; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; background: rgba(5, 8, 16, 0.3); border: 1px solid rgba(255, 255, 255, 0.02); border-radius: 16px; backdrop-filter: blur(10px); }
+        .info-label { font-size: 13.5px; color: var(--text-low); font-weight: 500; }
+        .info-value { font-size: 13.5px; font-weight: 700; color: var(--text-core); }
         .tech-mono { font-family: 'JetBrains Mono', monospace; color: var(--cyber-cyan); }
 
         .queue-terminal {
-            background: rgba(3, 5, 10, 0.7); border: 1px solid rgba(255,255,255,0.03); border-radius: 16px;
-            padding: 20px; height: 190px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.7; color: #67e8f9; box-shadow: inset 0 4px 20px rgba(0,0,0,0.6);
+            background: rgba(3, 5, 10, 0.5); border: 1px solid rgba(255,255,255,0.02); border-radius: 20px;
+            padding: 24px; height: 220px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8; color: #67e8f9; box-shadow: inset 0 4px 30px rgba(0,0,0,0.4);
         }
 
-        .cloud-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-        .cloud-table th, .cloud-table td { padding: 16px 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .cloud-table th { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); letter-spacing: 1px; background: rgba(0,0,0,0.15); }
-        .cloud-table td { font-size: 13.5px; color: #cbd5e1; }
-        .cloud-table tr { transition: background 0.2s ease; }
-        .cloud-table tr:hover { background: rgba(255,255,255,0.01); }
+        .cloud-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 5px; }
+        .cloud-table th { padding: 18px 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); letter-spacing: 1.5px; text-align: left; background: rgba(0,0,0,0.1); }
+        .cloud-table td { padding: 20px 16px; font-size: 14px; color: #cbd5e1; background: rgba(255,255,255,0.01); border-top: 1px solid rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .cloud-table tr td:first-child { border-left: 1px solid rgba(255,255,255,0.02); border-top-left-radius: 14px; border-bottom-left-radius: 14px; }
+        .cloud-table tr td:last-child { border-right: 1px solid rgba(255,255,255,0.02); border-top-right-radius: 14px; border-bottom-right-radius: 14px; }
+        .cloud-table tr { transition: var(--transition-smooth); }
+        .cloud-table tr:hover td { background: rgba(255,255,255,0.03); color: #ffffff; }
 
-        .cloud-header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; gap: 16px; }
-        .cloud-title-container { display: flex; align-items: center; gap: 16px; }
+        .cloud-header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 36px; flex-wrap: wrap; gap: 20px; }
+        .cloud-title-container { display: flex; align-items: center; gap: 20px; }
         
         .panel-hidden { display: none !important; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--cyber-cyan); }
 
-        .sync-hud-segment-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
-        @media(max-width: 600px) { .sync-hud-segment-row { grid-template-columns: 1fr; } }
+        .sync-hud-segment-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 24px; width: 100%; }
         
         .segment-mini-box {
-            background: rgba(5, 8, 16, 0.6); border: 1px solid rgba(255,255,255,0.03); border-radius: 14px;
-            padding: 14px; display: flex; flex-direction: column; gap: 4px; transition: border 0.3s ease;
+            background: rgba(5, 8, 16, 0.4); border: 1px solid rgba(255,255,255,0.02); border-radius: 18px;
+            padding: 18px; display: flex; flex-direction: column; gap: 6px; transition: var(--transition-smooth);
         }
-        .segment-mini-box:hover { border-color: rgba(6, 182, 212, 0.2); }
-        .segment-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); letter-spacing: 0.5px; }
-        .segment-value { font-size: 13.5px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: #f8fafc; }
+        .segment-mini-box:hover { border-color: rgba(6, 182, 212, 0.2); background: rgba(5, 8, 16, 0.6); }
+        .segment-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); letter-spacing: 0.8px; }
+        .segment-value { font-size: 14px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: #f8fafc; }
 
         .adaptive-sync-panel {
-            background: var(--glass-sheet); border: 1px solid var(--glass-border-glow);
-            border-radius: 24px; padding: 24px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); margin-top: 32px;
+            background: var(--glass-sheet); border: 1px solid var(--glass-border);
+            border-radius: 28px; padding: clamp(24px, 4vw, 36px); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            box-shadow: var(--3d-shadow); margin-top: 8px; transition: var(--transition-smooth);
         }
-        .sync-hud-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .sync-hud-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-core); }
-        .toggle-switch-wrapper { display: flex; align-items: center; gap: 12px; }
+        .adaptive-sync-panel:hover { border-color: var(--glass-border-hover); box-shadow: var(--3d-shadow-hover); }
+        
+        .sync-hud-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
+        .sync-hud-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-core); }
+        .toggle-switch-wrapper { display: flex; align-items: center; gap: 14px; }
         .toggle-switch-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; }
-        .toggle-switch { position: relative; width: 48px; height: 26px; display: inline-block; }
+        
+        .toggle-switch { position: relative; width: 54px; height: 30px; display: inline-block; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider {
             position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.05); transition: .3s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 24px;
+            background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); transition: var(--transition-smooth); border-radius: 30px;
         }
         .toggle-slider:before {
-            position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px;
-            background-color: #cbd5e1; transition: .3s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 50%;
+            position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px;
+            background-color: #cbd5e1; transition: var(--transition-smooth); border-radius: 50%;
         }
-        input:checked + .toggle-slider { background-color: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4); }
-        input:checked + .toggle-slider:before { background-color: var(--cyber-emerald); transform: translateX(22px); box-shadow: 0 0 10px var(--cyber-emerald); }
+        input:checked + .toggle-slider { background-color: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); }
+        input:checked + .toggle-slider:before { background-color: var(--cyber-emerald); transform: translateX(24px); box-shadow: 0 0 15px var(--cyber-emerald); }
         
         .mobile-speed-meter-capsule {
-            display: flex; align-items: center; gap: 6px; background: rgba(5, 8, 16, 0.7); 
-            border: 1px solid rgba(255,255,255,0.04); padding: 5px 12px; border-radius: 10px;
-            font-family: 'JetBrains Mono', monospace; font-size: 11.5px; font-weight: 700;
+            display: flex; align-items: center; gap: 8px; background: rgba(5, 8, 16, 0.5); 
+            border: 1px solid rgba(255,255,255,0.04); padding: 8px 16px; border-radius: 14px;
+            font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;
         }
         
         .sync-telemetry-terminal {
-            background: rgba(3, 5, 10, 0.7); border: 1px solid rgba(255,255,255,0.02); border-radius: 14px;
-            padding: 16px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px;
         }
-        @media (max-width: 550px) { .sync-telemetry-terminal { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
 <div class="tech-mesh-overlay"></div>
-<div class="glow-blob"></div>
 
 <div class="app-container">
     
@@ -265,9 +289,9 @@
             <h1>EdgeSync <span>InStep v2.1</span></h1>
         </div>
         
-        <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
             <div class="mobile-speed-meter-capsule">
-                <span style="color: var(--text-low); font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px;">NET SPEED</span>
+                <span style="color: var(--text-low); font-size: 9px; text-transform: uppercase; letter-spacing: 1px;">NET SPEED</span>
                 <span id="mobile-live-odometer-node" style="color: var(--cyber-cyan); font-variant-numeric: tabular-nums;">0.0 KB/s</span>
             </div>
             
@@ -282,11 +306,13 @@
         <div class="dashboard-grid">
             
             <div class="glass-card">
-                <div class="card-title">📊 Data Collection Console</div>
-                <form id="sync-form">
-                    <textarea id="data-payload" placeholder="Enter remote rural structural matrix logs (e.g., Water telemetry, localized agricultural harvest data logs)..." required></textarea>
-                    <button type="submit" id="submit-btn-node">Deploy Transaction to Edge</button>
-                </form>
+                <div>
+                    <div class="card-title">📊 Data Collection Console</div>
+                    <form id="sync-form">
+                        <textarea id="data-payload" placeholder="Enter remote rural structural matrix logs (e.g., Water telemetry, localized agricultural harvest data logs)..." required></textarea>
+                        <button type="submit" id="submit-btn-node">Deploy Transaction to Edge</button>
+                    </form>
+                </div>
                 
                 <div class="sync-hud-segment-row">
                     <div class="segment-mini-box">
@@ -323,7 +349,7 @@
                     </div>
                     <div class="info-row">
                         <span class="info-label">Pending Sync Payload Queue Size:</span>
-                        <span class="info-value tech-mono" id="counter" style="color: var(--cyber-rose); font-weight: 800; font-size: 14px;">0</span>
+                        <span class="info-value tech-mono" id="counter" style="color: var(--cyber-rose); font-weight: 800; font-size: 15px;">0</span>
                     </div>
                 </div>
             </div>
@@ -343,26 +369,26 @@
             </div>
             
             <div class="sync-telemetry-terminal">
-                <div class="info-row" style="background: rgba(0,0,0,0.2);">
-                    <span class="info-label">Network Polling Engine Frequency:</span>
+                <div class="info-row" style="background: rgba(0,0,0,0.15);">
+                    <span class="info-label">Network Polling Frequency:</span>
                     <span id="live-polling-frequency" class="info-value tech-mono" style="color: var(--cyber-emerald);">2500 ms (High Performance)</span>
                 </div>
-                <div class="info-row" style="background: rgba(0,0,0,0.2);">
-                    <span class="info-label">Expected Standby Hardware Latency:</span>
+                <div class="info-row" style="background: rgba(0,0,0,0.15);">
+                    <span class="info-label">Expected Hardware Latency:</span>
                     <span id="live-hardware-latency" class="info-value tech-mono">Minimal (~0.04s)</span>
                 </div>
-                <div class="info-row" style="background: rgba(0,0,0,0.2);">
-                    <span class="info-label">Client Handshake Throttle Burst:</span>
-                    <span id="live-handshake-throttle" class="info-value tech-mono">Unrestricted (Continuous Dispatches)</span>
+                <div class="info-row" style="background: rgba(0,0,0,0.15);">
+                    <span class="info-label">Handshake Throttle Burst:</span>
+                    <span id="live-handshake-throttle" class="info-value tech-mono">Unrestricted</span>
                 </div>
-                <div class="info-row" style="background: rgba(0,0,0,0.2);">
+                <div class="info-row" style="background: rgba(0,0,0,0.15);">
                     <span class="info-label">Adaptive Sync Network Profile:</span>
                     <span id="live-speed-telemetry" class="info-value tech-mono" style="color: var(--cyber-cyan);">Checking channels...</span>
                 </div>
             </div>
         </div>
 
-        <div class="glass-card" style="margin-top: 32px;">
+        <div class="glass-card" style="margin-top: 8px;">
             <div class="card-title">🖥️ Live Client Store Payload Telemetry Logs (IndexedDB Node Trace)</div>
             <div class="queue-terminal" id="terminal-logger">
                 <div style="color: var(--text-low); font-style: italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>
@@ -371,14 +397,14 @@
     </div>
 
     <div id="cloud-ledger-panel" class="panel-hidden">
-        <div class="glass-card" style="animation: sectionScrollReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+        <div class="glass-card" style="animation: spatialOrbit 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;">
             
             <div class="cloud-header-wrapper">
                 <div class="cloud-title-container">
                     <button class="circle-back-ui-btn" onclick="toggleActiveDashboardPanels(false)" title="Back to Data Entry Console">
                         <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                     </button>
-                    <div id="pipeline-title-node" style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; transition: color 0.3s ease;">
+                    <div id="pipeline-title-node" style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; transition: var(--transition-smooth);">
                         ☁️ Real-time Cloud Supabase Server Records Ledger
                     </div>
                 </div>
@@ -388,7 +414,7 @@
                 </button>
             </div>
             
-            <div class="queue-terminal" id="cloud-server-logger" style="height: 440px; color: #a7f3d0; background: rgba(3, 5, 11, 0.95);">
+            <div class="queue-terminal" id="cloud-server-logger" style="height: 480px; color: #a7f3d0; background: rgba(3, 5, 11, 0.85);">
                 <div style="color: var(--text-low); font-style: italic;">Querying cloud storage pipeline nodes...</div>
             </div>
         </div>
@@ -546,18 +572,18 @@
         }
 
         if (isEcoChecked) {
-            freqNode.textContent = "10000 ms (Throttled Delay Mode)";
+            freqNode.textContent = "10000 ms (Throttled Delay)";
             freqNode.style.color = "var(--cyber-orange)";
             latencyNode.textContent = "Extended Optimized (~4.20s)";
             latencyNode.style.color = "var(--cyber-orange)";
-            throttleNode.textContent = "Preservation Caps Locked (Batch Dispatches)";
+            throttleNode.textContent = "Preservation Caps Locked";
             throttleNode.style.color = "var(--cyber-orange)";
         } else {
-            freqNode.textContent = "2500 ms (High Performance Mode)";
+            freqNode.textContent = "2500 ms (High Performance)";
             freqNode.style.color = "var(--cyber-emerald)";
             latencyNode.textContent = "Minimal Base (~0.04s)";
             latencyNode.style.color = "var(--text-core)";
-            throttleNode.textContent = "Unrestricted (Continuous Dispatches)";
+            throttleNode.textContent = "Unrestricted Handshake";
             throttleNode.style.color = "var(--text-core)";
         }
     }
@@ -593,7 +619,7 @@
             badge.setAttribute('class', 'badge offline-state');
             badgeDot.style.backgroundColor = "var(--cyber-orange)";
             badgeDot.style.boxShadow = "0 0 16px var(--cyber-orange)";
-            badgeText.innerHTML = "EDGE OFFLINE — Local Cache Mode"; 
+            badgeText.innerHTML = "EDGE OFFLINE — Local Cache"; 
             
             const speedNode = document.getElementById('live-speed-telemetry');
             const odometerNode = document.getElementById('mobile-live-odometer-node');
@@ -616,7 +642,7 @@
         badge.setAttribute('class', 'badge online-state');
         badgeDot.style.backgroundColor = "var(--cyber-emerald)";
         badgeDot.style.boxShadow = "0 0 16px var(--cyber-emerald)";
-        badgeText.innerHTML = "EDGE ONLINE — Pipeline Synchronized"; 
+        badgeText.innerHTML = "EDGE ONLINE — Pipeline Sync"; 
         
         executeCloudSynchronization();
         updateTelemetryHUDDisplayMetrics();
@@ -757,8 +783,8 @@
                     return;
                 }
                 list.forEach(obj => {
-                    loggerConsole.innerHTML += `<div style="border-left:2px solid var(--cyber-cyan); padding-left:10px; margin-bottom:10px; font-family:'JetBrains Mono', monospace; font-size:12px; color:#c7d2fe;">
-                        [IndexedDB Cache] ID: ${obj.id.substring(0,8)}... | Location: ${obj.village_name || 'Acquiring'} | Data: "${obj.reportData}"
+                    loggerConsole.innerHTML += `<div style="border-left:3px solid var(--cyber-cyan); padding-left:14px; margin-bottom:14px; font-family:'JetBrains Mono', monospace; font-size:13px; color:#c7d2fe;">
+                        [Cache Node] ID: ${obj.id.substring(0,8)}... | Location: ${obj.village_name || 'Acquiring'} <br> Payload: "${obj.reportData}"
                     </div>`;
                 });
             };
@@ -787,10 +813,10 @@
         if (navigator.onLine === false) {
             if (titleNode) {
                 titleNode.style.color = "var(--cyber-orange)"; 
-                titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Offline Presence Mode)";
+                titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger";
             }
             if (refreshActionBtn) refreshActionBtn.style.display = "none"; 
-            if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Device decoupled from network channels. Injecting cloudMirrorStore persistence layers...</div>';
+            if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace; padding: 10px;">Device disconnected. Injected safe mirror persistence layers cache.</div>';
             loadLocalMirrorCacheFallback();
             return;
         }
@@ -800,7 +826,7 @@
             titleNode.textContent = "☁️ Real-time Cloud Supabase Server Records Ledger";
         }
         if (refreshActionBtn) refreshActionBtn.style.display = "flex";
-        if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Establishing secure gateway link to Supabase Server Ledger REST API...</div>';
+        if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace; padding: 10px;">Establishing link gateway to Supabase Server Ledger...</div>';
         
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?select=*`, {
@@ -811,12 +837,12 @@
             
             const contentType = response.headers.get("content-type");
             if (!response.ok || !contentType || !contentType.includes("application/json")) {
-                throw new Error("Invalid Outage HTML Target Intercepted");
+                throw new Error("Invalid Outage Target");
             }
 
             const data = await response.json();
             if(data.length === 0) {
-                if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">Cloud server database store table is currently empty.</div>';
+                if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">Cloud database store is currently empty.</div>';
                 return;
             }
             
@@ -829,10 +855,10 @@
             }
             renderTableHTML(data, true);
         } catch(err) {
-            console.warn("Handshake blocked. Pulling mirrored disk backups safely...", err);
+            console.warn("Handshake blocked. Pulling mirrored backups...", err);
             if (titleNode) {
                 titleNode.style.color = "var(--cyber-orange)";
-                titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Server Connection Congested)";
+                titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Congested)";
             }
             loadLocalMirrorCacheFallback();
         }
@@ -847,7 +873,7 @@
             if(mirroredOfflineData.length > 0) {
                 renderTableHTML(mirroredOfflineData, false);
             } else {
-                if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">No persistent mirrored cloud server data logs discovered inside device disk cache.</div>';
+                if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">No persistent mirrored cloud discovery logs inside device storage.</div>';
             }
         };
     }
@@ -859,10 +885,10 @@
         let tableHTML = `<table class="cloud-table">
             <thead>
                 <tr>
-                    <th>📦 Infield Node Location</th>
+                    <th>📦 Node Location</th>
                     <th>📅 Entry Date</th>
                     <th>🕒 Entry Time</th>
-                    <th>Synchronized Payload Log</th>
+                    <th>Payload Log</th>
                     <th style="text-align:center;">Action</th>
                 </tr>
             </thead>
@@ -874,7 +900,7 @@
             const timeVal = row.entry_time || formatIsoStringToLocalSystemTime(row.timestamp).split(' ').slice(1).join(' ');
 
             tableHTML += `<tr>
-                <td style="font-weight:700; color: var(--cyber-cyan); font-size:13px;">📍 ${villageName}</td>
+                <td style="font-weight:700; color: var(--cyber-cyan);">📍 ${villageName}</td>
                 <td style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#cbd5e1;">${dateVal}</td>
                 <td style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#a5b4fc;">${timeVal}</td>
                 <td>${row.reportData}</td>
@@ -908,11 +934,9 @@
         } catch(err) { console.error(err); }
     }
 
-    // 🔒 THE ULTIMATE VERCEL SERVICE WORKER BYPASS INTERCEPTOR MATRIX
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
             for(let registration of registrations) {
-                // Unregisters old caching worker schemas completely to prevent network freeze states
                 registration.unregister();
             }
         }).catch((err) => console.error('❌ SW De-registration Fault:', err));
