@@ -357,101 +357,119 @@ transform:scale(1.01);
 
 
 
-
-
-
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
-
-<style id="violet-premium-pro-v2">
+<style id="violet-premium-pro-theme">
+:root{
+--canvas-bg:#07070d;
+--cyber-indigo:#8b5cf6;
+--cyber-cyan:#c4b5fd;
+--cyber-purple:#a855f7;
+--cyber-emerald:#d8b4fe;
+--cyber-rose:#e879f9;
+--cyber-orange:#f5b7ff;
+--text-core:#ffffff;
+--text-low:#c9c2e3;
+}
 
 body{
-font-family:'Outfit',sans-serif!important;
+background:
+radial-gradient(circle at 15% 15%, rgba(139,92,246,.28), transparent 35%),
+radial-gradient(circle at 85% 20%, rgba(168,85,247,.20), transparent 35%),
+radial-gradient(circle at 50% 100%, rgba(232,121,249,.12), transparent 45%),
+linear-gradient(180deg,#07070d,#0d0b18,#06060a)!important;
+padding-top:95px!important;
+}
+
+header{
+position:fixed!important;
+top:0;left:0;right:0;
+height:82px;
+padding:0 42px;
+background:rgba(10,10,18,.78)!important;
+backdrop-filter:blur(30px) saturate(180%);
+-webkit-backdrop-filter:blur(30px) saturate(180%);
+border-bottom:1px solid rgba(139,92,246,.25)!important;
+box-shadow:0 10px 50px rgba(0,0,0,.45)!important;
+z-index:9999;
 }
 
 .logo-section h1{
-font-family:'Space Grotesk',sans-serif!important;
-font-size:32px!important;
+font-size:30px!important;
+font-weight:900!important;
+background:linear-gradient(135deg,#ffffff 0%,#f5f3ff 35%,#c4b5fd 100%)!important;
+-webkit-background-clip:text!important;
+-webkit-text-fill-color:transparent!important;
+text-shadow:0 0 25px rgba(196,181,253,.35);
+}
+
+.logo-section span{
+background:rgba(139,92,246,.15)!important;
+border:1px solid rgba(196,181,253,.25)!important;
+color:#ffffff!important;
 font-weight:800!important;
-letter-spacing:-1px!important;
 }
 
-.card-title,
-.segment-label,
-.badge,
-.toggle-switch-label{
-font-family:'Space Grotesk',sans-serif!important;
-}
-
-.glass-card,
-.adaptive-sync-panel{
-background:
-linear-gradient(
+.glass-card,.adaptive-sync-panel{
+background:linear-gradient(
 135deg,
-rgba(255,255,255,.10),
-rgba(255,255,255,.03)
+rgba(255,255,255,.08),
+rgba(255,255,255,.02)
 )!important;
-
-backdrop-filter:
-blur(40px)
-saturate(220%)
-brightness(1.1)!important;
-
--webkit-backdrop-filter:
-blur(40px)
-saturate(220%)
-brightness(1.1)!important;
-
-border:1px solid rgba(255,255,255,.12)!important;
-
+backdrop-filter:blur(34px) saturate(180%);
+border:1px solid rgba(255,255,255,.10)!important;
+border-radius:32px!important;
 box-shadow:
 0 30px 100px rgba(0,0,0,.45),
-0 0 80px rgba(139,92,246,.12),
-inset 0 1px 0 rgba(255,255,255,.15),
-inset 0 -1px 0 rgba(255,255,255,.04)!important;
+0 0 60px rgba(139,92,246,.08),
+inset 0 1px 0 rgba(255,255,255,.08)!important;
 }
 
-.glass-card::before,
-.adaptive-sync-panel::before{
-content:'';
-position:absolute;
-inset:0;
-background:
-linear-gradient(
-180deg,
-rgba(255,255,255,.08),
-transparent 25%
-);
-pointer-events:none;
+.glass-card:hover{
+transform:translateY(-6px)!important;
+border-color:rgba(196,181,253,.35)!important;
 }
 
-#network-badge.online-state{
-color:#39ff88!important;
-border-color:rgba(57,255,136,.35)!important;
-box-shadow:0 0 35px rgba(57,255,136,.18)!important;
+button{
+background:linear-gradient(135deg,#7c3aed,#c026d3)!important;
+color:white!important;
+font-weight:800!important;
+box-shadow:0 15px 45px rgba(139,92,246,.35)!important;
 }
 
-#network-badge.offline-state{
-color:#ff9f43!important;
-border-color:rgba(255,159,67,.35)!important;
-box-shadow:0 0 35px rgba(255,159,67,.18)!important;
+button:hover{
+box-shadow:0 25px 70px rgba(192,38,211,.45)!important;
+}
+
+.card-title,.segment-label{
+color:#d8b4fe!important;
+}
+
+textarea,
+.info-row,
+.segment-mini-box,
+.queue-terminal{
+background:rgba(255,255,255,.03)!important;
+border-color:rgba(255,255,255,.06)!important;
+}
+
+.info-value,.segment-value,.tech-mono{
+color:#ffffff!important;
 }
 
 #mobile-live-odometer-node{
-color:#39ff88!important;
+color:#c4b5fd!important;
 font-weight:800!important;
 }
 
-.info-row,
-.segment-mini-box{
-transition:.4s ease!important;
+.cloud-table tr:hover td{
+background:rgba(139,92,246,.12)!important;
 }
 
-.info-row:hover,
-.segment-mini-box:hover{
-transform:translateY(-4px);
-border-color:rgba(196,181,253,.2)!important;
+.badge{
+background:rgba(139,92,246,.10)!important;
+border:1px solid rgba(196,181,253,.18)!important;
 }
 
+.tech-mesh-overlay{opacity:.12!important;}
 </style>
 
 </head>
@@ -1119,39 +1137,5 @@ border-color:rgba(196,181,253,.2)!important;
         }).catch((err) => console.error('❌ SW De-registration Fault:', err));
     }
 </script>
-
-<script>
-(function(){
-
-const observer = new MutationObserver(()=>{
-
-const netProfile=document.getElementById('live-speed-telemetry');
-if(netProfile){
-
-if(netProfile.textContent.toLowerCase().includes('disconnected')){
-netProfile.style.color='#ff4d4d';
-}else{
-netProfile.style.color='#c4b5fd';
-}
-}
-
-const eco=document.getElementById('battery-toggle');
-if(eco && eco.checked){
-
-['live-polling-frequency','live-hardware-latency','live-handshake-throttle']
-.forEach(id=>{
-const el=document.getElementById(id);
-if(el) el.style.color='#c4b5fd';
-});
-
-}
-
-});
-
-observer.observe(document.body,{childList:true,subtree:true,characterData:true});
-
-})();
-</script>
 </body>
-
 </html>
