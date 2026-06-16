@@ -15,11 +15,12 @@
         :root {
             --canvas-bg: #02040a;
             --cyber-indigo: #4f46e5;
-            --cyber-cyan: #06b6d4;
+            --cyber-cyan: #00f0ff; /* Saturated Contrast Cyan */
             --cyber-purple: #9333ea;
-            --cyber-emerald: #10b981;
+            --cyber-emerald: #00ff66; /* Highly Saturated Pure Green */
             --cyber-rose: #f43f5e;
-            --cyber-orange: #f59e0b;
+            --cyber-orange: #ff9900; /* Highly Saturated Contrast Orange */
+            --cyber-red: #ff3333; /* Distinct Red for offline profiles */
             
             --glass-sheet: rgba(6, 10, 20, 0.6);
             --glass-border: rgba(255, 255, 255, 0.035);
@@ -27,22 +28,20 @@
             --text-core: #f8fafc;
             --text-low: #64748b;
             
-            --neon-glow-cyan: rgba(6, 182, 212, 0.15);
+            --neon-glow-cyan: rgba(0, 240, 255, 0.15);
             --neon-glow-indigo: rgba(79, 70, 229, 0.1);
             --neon-glow-rose: rgba(244, 63, 94, 0.15);
             
             --fluid-gradient: linear-gradient(135deg, var(--cyber-indigo) 0%, var(--cyber-cyan) 50%, var(--cyber-purple) 100%);
-            --blue-gradient-btn: linear-gradient(135deg, #0055ff 0%, #00bfff 100%);
-            --blue-glow-aesthetic: rgba(0, 191, 255, 0.25);
+            --blue-gradient-btn: linear-gradient(135deg, #7c3aed 0%, #c026d3 100%);
+            --blue-glow-aesthetic: rgba(192, 38, 211, 0.25);
             
-            /* Advanced Motion Primitives */
             --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
             --transition-premium: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             --transition-micro: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             
-            /* Spatial Layer Shadows */
             --shadow-spatial: 0 30px 70px -20px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.03);
-            --shadow-spatial-hover: 0 40px 90px -15px rgba(6, 182, 212, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.06);
+            --shadow-spatial-hover: 0 40px 90px -15px rgba(139, 92, 246, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.06);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -61,17 +60,16 @@
             letter-spacing: -0.01em;
         }
 
-        /* Ambient Fluid Lighting Fields */
         body::before {
             content: ""; position: fixed; top: -15%; left: -10%; width: 65vw; height: 65vw;
-            background: radial-gradient(circle, rgba(79, 70, 229, 0.12) 0%, transparent 65%);
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 65%);
             z-index: -2; pointer-events: none; filter: blur(80px);
             animation: orbOrbitActive 28s infinite alternate ease-in-out;
         }
 
         body::after {
             content: ""; position: fixed; bottom: -15%; right: -10%; width: 55vw; height: 55vw;
-            background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 65%);
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.12) 0%, transparent 65%);
             z-index: -2; pointer-events: none; filter: blur(70px);
             animation: orbOrbitActive 22s infinite alternate-reverse ease-in-out;
         }
@@ -85,11 +83,12 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 0);
             background-size: 40px 40px; z-index: -1; pointer-events: none;
+            opacity: 0.12 !important;
         }
 
         .app-container { 
             width: 100%; 
-            max-width: 1200px; 
+            max-width: 1400px; 
             position: relative; 
             z-index: 1;
             display: flex;
@@ -102,34 +101,38 @@
             width: 100%; padding-bottom: 32px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             flex-wrap: wrap; gap: 24px;
+            position: sticky; top: 0; z-index: 50; backdrop-filter: blur(20px);
+            background: rgba(2, 4, 10, 0.35); padding-top: 16px;
         }
 
         .logo-section h1 {
-            font-size: 24px; font-weight: 800; letter-spacing: -1.2px;
-            background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+            font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 800; letter-spacing: -1.2px;
+            background: linear-gradient(135deg, #ffffff 40%, #c4b5fd 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             display: flex; align-items: center; gap: 12px;
         }
 
         .logo-section span {
             font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
-            background: rgba(255, 255, 255, 0.03);
-            color: #cbd5e1; padding: 5px 12px; border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            background: rgba(139, 92, 246, 0.15);
+            color: #ffffff; padding: 5px 12px; border-radius: 8px;
+            border: 1px solid rgba(196, 181, 253, 0.25);
         }
 
         .badge {
             padding: 10px 20px; border-radius: 14px; font-size: 12px; font-weight: 600;
             display: flex; align-items: center; gap: 10px; backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); border: 1px solid transparent; 
-            background: rgba(4, 6, 12, 0.4); min-width: max-content; transition: var(--transition-premium);
+            background: rgba(139, 92, 246, 0.1); min-width: max-content; transition: var(--transition-premium);
         }
         
-        .badge.online-state { color: var(--cyber-emerald) !important; border-color: rgba(16, 185, 129, 0.2) !important; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.04); }
-        .badge.offline-state { color: var(--cyber-orange) !important; border-color: rgba(245, 158, 11, 0.2) !important; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.04); }
+        .badge.online-state { color: var(--cyber-emerald) !important; border-color: rgba(0, 255, 102, 0.25) !important; box-shadow: 0 0 30px rgba(0, 255, 102, 0.15); }
+        .badge.offline-state { color: var(--cyber-orange) !important; border-color: rgba(255, 153, 0, 0.25) !important; box-shadow: 0 0 30px rgba(255, 153, 0, 0.15); }
 
         .badge-dot { width: 6px; height: 6px; border-radius: 50%; transition: var(--transition-premium); animation: coreBlinkGlow 2s infinite ease-in-out; }
+        .badge.online-state .badge-dot { background: var(--cyber-emerald) !important; box-shadow: 0 0 18px var(--cyber-emerald) !important; }
+        .badge.offline-state .badge-dot { background: var(--cyber-orange) !important; box-shadow: 0 0 18px var(--cyber-orange) !important; }
+        
         @keyframes coreBlinkGlow { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.25); } }
 
         .dashboard-grid {
@@ -146,8 +149,8 @@
         @media (max-width: 968px) { .dashboard-grid { grid-template-columns: 1fr; } }
 
         .glass-card {
-            background: var(--glass-sheet); border: 1px solid var(--glass-border);
-            border-radius: 28px; padding: clamp(24px, 4vw, 40px); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
+            background: var(--glass-sheet); border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 28px; padding: clamp(24px, 4vw, 40px); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
             box-shadow: var(--shadow-spatial); transition: var(--transition-premium);
             position: relative; overflow: hidden;
             display: flex; flex-direction: column; justify-content: space-between;
@@ -156,48 +159,55 @@
             content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 100%); pointer-events: none;
         }
-        .glass-card:hover { transform: translateY(-4px); border-color: var(--glass-border-hover); box-shadow: var(--shadow-spatial-hover); }
+        .glass-card:hover { transform: translateY(-4px); border-color: rgba(196, 181, 253, 0.35); box-shadow: var(--shadow-spatial-hover); }
 
         .card-title {
-            font-size: 11px; font-weight: 700; color: var(--text-low); margin-bottom: 28px;
+            font-size: 11px; font-weight: 700; color: #d8b4fe; margin-bottom: 28px;
             text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
         }
 
         textarea {
             width: 100%; height: 160px; background: rgba(2, 4, 8, 0.5); border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 18px; padding: 20px; color: var(--text-core); font-family: inherit; font-size: 15px; line-height: 1.6; resize: none; outline: none; margin-bottom: 28px;
+            border-radius: 18px; padding: 20px; color: #e2e8f0 !important; font-family: inherit; font-size: 15px; line-height: 1.6; resize: none; outline: none; margin-bottom: 28px;
             transition: var(--transition-premium); box-shadow: inset 0 3px 12px rgba(0,0,0,0.3);
         }
-        textarea:focus { border-color: rgba(6, 182, 212, 0.35); background: rgba(2, 4, 8, 0.75); box-shadow: 0 0 30px rgba(6, 182, 212, 0.05), inset 0 3px 12px rgba(0,0,0,0.5); }
+        textarea::placeholder { color: #94a3b8 !important; }
+        textarea:focus { border-color: rgba(139, 92, 246, 0.35); background: rgba(2, 4, 8, 0.75); box-shadow: 0 0 30px rgba(139, 92, 246, 0.05), inset 0 3px 12px rgba(0,0,0,0.5); }
 
         button {
             width: 100%; background: var(--blue-gradient-btn); color: #ffffff; border: none; padding: 18px; border-radius: 16px;
-            font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: var(--transition-premium); box-shadow: 0 10px 25px rgba(0, 85, 255, 0.2);
+            font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px; transition: var(--transition-premium); box-shadow: 0 10px 25px rgba(139, 92, 246, 0.2);
+            position: relative; overflow: hidden;
         }
-        button:hover { transform: translateY(-2px); box-shadow: 0 15px 35px rgba(0, 191, 255, 0.35); }
+        button::before {
+            content: ''; position: absolute; top: 0; left: -120%; width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent); transition: 1s;
+        }
+        button:hover::before { left: 140%; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 15px 45px rgba(192, 38, 211, 0.35); }
         button:active { transform: translateY(0px) scale(0.98); }
 
         .admin-route-btn {
-            width: 100%; background: rgba(255, 255, 255, 0.01); color: var(--cyber-cyan); border: 1px solid rgba(6, 182, 212, 0.15);
+            width: 100%; background: rgba(255, 255, 255, 0.01); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.15);
             padding: 16px; border-radius: 16px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 24px;
             display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: none; transition: var(--transition-premium);
         }
-        .admin-route-btn:hover { background: rgba(6, 182, 212, 0.04); border-color: var(--cyber-cyan); box-shadow: 0 0 25px rgba(6, 182, 212, 0.08); transform: translateY(-1px); }
+        .admin-route-btn:hover { background: rgba(139, 92, 246, 0.04); border-color: #c4b5fd; box-shadow: 0 0 25px rgba(139, 92, 246, 0.08); transform: translateY(-1px); }
 
         .circle-back-ui-btn {
             width: 48px; height: 48px; background: rgba(2, 4, 8, 0.4); border: 1px solid rgba(255, 255, 255, 0.06); color: var(--text-core);
             border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
             transition: var(--transition-premium); box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
-        .circle-back-ui-btn:hover { background: rgba(6, 182, 212, 0.08); border-color: var(--cyber-cyan); color: var(--cyber-cyan); transform: scale(1.05); }
+        .circle-back-ui-btn:hover { background: rgba(139, 92, 246, 0.08); border-color: #c4b5fd; color: #c4b5fd; transform: scale(1.05); }
         .circle-back-ui-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
         .server-refresh-btn {
-            background: rgba(6, 182, 212, 0.04) !important; color: var(--cyber-cyan) !important; border: 1px solid rgba(6, 182, 212, 0.2) !important;
+            background: rgba(139, 92, 246, 0.04) !important; color: #c4b5fd !important; border: 1px solid rgba(139, 92, 246, 0.2) !important;
             padding: 12px 24px; font-size: 13px; width: auto; border-radius: 12px; box-shadow: none !important; display: flex; align-items: center; gap: 8px;
             transition: var(--transition-premium) !important;
         }
-        .server-refresh-btn:hover { background: var(--blue-gradient-btn) !important; color: #ffffff !important; border-color: transparent !important; transform: translateY(-2px); box-shadow: 0 10px 25px var(--blue-glow-aesthetic) !important; }
+        .server-refresh-btn:hover { background: var(--blue-gradient-btn) !important; color: #ffffff !important; border-color: transparent !important; transform: translateY(-2px); }
         .spinning-loader-icon { display: inline-block; transition: transform 0.6s var(--ease-out-expo); }
         .server-refresh-btn:hover .spinning-loader-icon { transform: rotate(180deg); }
 
@@ -208,24 +218,26 @@
         }
         .row-delete-btn:hover { background: rgba(244, 63, 94, 0.06) !important; border-color: var(--cyber-rose) !important; box-shadow: 0 0 15px var(--neon-glow-rose) !important; }
 
-        .pipeline-container { display: flex; flex-direction: column; gap: 16px; width: 100%; }
-        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; background: rgba(2, 4, 8, 0.3); border: 1px solid rgba(255, 255, 255, 0.01); border-radius: 16px; backdrop-filter: blur(12px); }
+        .pipeline-container { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 16px; backdrop-filter: blur(12px); transition: all .4s ease; }
+        .info-row:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.04); }
         .info-label { font-size: 13px; color: var(--text-low); font-weight: 500; }
-        .info-value { font-size: 13px; font-weight: 700; color: var(--text-core); }
-        .tech-mono { font-family: 'JetBrains Mono', monospace; color: var(--cyber-cyan); }
+        .info-value { font-size: 13px; font-weight: 700; color: #ffffff; }
+        .tech-mono { font-family: 'JetBrains Mono', monospace; }
 
         .queue-terminal {
-            background: rgba(2, 4, 8, 0.5); border: 1px solid rgba(255,255,255,0.015); border-radius: 20px;
-            padding: 24px; height: 210px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8; color: #67e8f9; box-shadow: inset 0 4px 24px rgba(0,0,0,0.5);
+            background: linear-gradient(180deg, rgba(2,4,8,0.85), rgba(5,8,16,0.55)); border: 1px solid rgba(255,255,255,0.015); border-radius: 20px;
+            padding: 24px; height: 210px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8; color: #c4b5fd; box-shadow: inset 0 4px 24px rgba(0,0,0,0.5);
             width: 100%;
         }
 
         .cloud-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 5px; }
         .cloud-table th { padding: 16px 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); letter-spacing: 1.5px; text-align: left; }
-        .cloud-table td { padding: 20px; font-size: 14px; color: #cbd5e1; background: rgba(255, 255, 255, 0.015); border-top: 1px solid rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.02); transition: var(--transition-micro); }
+        .cloud-table td { padding: 20px; font-size: 14px; color: #cbd5e1; background: rgba(255, 255, 255, 0.015); border-top: 1px solid rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.02); transition: .35s ease; }
         .cloud-table tr td:first-child { border-left: 1px solid rgba(255,255,255,0.02); border-top-left-radius: 14px; border-bottom-left-radius: 14px; }
         .cloud-table tr td:last-child { border-right: 1px solid rgba(255,255,255,0.02); border-top-right-radius: 14px; border-bottom-right-radius: 14px; }
-        .cloud-table tr:hover td { background: rgba(255,255,255,0.035); color: #ffffff; }
+        .cloud-table tr:hover td { background: rgba(139, 92, 246, 0.12); color: #ffffff; }
+        .cloud-table tr:hover { transform: scale(1.01); }
 
         .cloud-header-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; gap: 20px; flex-wrap: wrap; }
         .cloud-title-container { display: flex; align-items: center; gap: 20px; }
@@ -240,18 +252,18 @@
         
         .segment-mini-box {
             background: rgba(4, 6, 12, 0.4); border: 1px solid rgba(255,255,255,0.015); border-radius: 18px;
-            padding: 18px; display: flex; flex-direction: column; gap: 6px; transition: var(--transition-premium);
+            padding: 18px; display: flex; flex-direction: column; gap: 6px; transition: all .4s ease;
         }
-        .segment-mini-box:hover { border-color: rgba(6, 182, 212, 0.15); background: rgba(4, 6, 12, 0.6); }
-        .segment-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-low); letter-spacing: 0.8px; }
-        .segment-value { font-size: 14px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: #f8fafc; }
+        .segment-mini-box:hover { border-color: rgba(196, 181, 253, 0.15); background: rgba(4, 6, 12, 0.6); transform: translateY(-4px); }
+        .segment-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #d8b4fe; letter-spacing: 0.8px; }
+        .segment-value { font-size: 14px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
 
         .adaptive-sync-panel {
-            background: var(--glass-sheet); border: 1px solid var(--glass-border);
-            border-radius: 28px; padding: clamp(24px, 4vw, 40px); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
+            background: var(--glass-sheet); border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 28px; padding: clamp(24px, 4vw, 40px); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
             box-shadow: var(--shadow-spatial); width: 100%; transition: var(--transition-premium);
         }
-        .adaptive-sync-panel:hover { border-color: var(--glass-border-hover); box-shadow: var(--shadow-spatial-hover); }
+        .adaptive-sync-panel:hover { border-color: rgba(196, 181, 253, 0.35); box-shadow: var(--shadow-spatial-hover); }
         
         .sync-hud-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
         .sync-hud-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-core); }
@@ -267,7 +279,7 @@
             position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px;
             background-color: #cbd5e1; transition: var(--transition-premium); border-radius: 50%;
         }
-        input:checked + .toggle-slider { background-color: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); }
+        input:checked + .toggle-slider { background-color: rgba(0, 255, 102, 0.15); border-color: rgba(0, 255, 102, 0.3); }
         input:checked + .toggle-slider:before { background-color: var(--cyber-emerald); transform: translateX(24px); box-shadow: 0 0 12px var(--cyber-emerald); }
         
         .mobile-speed-meter-capsule {
@@ -279,446 +291,13 @@
         .sync-telemetry-terminal {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; width: 100%;
         }
-    
-/* ===== CINEMATIC STORYTELLING UI UPGRADE ===== */
-body{
-background:
-radial-gradient(circle at 20% 20%, rgba(79,70,229,.18), transparent 35%),
-radial-gradient(circle at 80% 30%, rgba(6,182,212,.12), transparent 35%),
-radial-gradient(circle at 50% 100%, rgba(147,51,234,.12), transparent 40%),
-#02040a;
-}
-.app-container{
-max-width:1400px;
-}
-.glass-card,.adaptive-sync-panel{
-backdrop-filter:blur(40px);
-border:1px solid rgba(255,255,255,.06);
-}
-.glass-card::after,.adaptive-sync-panel::after{
-content:'';
-position:absolute;
-inset:0;
-background:linear-gradient(180deg,rgba(255,255,255,.04),transparent 25%);
-pointer-events:none;
-}
-header{
-position:sticky;
-top:0;
-z-index:50;
-backdrop-filter:blur(20px);
-background:rgba(2,4,10,.35);
-padding-top:16px;
-}
-.logo-section h1{
-font-size:clamp(2rem,4vw,3.5rem);
-}
-.dashboard-grid,.glass-card,.adaptive-sync-panel{
-animation:sectionScrollReveal .9s cubic-bezier(.16,1,.3,1);
-}
-button{
-position:relative;
-overflow:hidden;
-}
-button::before{
-content:'';
-position:absolute;
-top:0;
-left:-120%;
-width:60%;
-height:100%;
-background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
-transition:1s;
-}
-button:hover::before{
-left:140%;
-}
-.segment-mini-box,.info-row{
-transition:all .4s ease;
-}
-.segment-mini-box:hover,.info-row:hover{
-transform:translateY(-4px);
-}
-.queue-terminal{
-background:linear-gradient(180deg,rgba(2,4,8,.85),rgba(5,8,16,.55));
-}
-.cloud-table tr{
-transition:.35s ease;
-}
-.cloud-table tr:hover{
-transform:scale(1.01);
-}
 
-</style>
-
-
-
-
-
-
-
-<style id="violet-premium-pro-theme">
-:root{
---canvas-bg:#07070d;
---cyber-indigo:#8b5cf6;
---cyber-cyan:#c4b5fd;
---cyber-purple:#a855f7;
---cyber-emerald:#d8b4fe;
---cyber-rose:#e879f9;
---cyber-orange:#f5b7ff;
---text-core:#ffffff;
---text-low:#c9c2e3;
-}
-
-body{
-background:
-radial-gradient(circle at 15% 15%, rgba(139,92,246,.28), transparent 35%),
-radial-gradient(circle at 85% 20%, rgba(168,85,247,.20), transparent 35%),
-radial-gradient(circle at 50% 100%, rgba(232,121,249,.12), transparent 45%),
-linear-gradient(180deg,#07070d,#0d0b18,#06060a)!important;
-padding-top:95px!important;
-}
-
-header{
-position:fixed!important;
-top:0;left:0;right:0;
-height:82px;
-padding:0 42px;
-background:rgba(10,10,18,.78)!important;
-backdrop-filter:blur(30px) saturate(180%);
--webkit-backdrop-filter:blur(30px) saturate(180%);
-border-bottom:1px solid rgba(139,92,246,.25)!important;
-box-shadow:0 10px 50px rgba(0,0,0,.45)!important;
-z-index:9999;
-}
-
-.logo-section h1{
-font-size:30px!important;
-font-weight:900!important;
-background:linear-gradient(135deg,#ffffff 0%,#f5f3ff 35%,#c4b5fd 100%)!important;
--webkit-background-clip:text!important;
--webkit-text-fill-color:transparent!important;
-text-shadow:0 0 25px rgba(196,181,253,.35);
-}
-
-.logo-section span{
-background:rgba(139,92,246,.15)!important;
-border:1px solid rgba(196,181,253,.25)!important;
-color:#ffffff!important;
-font-weight:800!important;
-}
-
-.glass-card,.adaptive-sync-panel{
-background:linear-gradient(
-135deg,
-rgba(255,255,255,.08),
-rgba(255,255,255,.02)
-)!important;
-backdrop-filter:blur(34px) saturate(180%);
-border:1px solid rgba(255,255,255,.10)!important;
-border-radius:32px!important;
-box-shadow:
-0 30px 100px rgba(0,0,0,.45),
-0 0 60px rgba(139,92,246,.08),
-inset 0 1px 0 rgba(255,255,255,.08)!important;
-}
-
-.glass-card:hover{
-transform:translateY(-6px)!important;
-border-color:rgba(196,181,253,.35)!important;
-}
-
-button{
-background:linear-gradient(135deg,#7c3aed,#c026d3)!important;
-color:white!important;
-font-weight:800!important;
-box-shadow:0 15px 45px rgba(139,92,246,.35)!important;
-}
-
-button:hover{
-box-shadow:0 25px 70px rgba(192,38,211,.45)!important;
-}
-
-.card-title,.segment-label{
-color:#d8b4fe!important;
-}
-
-textarea,
-.info-row,
-.segment-mini-box,
-.queue-terminal{
-background:rgba(255,255,255,.03)!important;
-border-color:rgba(255,255,255,.06)!important;
-}
-
-.info-value,.segment-value,.tech-mono{
-color:#ffffff!important;
-}
-
-#mobile-live-odometer-node{
-color:#c4b5fd!important;
-font-weight:800!important;
-}
-
-.cloud-table tr:hover td{
-background:rgba(139,92,246,.12)!important;
-}
-
-.badge{
-background:rgba(139,92,246,.10)!important;
-border:1px solid rgba(196,181,253,.18)!important;
-}
-
-.tech-mesh-overlay{opacity:.12!important;}
-</style>
-
-
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-<style id="violet-pro-upgrade">
-body{
-font-family:'Outfit',sans-serif !important;
-}
-
-.logo-section h1{
-font-family:'Sora',sans-serif !important;
-font-weight:800 !important;
-letter-spacing:-1.2px !important;
-}
-
-.card-title,
-.sync-hud-title,
-.toggle-switch-label,
-.segment-label{
-font-family:'Sora',sans-serif !important;
-}
-
-.badge.online-state{
-color:#39ff88 !important;
-border-color:rgba(57,255,136,.25)!important;
-box-shadow:0 0 30px rgba(57,255,136,.15)!important;
-}
-
-.badge.online-state .badge-dot{
-background:#39ff88 !important;
-box-shadow:0 0 18px #39ff88 !important;
-}
-
-.badge.offline-state{
-color:#ff9f43 !important;
-border-color:rgba(255,159,67,.25)!important;
-box-shadow:0 0 30px rgba(255,159,67,.15)!important;
-}
-
-.badge.offline-state .badge-dot{
-background:#ff9f43 !important;
-box-shadow:0 0 18px #ff9f43 !important;
-}
-
-#mobile-live-odometer-node{
-color:#39ff88 !important;
-font-weight:800 !important;
-}
-
-.network-offline-speed{
-color:#ff4d4d !important;
-}
-
-.eco-active-violet{
-color:#c084fc !important;
-}
-
-.info-value,
-.segment-value{
-font-weight:700 !important;
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded',()=>{
-
-const observer=setInterval(()=>{
-
-const badge=document.getElementById('network-badge');
-const speed=document.getElementById('mobile-live-odometer-node');
-const profile=document.getElementById('live-speed-telemetry');
-const eco=document.getElementById('battery-toggle');
-
-if(speed){
-if(navigator.onLine){
-speed.style.color='#39ff88';
-}else{
-speed.style.color='#ff9f43';
-}
-}
-
-if(profile){
-if(!navigator.onLine){
-profile.style.color='#ff4d4d';
-profile.textContent='0.00 Mbps (Disconnected)';
-}
-}
-
-if(eco && eco.checked){
-
-const ids=[
-'live-polling-frequency',
-'live-hardware-latency',
-'live-handshake-throttle',
-'live-speed-telemetry'
-];
-
-ids.forEach(id=>{
-const el=document.getElementById(id);
-if(el){
-el.style.color='#c084fc';
-}
-});
-
-}
-},500);
-
-});
-</script>
-
-
-<style id="user-v3-enhancements">
-#hud-live-date,#hud-live-time{color:#39ff88!important;font-weight:800!important;}
-#hud-live-location{color:#00e5ff!important;font-weight:800!important;}
-textarea{color:#d9d9d9!important;}
-textarea::placeholder{color:#bfbfbf!important;}
-.pipeline-container::after{
-content:"System Status • Edge Ready • IndexedDB Active • Secure Sync";
-display:block;padding:16px;margin-top:16px;border-radius:14px;
-background:rgba(255,255,255,.03);text-align:center;color:#c4b5fd;font-weight:700;
-}
-</style>
-<script>
-document.addEventListener('DOMContentLoaded',()=>{
-setInterval(()=>{
-const eco=document.getElementById('battery-toggle');
-const freq=document.getElementById('live-polling-frequency');
-const lat=document.getElementById('live-hardware-latency');
-const thr=document.getElementById('live-handshake-throttle');
-const prof=document.getElementById('live-speed-telemetry');
-const speed=document.getElementById('mobile-live-odometer-node');
-
-if(speed){speed.style.color=navigator.onLine?'#39ff88':'#ff9f43';}
-
-if(prof){prof.style.color=navigator.onLine?'#39ff88':'#ff4d4d';}
-
-const clr=(eco&&eco.checked)?'#39ff88':'#ff9f43';
-[freq,lat,thr].forEach(e=>{if(e)e.style.color=clr;});
-
-},500);
-});
-</script>
-
-
-<style id="final-user-patch">
-#hud-live-date,#hud-live-time{
-color:#39ff88 !important;
-font-weight:800 !important;
-}
-
-#hud-live-location{
-color:#00e5ff !important;
-font-weight:800 !important;
-}
-
-textarea,
-textarea::placeholder{
-color:#d3d3d3 !important;
-}
-
-.pipeline-container::after{
-content:"System Health: Optimal • Secure Channel Active • Edge Sync Ready • IndexedDB Protected";
-display:block;
-margin-top:16px;
-padding:16px;
-border-radius:14px;
-background:rgba(255,255,255,.04);
-color:#c4b5fd;
-font-weight:700;
-text-align:center;
-}
-
-#live-polling-frequency,
-#live-hardware-latency,
-#live-handshake-throttle{
-font-weight:800 !important;
-}
-
-#live-speed-telemetry{
-font-weight:800 !important;
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded',()=>{
-
-const originalLocationFunction = window.forceEnforcedLocationVerification;
-
-window.forceEnforcedLocationVerification = function(triggerManualAlertOnBlock=false){
-
-if(!navigator.geolocation){ return originalLocationFunction(triggerManualAlertOnBlock); }
-
-navigator.geolocation.getCurrentPosition(async(position)=>{
-
-const lat=position.coords.latitude;
-const lon=position.coords.longitude;
-
-try{
-const res=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1`);
-const geo=await res.json();
-
-let englishName =
-geo.address.city ||
-geo.address.town ||
-geo.address.village ||
-geo.address.suburb ||
-geo.address.county ||
-"Field Node";
-
-capturedVillageNameStr = englishName;
-locationPermissionGranted = true;
-
-const node=document.getElementById('hud-live-location');
-if(node) node.textContent = englishName;
-
-}catch(e){}
-},{enableHighAccuracy:true,timeout:12000});
-};
-
-setInterval(()=>{
-
-const eco=document.getElementById('battery-toggle')?.checked;
-
-const freq=document.getElementById('live-polling-frequency');
-const latency=document.getElementById('live-hardware-latency');
-const throttle=document.getElementById('live-handshake-throttle');
-const profile=document.getElementById('live-speed-telemetry');
-const speed=document.getElementById('mobile-live-odometer-node');
-
-if(speed){
-speed.style.color = navigator.onLine ? '#39ff88' : '#ff9f43';
-}
-
-if(profile){
-profile.style.color = navigator.onLine ? '#39ff88' : '#ff4d4d';
-}
-
-const ecoColor = eco ? '#39ff88' : '#ff9f43';
-
-[freq,latency,throttle].forEach(el=>{
-if(el) el.style.color = ecoColor;
-});
-
-},500);
-
-});
-</script>
-
+        .pipeline-container::after {
+            content: "System Health: Optimal • Secure Channel Active • Edge Sync Ready • IndexedDB Protected";
+            display: block; margin-top: 12px; padding: 14px; border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04); color: #c4b5fd; font-weight: 700; text-align: center; font-size: 12px;
+        }
+    </style>
 </head>
 
 <body>
@@ -735,7 +314,7 @@ if(el) el.style.color = ecoColor;
         <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
             <div class="mobile-speed-meter-capsule">
                 <span style="color: var(--text-low); font-size: 9px; text-transform: uppercase; letter-spacing: 1px;">NET SPEED</span>
-                <span id="mobile-live-odometer-node" style="color: var(--cyber-cyan); font-variant-numeric: tabular-nums;">0.0 KB/s</span>
+                <span id="mobile-live-odometer-node" style="font-variant-numeric: tabular-nums;">0.0 KB/s</span>
             </div>
             
             <div id="network-badge" class="badge">
@@ -768,7 +347,7 @@ if(el) el.style.color = ecoColor;
                     </div>
                     <div class="segment-mini-box">
                         <span class="segment-label">🕒 Transaction Time</span>
-                        <span id="hud-live-time" class="segment-value" style="color: var(--cyber-orange);">--:--:-- --</span>
+                        <span id="hud-live-time" class="segment-value" style="color: var(--cyber-emerald);">--:--:-- --</span>
                     </div>
                 </div>
 
@@ -789,6 +368,14 @@ if(el) el.style.color = ecoColor;
                     <div class="info-row">
                         <span class="info-label">Active Storage Key Database:</span>
                         <span class="info-value tech-mono">VercelOfflineQueueDB</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Encryption Protocol Layer:</span>
+                        <span class="info-value tech-mono" style="color: var(--cyber-cyan);">AES-GCM 256 Local-Sharded</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Local Node Isolation State:</span>
+                        <span class="info-value tech-mono" style="color: var(--cyber-emerald);">Sovereign Persistence Confirmed</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Pending Sync Payload Queue Size:</span>
@@ -814,7 +401,7 @@ if(el) el.style.color = ecoColor;
             <div class="sync-telemetry-terminal">
                 <div class="info-row" style="background: rgba(0,0,0,0.15);">
                     <span class="info-label">Network Polling Frequency:</span>
-                    <span id="live-polling-frequency" class="info-value tech-mono" style="color: var(--cyber-emerald);">2500 ms (High Performance)</span>
+                    <span id="live-polling-frequency" class="info-value tech-mono">2500 ms (High Performance)</span>
                 </div>
                 <div class="info-row" style="background: rgba(0,0,0,0.15);">
                     <span class="info-label">Expected Hardware Latency:</span>
@@ -826,7 +413,7 @@ if(el) el.style.color = ecoColor;
                 </div>
                 <div class="info-row" style="background: rgba(0,0,0,0.15);">
                     <span class="info-label">Adaptive Sync Network Profile:</span>
-                    <span id="live-speed-telemetry" class="info-value tech-mono" style="color: var(--cyber-cyan);">Checking channels...</span>
+                    <span id="live-speed-telemetry" class="info-value tech-mono">Checking channels...</span>
                 </div>
             </div>
         </div>
@@ -893,6 +480,10 @@ if(el) el.style.color = ecoColor;
         } catch(e) { return isoString; }
     }
 
+    function cleanToEnglishText(str) {
+        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\x00-\x7F]/g, "").trim();
+    }
+
     function forceEnforcedLocationVerification(triggerManualAlertOnBlock = false) {
         if (!navigator.geolocation) {
             capturedVillageNameStr = "Not Supported";
@@ -912,9 +503,13 @@ if(el) el.style.color = ecoColor;
                 const lon = position.coords.longitude;
 
                 try {
-                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1`);
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1&accept-language=en`);
                     const geoJSON = await res.json();
-                    capturedVillageNameStr = geoJSON.address.village || geoJSON.address.suburb || geoJSON.address.county || geoJSON.address.town || "Remote Outpost";
+                    
+                    let addressObj = geoJSON.address;
+                    let preciseName = addressObj.suburb || addressObj.neighbourhood || addressObj.village || addressObj.town || addressObj.city_district || addressObj.city || "Remote Outpost";
+                    
+                    capturedVillageNameStr = cleanToEnglishText(preciseName);
                     document.getElementById('hud-live-location').textContent = capturedVillageNameStr;
                 } catch (err) {
                     capturedVillageNameStr = "Infield Grid Alpha";
@@ -934,7 +529,7 @@ if(el) el.style.color = ecoColor;
                     alert("📍 Location Service Interrupted:\n\nEdgeSync requires active geolocation to verify field nodes. Please click the location icon in your address bar to change configuration to 'Allow' and reload!");
                 }
             },
-            { enableHighAccuracy: true, timeout: 8000 }
+            { enableHighAccuracy: true, timeout: 15000 }
         );
     }
 
@@ -957,9 +552,9 @@ if(el) el.style.color = ecoColor;
 
         if (navigator.onLine === false) {
             speedNode.textContent = "0.00 Mbps (Disconnected)";
-            speedNode.style.color = "var(--cyber-orange)";
+            speedNode.style.color = "var(--cyber-red)";
             odometerNode.textContent = "0.0 KB/s";
-            odometerNode.style.color = "var(--text-low)";
+            odometerNode.style.color = "var(--cyber-orange)";
             return;
         }
 
@@ -988,7 +583,7 @@ if(el) el.style.color = ecoColor;
             if(simulatedDownlinkMbps > 95) simulatedDownlinkMbps = 54.32;
 
             speedNode.textContent = simulatedDownlinkMbps.toFixed(2) + " Mbps (Active Grid)";
-            speedNode.style.color = "var(--cyber-cyan)";
+            speedNode.style.color = "var(--cyber-emerald)";
 
             const calculatedKbsValue = (simulatedDownlinkMbps * 1024) / 8;
             if (calculatedKbsValue >= 1024) {
@@ -998,14 +593,14 @@ if(el) el.style.color = ecoColor;
             } else {
                 const dynamicRenderKbs = calculatedKbsValue * (0.94 + Math.random() * 0.14);
                 odometerNode.textContent = dynamicRenderKbs.toFixed(1) + " KB/s";
-                odometerNode.style.color = "var(--cyber-cyan)";
+                odometerNode.style.color = "var(--cyber-emerald)";
             }
         } catch (e) {
             if (e.name !== 'AbortError') {
                 speedNode.textContent = "0.00 Mbps (Disconnected)";
-                speedNode.style.color = "var(--cyber-orange)";
+                speedNode.style.color = "var(--cyber-red)";
                 odometerNode.textContent = "0.0 KB/s";
-                odometerNode.style.color = "var(--text-low)";
+                odometerNode.style.color = "var(--cyber-orange)";
                 
                 if (previousNetworkStateIsOnline !== false) {
                     previousNetworkStateIsOnline = false;
@@ -1014,21 +609,21 @@ if(el) el.style.color = ecoColor;
             }
         }
 
+        const currentSyncColor = isEcoChecked ? "var(--cyber-emerald)" : "var(--cyber-orange)";
+        
         if (isEcoChecked) {
             freqNode.textContent = "10000 ms (Throttled)";
-            freqNode.style.color = "var(--cyber-orange)";
             latencyNode.textContent = "Extended Optimized (~4.20s)";
-            latencyNode.style.color = "var(--cyber-orange)";
             throttleNode.textContent = "Preservation Caps Locked";
-            throttleNode.style.color = "var(--cyber-orange)";
         } else {
             freqNode.textContent = "2500 ms (High Perf)";
-            freqNode.style.color = "var(--cyber-emerald)";
             latencyNode.textContent = "Minimal Base (~0.04s)";
-            latencyNode.style.color = "var(--text-core)";
             throttleNode.textContent = "Unrestricted Handshake";
-            throttleNode.style.color = "var(--text-core)";
         }
+        
+        freqNode.style.color = currentSyncColor;
+        latencyNode.style.color = currentSyncColor;
+        throttleNode.style.color = currentSyncColor;
     }
 
     function adjustBatteryEcoSyncRatesHUD() {
@@ -1039,11 +634,11 @@ if(el) el.style.color = ecoColor;
         
         if (isChecked) {
             statusDisplay.textContent = "ECO MODE: ACTIVE";
-            statusDisplay.style.color = "var(--cyber-orange)";
+            statusDisplay.style.color = "var(--cyber-emerald)";
             fallbackPollIntervalTimer = 10000; 
         } else {
             statusDisplay.textContent = "ECO MODE: OFF";
-            statusDisplay.style.color = "var(--cyber-emerald)";
+            statusDisplay.style.color = "var(--cyber-orange)";
             fallbackPollIntervalTimer = 2500; 
         }
         
@@ -1055,6 +650,8 @@ if(el) el.style.color = ecoColor;
         const badge = document.getElementById('network-badge');
         const badgeDot = document.getElementById('badge-glow-node');
         const badgeText = document.getElementById('badge-text-node');
+        const odometerNode = document.getElementById('mobile-live-odometer-node');
+        const speedNode = document.getElementById('live-speed-telemetry');
         const currentOnlineState = navigator.onLine;
         
         if (currentOnlineState === false) {
@@ -1064,14 +661,8 @@ if(el) el.style.color = ecoColor;
             badgeDot.style.boxShadow = "0 0 16px var(--cyber-orange)";
             badgeText.innerHTML = "EDGE OFFLINE — Local Cache Mode"; 
             
-            const speedNode = document.getElementById('live-speed-telemetry');
-            const odometerNode = document.getElementById('mobile-live-odometer-node');
-            if(speedNode && odometerNode) {
-                speedNode.textContent = "0.00 Mbps (Disconnected)";
-                speedNode.style.color = "var(--cyber-orange)";
-                odometerNode.textContent = "0.0 KB/s";
-                odometerNode.style.color = "var(--text-low)";
-            }
+            if(odometerNode) odometerNode.style.color = "var(--cyber-orange)";
+            if(speedNode) speedNode.style.color = "var(--cyber-red)";
 
             if (previousNetworkStateIsOnline !== false) {
                 previousNetworkStateIsOnline = false;
@@ -1086,6 +677,9 @@ if(el) el.style.color = ecoColor;
         badgeDot.style.backgroundColor = "var(--cyber-emerald)";
         badgeDot.style.boxShadow = "0 0 16px var(--cyber-emerald)";
         badgeText.innerHTML = "EDGE ONLINE — Pipeline Synchronized"; 
+        
+        if(odometerNode) odometerNode.style.color = "var(--cyber-emerald)";
+        if(speedNode) speedNode.style.color = "var(--cyber-emerald)";
         
         executeCloudSynchronization();
         updateTelemetryHUDDisplayMetrics();
