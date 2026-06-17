@@ -208,7 +208,9 @@
         .info-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; background: rgba(255, 255, 255, 0.03) !important; border: 1px solid rgba(255, 255, 255, 0.06) !important; border-radius: 16px; backdrop-filter: blur(12px); transition: all .4s ease; }
         .info-row:hover { transform: translateY(-4px); }
         .info-label { font-size: 13px; color: var(--text-low); font-weight: 500; }
-        .info-value { font-size: 13px; font-weight: 700; color: #ffffff !important; }
+        
+        /* REMOVED !important SO JAVASCRIPT CAN DYNAMICALLY UPDATE COLORS */
+        .info-value { font-size: 13px; font-weight: 700; color: #ffffff; } 
         .tech-mono { font-family: 'JetBrains Mono', monospace; }
 
         .queue-terminal {
@@ -472,6 +474,7 @@
         return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\x00-\x7F]/g, "").trim();
     }
 
+    // High accuracy location update configuration
     function forceEnforcedLocationVerification(triggerManualAlertOnBlock = false) {
         if (!navigator.geolocation) {
             capturedVillageNameStr = "Not Supported";
@@ -576,7 +579,7 @@
 
             if (speedNode) {
                 speedNode.textContent = simulatedDownlinkMbps.toFixed(2) + " Mbps (Active Grid)";
-                speedNode.style.color = "var(--cyber-emerald)"; // Always saturated green when online
+                speedNode.style.color = "var(--cyber-emerald)"; 
             }
 
             const calculatedKbsValue = (simulatedDownlinkMbps * 1024) / 8;
@@ -609,7 +612,7 @@
             }
         }
 
-        // FIXED: Explicitly handle custom style switching per your specifications matrix
+        // Color configurations based on ECO MODE state
         const metricsTargetColorStr = isEcoChecked ? "var(--cyber-emerald)" : "var(--cyber-orange)";
         
         if (isEcoChecked) {
@@ -625,6 +628,7 @@
         freqNode.style.color = metricsTargetColorStr;
         latencyNode.style.color = metricsTargetColorStr;
         throttleNode.style.color = metricsTargetColorStr;
+        if (speedNode && navigator.onLine) speedNode.style.color = "var(--cyber-emerald)";
     }
 
     function adjustBatteryEcoSyncRatesHUD() {
