@@ -16,7 +16,7 @@
         :root {
             --canvas-bg: #07070d;
             --cyber-indigo: #8b5cf6;
-            --cyber-cyan: #00f0ff; /* Saturated Contrast Cyan */
+            --cyber-cyan: #00f0ff; 
             --cyber-purple: #a855f7;
             --cyber-emerald: #00ff66; /* Highly Saturated Pure Green */
             --cyber-rose: #e879f9;
@@ -73,7 +73,6 @@
             gap: clamp(32px, 5vw, 56px);
         }
 
-        /* FIXED FIXED NAVBAR GENERATION */
         header {
             position: fixed !important;
             top: 0; left: 0; right: 0;
@@ -257,7 +256,7 @@
         .sync-hud-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
         .sync-hud-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-core); }
         .toggle-switch-wrapper { display: flex; align-items: center; gap: 14px; }
-        .toggle-switch-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; }
+        .toggle-switch-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; transition: color 0.3s ease; }
         .toggle-switch { position: relative; width: 52px; height: 28px; display: inline-block; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider {
@@ -379,7 +378,7 @@
             <div class="sync-hud-header">
                 <div class="sync-hud-title">🔋 Battery Adaptive Sync Regulator Configuration</div>
                 <div class="toggle-switch-wrapper">
-                    <span id="sync-rate-status" class="toggle-switch-label" style="color: var(--cyber-emerald);">ECO MODE: OFF</span>
+                    <span id="sync-rate-status" class="toggle-switch-label" style="color: var(--cyber-orange);">ECO MODE: OFF</span>
                     <label class="toggle-switch">
                         <input type="checkbox" id="battery-toggle" onchange="adjustBatteryEcoSyncRatesHUD()">
                         <span class="toggle-slider"></span>
@@ -390,19 +389,19 @@
             <div class="sync-telemetry-terminal">
                 <div class="info-row" style="background: rgba(0,0,0,0.15);">
                     <span class="info-label">Network Polling Frequency:</span>
-                    <span id="live-polling-frequency" class="info-value tech-mono">2500 ms (High Performance)</span>
+                    <span id="live-polling-frequency" class="info-value tech-mono" style="color: var(--cyber-orange);">2500 ms (High Performance)</span>
                 </div>
                 <div class="info-row" style="background: rgba(0,0,0,0.15);">
                     <span class="info-label">Expected Hardware Latency:</span>
-                    <span id="live-hardware-latency" class="info-value tech-mono">Minimal (~0.04s)</span>
+                    <span id="live-hardware-latency" class="info-value tech-mono" style="color: var(--cyber-orange);">Minimal Base (~0.04s)</span>
                 </div>
                 <div class="info-row" style="background: rgba(0,0,0,0.15);">
                     <span class="info-label">Client Handshake Throttle Burst:</span>
-                    <span id="live-handshake-throttle" class="info-value tech-mono">Unrestricted (Continuous)</span>
+                    <span id="live-handshake-throttle" class="info-value tech-mono" style="color: var(--cyber-orange);">Unrestricted (Continuous)</span>
                 </div>
                 <div class="info-row" style="background: rgba(0,0,0,0.15);">
                     <span class="info-label">Adaptive Sync Network Profile:</span>
-                    <span id="live-speed-telemetry" class="info-value tech-mono">Checking channels...</span>
+                    <span id="live-speed-telemetry" class="info-value tech-mono" style="color: var(--cyber-emerald);">Checking channels...</span>
                 </div>
             </div>
         </div>
@@ -539,11 +538,16 @@
         const throttleNode = document.getElementById('live-handshake-throttle');
         const isEcoChecked = document.getElementById('battery-toggle').checked;
 
+        // FIXED: Drop to absolute zero instantly when navigator is evaluated as offline
         if (navigator.onLine === false) {
-            speedNode.textContent = "0.00 Mbps (Disconnected)";
-            speedNode.style.color = "var(--cyber-red)";
-            odometerNode.textContent = "0.0 KB/s";
-            odometerNode.style.color = "var(--cyber-orange)";
+            if (speedNode) {
+                speedNode.textContent = "0.00 Mbps (Disconnected)";
+                speedNode.style.color = "var(--cyber-red)";
+            }
+            if (odometerNode) {
+                odometerNode.textContent = "0.0 KB/s";
+                odometerNode.style.color = "var(--cyber-orange)";
+            }
             return;
         }
 
@@ -571,25 +575,33 @@
             let simulatedDownlinkMbps = Math.max(1.5, (2.6 / (computeDeltaDuration + 0.02)));
             if(simulatedDownlinkMbps > 95) simulatedDownlinkMbps = 54.32;
 
-            speedNode.textContent = simulatedDownlinkMbps.toFixed(2) + " Mbps (Active Grid)";
-            speedNode.style.color = "var(--cyber-emerald)";
+            if (speedNode) {
+                speedNode.textContent = simulatedDownlinkMbps.toFixed(2) + " Mbps (Active Grid)";
+                speedNode.style.color = "var(--cyber-emerald)"; // Profile stays green always
+            }
 
             const calculatedKbsValue = (simulatedDownlinkMbps * 1024) / 8;
-            if (calculatedKbsValue >= 1024) {
-                const mbsValue = (calculatedKbsValue / 1024) * (0.94 + Math.random() * 0.12);
-                odometerNode.textContent = mbsValue.toFixed(1) + " MB/s";
-                odometerNode.style.color = "var(--cyber-emerald)";
-            } else {
-                const dynamicRenderKbs = calculatedKbsValue * (0.94 + Math.random() * 0.14);
-                odometerNode.textContent = dynamicRenderKbs.toFixed(1) + " KB/s";
-                odometerNode.style.color = "var(--cyber-emerald)";
+            if (odometerNode) {
+                if (calculatedKbsValue >= 1024) {
+                    const mbsValue = (calculatedKbsValue / 1024) * (0.94 + Math.random() * 0.12);
+                    odometerNode.textContent = mbsValue.toFixed(1) + " MB/s";
+                    odometerNode.style.color = "var(--cyber-emerald)";
+                } else {
+                    const dynamicRenderKbs = calculatedKbsValue * (0.94 + Math.random() * 0.14);
+                    odometerNode.textContent = dynamicRenderKbs.toFixed(1) + " KB/s";
+                    odometerNode.style.color = "var(--cyber-emerald)";
+                }
             }
         } catch (e) {
             if (e.name !== 'AbortError') {
-                speedNode.textContent = "0.00 Mbps (Disconnected)";
-                speedNode.style.color = "var(--cyber-red)";
-                odometerNode.textContent = "0.0 KB/s";
-                odometerNode.style.color = "var(--cyber-orange)";
+                if (speedNode) {
+                    speedNode.textContent = "0.00 Mbps (Disconnected)";
+                    speedNode.style.color = "var(--cyber-red)";
+                }
+                if (odometerNode) {
+                    odometerNode.textContent = "0.0 KB/s";
+                    odometerNode.style.color = "var(--cyber-orange)";
+                }
                 
                 if (previousNetworkStateIsOnline !== false) {
                     previousNetworkStateIsOnline = false;
@@ -598,6 +610,7 @@
             }
         }
 
+        // Dynamic metrics state styling assignments
         const currentSyncColor = isEcoChecked ? "var(--cyber-emerald)" : "var(--cyber-orange)";
         
         if (isEcoChecked) {
@@ -621,6 +634,7 @@
         
         clearInterval(heartbeatThreadLoop);
         
+        // FIXED: Toggle initialization switches precisely between orange (OFF) and green (ON)
         if (isChecked) {
             statusDisplay.textContent = "ECO MODE: ACTIVE";
             statusDisplay.style.color = "var(--cyber-emerald)";
@@ -650,8 +664,14 @@
             badgeDot.style.boxShadow = "0 0 16px var(--cyber-orange)";
             badgeText.innerHTML = "EDGE OFFLINE — Local Cache Mode"; 
             
-            if(odometerNode) odometerNode.style.color = "var(--cyber-orange)";
-            if(speedNode) speedNode.style.color = "var(--cyber-red)";
+            if(odometerNode) {
+                odometerNode.textContent = "0.0 KB/s"; // FIXED: Ensure top layout also falls to absolute zero text
+                odometerNode.style.color = "var(--cyber-orange)";
+            }
+            if(speedNode) {
+                speedNode.textContent = "0.00 Mbps (Disconnected)";
+                speedNode.style.color = "var(--cyber-red)";
+            }
 
             if (previousNetworkStateIsOnline !== false) {
                 previousNetworkStateIsOnline = false;
@@ -666,9 +686,6 @@
         badgeDot.style.backgroundColor = "var(--cyber-emerald)";
         badgeDot.style.boxShadow = "0 0 16px var(--cyber-emerald)";
         badgeText.innerHTML = "EDGE ONLINE — Pipeline Synchronized"; 
-        
-        if(odometerNode) odometerNode.style.color = "var(--cyber-emerald)";
-        if(speedNode) speedNode.style.color = "var(--cyber-emerald)";
         
         executeCloudSynchronization();
         updateTelemetryHUDDisplayMetrics();
@@ -960,7 +977,6 @@
         } catch(err) { console.error(err); }
     }
 
-    /* PWA SERVICE WORKER REGISTRATION BOILERPLATE */
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js')
