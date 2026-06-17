@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EdgeSync — Enterprise Edge Client Layer</title>
-    <link rel="manifest" href="/manifest.json">
-    <link rel="icon" href="data:,">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+    <meta name="theme-color" content="#07070d">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -959,12 +960,13 @@
         } catch(err) { console.error(err); }
     }
 
+    /* PWA SERVICE WORKER REGISTRATION BOILERPLATE */
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            for(let registration of registrations) {
-                registration.unregister();
-            }
-        }).catch((err) => console.error('❌ SW De-registration Fault:', err));
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('🚀 EdgeSync SW Registered Successfully!', reg.scope))
+                .catch(err => console.error('❌ EdgeSync SW Registration Failed:', err));
+        });
     }
 </script>
 </body>
