@@ -538,7 +538,6 @@
         const throttleNode = document.getElementById('live-handshake-throttle');
         const isEcoChecked = document.getElementById('battery-toggle').checked;
 
-        // FIXED: Drop to absolute zero instantly when navigator is evaluated as offline
         if (navigator.onLine === false) {
             if (speedNode) {
                 speedNode.textContent = "0.00 Mbps (Disconnected)";
@@ -577,7 +576,7 @@
 
             if (speedNode) {
                 speedNode.textContent = simulatedDownlinkMbps.toFixed(2) + " Mbps (Active Grid)";
-                speedNode.style.color = "var(--cyber-emerald)"; // Profile stays green always
+                speedNode.style.color = "var(--cyber-emerald)"; // Always saturated green when online
             }
 
             const calculatedKbsValue = (simulatedDownlinkMbps * 1024) / 8;
@@ -610,8 +609,8 @@
             }
         }
 
-        // Dynamic metrics state styling assignments
-        const currentSyncColor = isEcoChecked ? "var(--cyber-emerald)" : "var(--cyber-orange)";
+        // FIXED: Explicitly handle custom style switching per your specifications matrix
+        const metricsTargetColorStr = isEcoChecked ? "var(--cyber-emerald)" : "var(--cyber-orange)";
         
         if (isEcoChecked) {
             freqNode.textContent = "10000 ms (Throttled)";
@@ -623,9 +622,9 @@
             throttleNode.textContent = "Unrestricted Handshake";
         }
         
-        freqNode.style.color = currentSyncColor;
-        latencyNode.style.color = currentSyncColor;
-        throttleNode.style.color = currentSyncColor;
+        freqNode.style.color = metricsTargetColorStr;
+        latencyNode.style.color = metricsTargetColorStr;
+        throttleNode.style.color = metricsTargetColorStr;
     }
 
     function adjustBatteryEcoSyncRatesHUD() {
@@ -634,7 +633,6 @@
         
         clearInterval(heartbeatThreadLoop);
         
-        // FIXED: Toggle initialization switches precisely between orange (OFF) and green (ON)
         if (isChecked) {
             statusDisplay.textContent = "ECO MODE: ACTIVE";
             statusDisplay.style.color = "var(--cyber-emerald)";
@@ -665,7 +663,7 @@
             badgeText.innerHTML = "EDGE OFFLINE — Local Cache Mode"; 
             
             if(odometerNode) {
-                odometerNode.textContent = "0.0 KB/s"; // FIXED: Ensure top layout also falls to absolute zero text
+                odometerNode.textContent = "0.0 KB/s";
                 odometerNode.style.color = "var(--cyber-orange)";
             }
             if(speedNode) {
