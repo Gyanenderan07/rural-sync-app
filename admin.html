@@ -11,13 +11,15 @@
             --card: rgba(13, 20, 35, 0.65);
             --border: rgba(255, 255, 255, 0.07);
             --text: #f1f5f9;
+            --color-cyan: #00f0ff;
+            --color-rose: #ff2a85;
         }
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background: radial-gradient(120% 120% at 50% 10%, #0b0f19 0%, var(--bg) 100%);
             color: var(--text); padding: 40px; margin: 0;
         }
-        .container { max-width: 1100px; margin: 0 auto; }
+        .container { max-width: 1400px; margin: 0 auto; }
         .header { margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 20px; display: flex; justify-content: space-between; align-items: center;}
         h1 { font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
         .refresh-btn { background: linear-gradient(135deg, #0077ff 0%, #00ddff 100%); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 119, 255, 0.3); }
@@ -26,27 +28,35 @@
         th { background: rgba(255,255,255,0.02); font-size: 12px; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; }
         td { font-size: 14px; }
         .mono { font-family: 'JetBrains Mono', monospace; color: #00ddff; font-size: 13px;}
+        .error-message { color: var(--color-rose); padding: 20px; text-align: center; font-weight: 600; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h1>🛰️ Centralized Cloud Data Sync Pipeline Monitor</h1>
-        <button class="refresh-btn" onclick="fetchCloudData()">🔄 Fetch Live Server Data</button>
+        <h1>Centralized Cloud Data Sync Pipeline Monitor</h1>
+        <button class="refresh-btn" onclick="fetchCloudData()">Fetch Live Server Data</button>
     </div>
 
     <table class="data-table">
         <thead>
             <tr>
-                <th>Transaction Payload ID</th>
-                <th>Synchronized Report Data String</th>
-                <th>Server Timestamp Log</th>
+                <th>Record Payload ID</th>
+                <th>Infield Node Location</th>
+                <th>Operator Name</th>
+                <th>Phone Node</th>
+                <th>Classification</th>
+                <th>Concern Title</th>
+                <th>Grievance Content Box</th>
+                <th>Date Node</th>
+                <th>Time Node</th>
+                <th>Evidence Asset</th>
             </tr>
         </thead>
         <tbody id="database-rows">
             <tr>
-                <td colspan="3" style="text-align: center; color: #94a3b8; padding: 40px; font-style: italic;">Click fetch button to query real-time data entries.</td>
+                <td colspan="10" style="text-align: center; color: #94a3b8; padding: 40px; font-style: italic;">Click fetch button to query real-time data entries.</td>
             </tr>
         </tbody>
     </table>
@@ -58,35 +68,60 @@
 
     async function fetchCloudData() {
         const tableBody = document.getElementById('database-rows');
-        tableBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 40px;">Querying cloud ledger data tables...</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 40px;">Querying cloud ledger data tables...</td></tr>';
         
         try {
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?select=*`, {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?select=*&order=timestamp.desc`, {
                 method: 'GET',
                 headers: {
                     'apikey': SUPABASE_ANON_KEY,
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                    'Accept': 'application/json'
                 }
             });
+
+            if (!response.ok) {
+                const errLog = await response.text();
+                throw new Error(errLog);
+            }
+
             const data = await response.json();
-            
             tableBody.innerHTML = '';
+            
             if(data.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color:#94a3b8; padding: 40px;">Database store is empty. No pipelines tracked yet.</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="10" style="text-align: center; color:#94a3b8; padding: 40px;">Database store is empty. No pipelines tracked yet.</td></tr>';
                 return;
             }
 
             data.forEach(row => {
+                const dateVal = row.entry_date || "N/A";
+                const timeVal = row.entry_time || "N/A";
+                const typeVal = row.type || "General";
+                const titleVal = row.title || "Untitled";
+                const descriptionContent = row.description || row.reportData || "No narrative";
+                const evidenceAction = row.image_url 
+                    ? `<a href="${row.image_url}" target="_blank" style="color:#00ddff; text-decoration:none; font-weight:600;">View Asset</a>` 
+                    : '<span style="color:#64748b; font-style:italic;">No Asset</span>';
+
                 tableBody.innerHTML += `<tr>
-                    <td class="mono">${row.id}</td>
-                    <td>${row.reportData}</td>
-                    <td style="color:#10b981; font-weight:600;">${row.timestamp}</td>
+                    <td class="mono">${row.id.substring(0,8)}...</td>
+                    <td style="font-weight:600; color:#00f0ff;">Location: ${row.village_name || 'Unknown'}</td>
+                    <td>${row.submitterName || 'Logesh'}</td>
+                    <td class="mono">${row.submitterPhone || '+91 8667454830'}</td>
+                    <td>${typeVal}</td>
+                    <td style="color:#e879f9; font-weight:600;">${titleVal}</td>
+                    <td style="max-width:300px; word-break:break-word;">${descriptionContent}</td>
+                    <td class="mono">${dateVal}</td>
+                    <td class="mono" style="color:#10b981;">${timeVal}</td>
+                    <td>${evidenceAction}</td>
                 </tr>`;
             });
         } catch(err) {
-            tableBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color:#ef4444; padding: 40px;">API Tracking Gateway Handshake Error.</td></tr>';
+            tableBody.innerHTML = `<tr><td colspan="10" class="error-message">API Tracking Gateway Handshake Error: Run via local HTTP server environment to bypass browser CORS block rules.</td></tr>`;
         }
     }
+
+    window.onload = fetchCloudData;
 </script>
 </body>
 </html>

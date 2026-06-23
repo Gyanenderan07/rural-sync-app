@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EdgeSync — Enterprise Edge Client Layer</title>
+    <title>EdgeSync - Enterprise Edge Client Layer</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>TS</text></svg>">
     <meta name="theme-color" content="#07070d">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,9 +18,9 @@
             --cyber-indigo: #8b5cf6;
             --cyber-cyan: #00f0ff; 
             --cyber-purple: #a855f7;
-            --cyber-emerald: #00ff66; /* Highly Saturated Pure Green */
+            --cyber-emerald: #00ff66; 
             --cyber-rose: #e879f9;
-            --cyber-orange: #ff9900; /* Highly Saturated Contrast Orange */
+            --cyber-orange: #ff9900; 
             --cyber-red: #ff3333;
             
             --glass-sheet: rgba(255, 255, 255, 0.03);
@@ -152,13 +152,25 @@
             text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
         }
 
-        textarea {
-            width: 100%; height: 160px; background: rgba(255, 255, 255, 0.03) !important; border: 1px solid rgba(255, 255, 255, 0.06) !important;
-            border-radius: 18px; padding: 20px; color: #e2e8f0 !important; font-family: inherit; font-size: 15px; line-height: 1.6; resize: none; outline: none; margin-bottom: 28px;
-            transition: var(--transition-premium); box-shadow: inset 0 3px 12px rgba(0,0,0,0.3);
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 11px; color: var(--text-low); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 700; }
+        
+        select, textarea {
+            width: 100%; background: rgba(10, 15, 29, 0.6) !important; border: 1px solid var(--glass-border) !important;
+            border-radius: 14px; padding: 14px; color: var(--text-core) !important; font-family: inherit; font-size: 14px; transition: var(--transition-premium);
         }
-        textarea::placeholder { color: #94a3b8 !important; }
-        textarea:focus { border-color: rgba(139, 92, 246, 0.35); background: rgba(2, 4, 8, 0.75); box-shadow: 0 0 30px rgba(139, 92, 246, 0.05), inset 0 3px 12px rgba(0,0,0,0.5); }
+        select:focus, textarea:focus { border-color: var(--cyber-cyan) !important; outline: none; background: rgba(2, 4, 8, 0.8) !important; box-shadow: 0 0 20px rgba(0, 240, 255, 0.2); }
+
+        textarea { height: 140px; resize: none; line-height: 1.6; margin-bottom: 12px; box-shadow: inset 0 3px 12px rgba(0,0,0,0.3); }
+        textarea::placeholder { color: #525c7a !important; }
+
+        .file-upload-container {
+            border: 2px dashed rgba(139, 92, 246, 0.3); padding: 24px; border-radius: 18px;
+            background: rgba(255,255,255,0.01); text-align: center; margin-bottom: 24px; cursor: pointer; transition: 0.3s;
+        }
+        .file-upload-container:hover { border-color: var(--cyber-cyan); background: rgba(139, 92, 246, 0.05); }
+        .file-input-hidden { display: none; }
+        .img-preview-box { width: 120px; height: 120px; border-radius: 14px; object-fit: cover; margin-top: 14px; display: none; border: 1px solid rgba(255,255,255,0.1); }
 
         button {
             width: 100%; background: linear-gradient(135deg, #7c3aed, #c026d3) !important; color: white !important; border: none; padding: 18px; border-radius: 16px;
@@ -202,14 +214,13 @@
             padding: 8px 16px !important; font-size: 12px !important; width: auto !important; font-weight: 600 !important; box-shadow: none !important; border-radius: 10px !important;
             transition: var(--transition-micro) !important;
         }
-        .row-delete-btn:hover { background: rgba(244, 63, 94, 0.06) !important; border-color: var(--cyber-rose) !important; box-shadow: 0 0 15px var(--neon-glow-rose) !important; }
+        .row-delete-btn:hover { background: rgba(244, 63, 94, 0.06) !important; border-color: var(--cyber-rose) !important; box-shadow: 0 0 15px rgba(244, 63, 94, 0.25) !important; }
 
         .pipeline-container { display: flex; flex-direction: column; gap: 12px; width: 100%; }
         .info-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; background: rgba(255, 255, 255, 0.03) !important; border: 1px solid rgba(255, 255, 255, 0.06) !important; border-radius: 16px; backdrop-filter: blur(12px); transition: all .4s ease; }
         .info-row:hover { transform: translateY(-4px); }
         .info-label { font-size: 13px; color: var(--text-low); font-weight: 500; }
         
-        /* REMOVED !important SO JAVASCRIPT CAN DYNAMICALLY UPDATE COLORS */
         .info-value { font-size: 13px; font-weight: 700; color: #ffffff; } 
         .tech-mono { font-family: 'JetBrains Mono', monospace; }
 
@@ -287,6 +298,9 @@
             display: block; margin-top: 12px; padding: 14px; border-radius: 14px;
             background: rgba(255, 255, 255, 0.04); color: #c4b5fd; font-weight: 700; text-align: center; font-size: 12px;
         }
+        
+        .active-link { color: var(--cyber-cyan); text-decoration: none; font-weight: 700; }
+        .active-link:hover { text-decoration: underline; }
     </style>
 </head>
 
@@ -319,33 +333,53 @@
             
             <div class="glass-card">
                 <div>
-                    <div class="card-title">📊 Data Collection Console</div>
+                    <div class="card-title">Data Collection Console</div>
                     <form id="sync-form">
-                        <textarea id="data-payload" placeholder="Enter remote rural structural matrix logs (e.g., Water telemetry, localized agricultural harvest data logs)..." required></textarea>
+                        <div class="form-group">
+                            <label>Report Classification</label>
+                            <select id="categorySelect" required>
+                                <option value="Roads">Roads and Access Transport</option>
+                                <option value="Water Supply">Water Supply and Storage</option>
+                                <option value="Electricity">Electricity and Energy Supply</option>
+                                <option value="Sanitation">Sanitation and Drainage Utilities</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Brief Concern Description</label>
+                            <textarea id="data-payload" placeholder="Enter remote rural structural matrix logs (e.g., Water telemetry, localized agricultural harvest data logs)..." required></textarea>
+                        </div>
+                        
+                        <div class="file-upload-container" onclick="document.getElementById('evidence-image-file').click()">
+                            <span id="upload-status-text" style="font-size:13px; color:var(--text-low); font-weight:600;">Attach Image Proof (.jpg, .jpeg, .png)</span>
+                            <input type="file" id="evidence-image-file" class="file-input-hidden" accept="image/jpeg,image/png,image/jpg">
+                            <center><img id="preview-image-node" class="img-preview-box" alt="Evidence preview"></center>
+                        </div>
+
                         <button type="submit" id="submit-btn-node">Deploy Transaction to Edge</button>
                     </form>
                 </div>
                 
                 <div class="sync-hud-segment-row">
                     <div class="segment-mini-box">
-                        <span class="segment-label">📍 Active Node Location</span>
+                        <span class="segment-label">Active Node Location</span>
                         <span id="hud-live-location" class="segment-value" style="color: var(--cyber-cyan); cursor: pointer;" onclick="forceEnforcedLocationVerification(true)">Tap to Grant Access</span>
                     </div>
                     <div class="segment-mini-box">
-                        <span class="segment-label">📅 Transaction Date</span>
+                        <span class="segment-label">Transaction Date</span>
                         <span id="hud-live-date" class="segment-value" style="color: var(--cyber-emerald);">--/--/----</span>
                     </div>
                     <div class="segment-mini-box">
-                        <span class="segment-label">🕒 Transaction Time</span>
+                        <span class="segment-label">Transaction Time</span>
                         <span id="hud-live-time" class="segment-value" style="color: var(--cyber-emerald);">--:--:-- --</span>
                     </div>
                 </div>
 
-                <button class="admin-route-btn" onclick="toggleActiveDashboardPanels(true)">🛰️ Open System Pipeline Monitor</button>
+                <button class="admin-route-btn" onclick="toggleActiveDashboardPanels(true)">Open System Pipeline Monitor</button>
             </div>
 
             <div class="glass-card">
-                <div class="card-title">⚙️ Internal Architecture Data Pipeline</div>
+                <div class="card-title">Internal Architecture Data Pipeline</div>
                 <div class="pipeline-container">
                     <div class="info-row">
                         <span class="info-label">Storage Architecture Hardware:</span>
@@ -378,7 +412,7 @@
 
         <div class="adaptive-sync-panel">
             <div class="sync-hud-header">
-                <div class="sync-hud-title">🔋 Battery Adaptive Sync Regulator Configuration</div>
+                <div class="sync-hud-title">Battery Adaptive Sync Regulator Configuration</div>
                 <div class="toggle-switch-wrapper">
                     <span id="sync-rate-status" class="toggle-switch-label" style="color: var(--cyber-orange);">ECO MODE: OFF</span>
                     <label class="toggle-switch">
@@ -409,7 +443,7 @@
         </div>
 
         <div class="glass-card">
-            <div class="card-title">🖥️ Live Client Store Payload Telemetry Logs (IndexedDB Node Trace)</div>
+            <div class="card-title">Live Client Store Payload Telemetry Logs (IndexedDB Node Trace)</div>
             <div class="queue-terminal" id="terminal-logger">
                 <div style="color: var(--text-low); font-style: italic;">No active cache tracking objects inside IndexedDB reportsStore.</div>
             </div>
@@ -425,7 +459,7 @@
                         <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                     </button>
                     <div id="pipeline-title-node" style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; transition: var(--transition-premium);">
-                        ☁️ Real-time Cloud Supabase Server Records Ledger
+                        Real-time Cloud Supabase Server Records Ledger
                     </div>
                 </div>
                 
@@ -457,6 +491,9 @@
 
     let capturedVillageNameStr = "Unknown Location";
     let locationPermissionGranted = false; 
+    let base64ImageBufferString = null;
+    let imageFileExtensionType = null;
+    let mimeTypeString = null;
 
     function getSupabaseSecureTimestamp() { return new Date().toISOString(); }
 
@@ -474,7 +511,41 @@
         return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\x00-\x7F]/g, "").trim();
     }
 
-    // High accuracy location update configuration
+    document.getElementById('evidence-image-file').addEventListener('change', function(e) {
+        const targetUploadedFileObj = e.target.files[0];
+        if (!targetUploadedFileObj) return;
+
+        const fileNameString = targetUploadedFileObj.name.toLowerCase();
+        const validFormatsArray = ['.jpg', '.jpeg', '.png'];
+        const isExtensionMatchValid = validFormatsArray.some(ext => fileNameString.endsWith(ext));
+
+        if (!isExtensionMatchValid) {
+            alert("Format Error: Only .jpg, .jpeg, and .png extensions are permitted by the system layout constraint!");
+            this.value = '';
+            document.getElementById('preview-image-node').style.display = 'none';
+            document.getElementById('upload-status-text').textContent = "Attach Image Proof (.jpg, .jpeg, .png)";
+            base64ImageBufferString = null;
+            imageFileExtensionType = null;
+            mimeTypeString = null;
+            return;
+        }
+
+        mimeTypeString = targetUploadedFileObj.type;
+        imageFileExtensionType = targetUploadedFileObj.type.split('/')[1];
+        if (imageFileExtensionType === 'jpeg') imageFileExtensionType = 'jpg';
+        
+        document.getElementById('upload-status-text').textContent = `Selected: ${targetUploadedFileObj.name}`;
+
+        const fileReaderInstance = new FileReader();
+        fileReaderInstance.onload = function(event) {
+            const previewNode = document.getElementById('preview-image-node');
+            previewNode.src = event.target.result;
+            previewNode.style.display = 'block';
+            base64ImageBufferString = event.target.result.split(',')[1];
+        };
+        fileReaderInstance.readAsDataURL(targetUploadedFileObj);
+    });
+
     function forceEnforcedLocationVerification(triggerManualAlertOnBlock = false) {
         if (!navigator.geolocation) {
             capturedVillageNameStr = "Not Supported";
@@ -509,15 +580,15 @@
             },
             (error) => {
                 locationPermissionGranted = false;
-                document.getElementById('hud-live-location').textContent = "⚠️ Location Off";
+                document.getElementById('hud-live-location').textContent = "Location Off";
                 document.getElementById('hud-live-location').style.color = "var(--cyber-orange)";
                 
                 document.getElementById('submit-btn-node').disabled = true;
                 document.getElementById('submit-btn-node').style.opacity = "0.4";
-                document.getElementById('submit-btn-node').textContent = "🔒 Locked — Enable Location Services";
+                document.getElementById('submit-btn-node').textContent = "Locked — Enable Location Services";
                 
                 if (triggerManualAlertOnBlock) {
-                    alert("📍 Location Service Interrupted:\n\nEdgeSync requires active geolocation to verify field nodes. Please click the location icon in your address bar to change configuration to 'Allow' and reload!");
+                    alert("Location Service Interrupted: EdgeSync requires active geolocation to verify field nodes. Please change configuration to 'Allow' and reload!");
                 }
             },
             { enableHighAccuracy: true, timeout: 15000 }
@@ -542,14 +613,8 @@
         const isEcoChecked = document.getElementById('battery-toggle').checked;
 
         if (navigator.onLine === false) {
-            if (speedNode) {
-                speedNode.textContent = "0.00 Mbps (Disconnected)";
-                speedNode.style.color = "var(--cyber-red)";
-            }
-            if (odometerNode) {
-                odometerNode.textContent = "0.0 KB/s";
-                odometerNode.style.color = "var(--cyber-orange)";
-            }
+            if (speedNode) speedNode.textContent = "0.00 Mbps (Disconnected)";
+            if (odometerNode) odometerNode.textContent = "0.0 KB/s";
             return;
         }
 
@@ -558,21 +623,13 @@
 
         try {
             const hostStartTime = Date.now();
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?limit=0`, {
+            await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?limit=0`, {
                 method: 'HEAD',
                 cache: 'no-store',
-                headers: { 
-                    'apikey': SUPABASE_ANON_KEY, 
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                },
+                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
                 signal: activeFetchAbortController.signal
             });
             
-            const contentType = response.headers.get("content-type");
-            if (!response.ok || (contentType && contentType.includes("text/html"))) {
-                throw new Error("Proxy Override Intercepted");
-            }
-
             const computeDeltaDuration = (Date.now() - hostStartTime) / 1000;
             let simulatedDownlinkMbps = Math.max(1.5, (2.6 / (computeDeltaDuration + 0.02)));
             if(simulatedDownlinkMbps > 95) simulatedDownlinkMbps = 54.32;
@@ -587,32 +644,19 @@
                 if (calculatedKbsValue >= 1024) {
                     const mbsValue = (calculatedKbsValue / 1024) * (0.94 + Math.random() * 0.12);
                     odometerNode.textContent = mbsValue.toFixed(1) + " MB/s";
-                    odometerNode.style.color = "var(--cyber-emerald)";
                 } else {
                     const dynamicRenderKbs = calculatedKbsValue * (0.94 + Math.random() * 0.14);
                     odometerNode.textContent = dynamicRenderKbs.toFixed(1) + " KB/s";
-                    odometerNode.style.color = "var(--cyber-emerald)";
                 }
+                odometerNode.style.color = "var(--cyber-emerald)";
             }
         } catch (e) {
             if (e.name !== 'AbortError') {
-                if (speedNode) {
-                    speedNode.textContent = "0.00 Mbps (Disconnected)";
-                    speedNode.style.color = "var(--cyber-red)";
-                }
-                if (odometerNode) {
-                    odometerNode.textContent = "0.0 KB/s";
-                    odometerNode.style.color = "var(--cyber-orange)";
-                }
-                
-                if (previousNetworkStateIsOnline !== false) {
-                    previousNetworkStateIsOnline = false;
-                    forceNetworkInterfaceUpdate();
-                }
+                if (speedNode) speedNode.textContent = "0.00 Mbps (Disconnected)";
+                if (odometerNode) odometerNode.textContent = "0.0 KB/s";
             }
         }
 
-        // Color configurations based on ECO MODE state
         const metricsTargetColorStr = isEcoChecked ? "var(--cyber-emerald)" : "var(--cyber-orange)";
         
         if (isEcoChecked) {
@@ -628,7 +672,6 @@
         freqNode.style.color = metricsTargetColorStr;
         latencyNode.style.color = metricsTargetColorStr;
         throttleNode.style.color = metricsTargetColorStr;
-        if (speedNode && navigator.onLine) speedNode.style.color = "var(--cyber-emerald)";
     }
 
     function adjustBatteryEcoSyncRatesHUD() {
@@ -655,8 +698,6 @@
         const badge = document.getElementById('network-badge');
         const badgeDot = document.getElementById('badge-glow-node');
         const badgeText = document.getElementById('badge-text-node');
-        const odometerNode = document.getElementById('mobile-live-odometer-node');
-        const speedNode = document.getElementById('live-speed-telemetry');
         const currentOnlineState = navigator.onLine;
         
         if (currentOnlineState === false) {
@@ -666,15 +707,6 @@
             badgeDot.style.boxShadow = "0 0 16px var(--cyber-orange)";
             badgeText.innerHTML = "EDGE OFFLINE — Local Cache Mode"; 
             
-            if(odometerNode) {
-                odometerNode.textContent = "0.0 KB/s";
-                odometerNode.style.color = "var(--cyber-orange)";
-            }
-            if(speedNode) {
-                speedNode.textContent = "0.00 Mbps (Disconnected)";
-                speedNode.style.color = "var(--cyber-red)";
-            }
-
             if (previousNetworkStateIsOnline !== false) {
                 previousNetworkStateIsOnline = false;
                 if (!document.getElementById('cloud-ledger-panel').classList.contains('panel-hidden')) {
@@ -711,15 +743,34 @@
     };
     dbOpenRequest.onsuccess = (e) => {
         indexedDatabase = e.target.result;
-        indexedDatabase.onclose = () => { indexedDatabase = null; };
-        indexedDatabase.onversionchange = () => { if(indexedDatabase) { indexedDatabase.close(); indexedDatabase = null; } };
-        
         refreshQueueCount();
         forceNetworkInterfaceUpdate();
-        
         clearInterval(heartbeatThreadLoop);
         heartbeatThreadLoop = setInterval(forceNetworkInterfaceUpdate, fallbackPollIntervalTimer);
     };
+
+    function extractTitleFromDescription(desc) {
+        if (!desc) return "Untitled Grievance";
+        const words = desc.trim().split(/\s+/).filter(w => w.length > 0);
+        if (words.length === 0) return "Untitled Grievance";
+        return words.slice(0, 4).join(" ");
+    }
+
+    function base64ToBlob(base64, targetMime) {
+        const parts = base64.split(',');
+        const byteCharacters = atob(parts[1] || parts[0]);
+        const byteArrays = [];
+        for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+            const slice = byteCharacters.slice(offset, offset + 512);
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+        }
+        return new Blob(byteArrays, { type: targetMime });
+    }
 
     document.getElementById('sync-form').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -731,14 +782,23 @@
         const textPayload = document.getElementById('data-payload').value;
         const targetDate = document.getElementById('hud-live-date').textContent;
         const targetTime = document.getElementById('hud-live-time').textContent;
+        const selectedClassification = document.getElementById('categorySelect').value;
 
         const record = { 
             id: crypto.randomUUID(), 
-            reportData: textPayload, 
-            timestamp: getSupabaseSecureTimestamp(),
+            title: extractTitleFromDescription(textPayload),
+            type: selectedClassification,
+            description: textPayload,
+            submitterName: "Logesh",
+            submitterPhone: "+91 8667454830",
             village_name: capturedVillageNameStr,
             entry_date: targetDate,
-            entry_time: targetTime
+            entry_time: targetTime,
+            timestamp: getSupabaseSecureTimestamp(),
+            image_b64: base64ImageBufferString,
+            image_ext: imageFileExtensionType,
+            mime_type: mimeTypeString,
+            sync_status: "pending"
         };
 
         if (!indexedDatabase) return;
@@ -747,13 +807,18 @@
         tx.objectStore('reportsStore').add(record);
         tx.oncomplete = () => {
             document.getElementById('data-payload').value = ''; 
+            document.getElementById('preview-image-node').style.display = 'none';
+            document.getElementById('upload-status-text').textContent = "Attach Image Proof (.jpg, .jpeg, .png)";
+            base64ImageBufferString = null;
+            imageFileExtensionType = null;
+            mimeTypeString = null;
             refreshQueueCount();
             if (navigator.onLine) executeCloudSynchronization();
         };
     });
 
     async function executeCloudSynchronization() {
-        if (!navigator.onLine || !indexedDatabase || !locationPermissionGranted || capturedVillageNameStr === "Unknown Location" || capturedVillageNameStr === "Acquiring village...") return;
+        if (!navigator.onLine || !indexedDatabase || !locationPermissionGranted || capturedVillageNameStr === "Unknown Location") return;
 
         try {
             const tx = indexedDatabase.transaction('reportsStore', 'readonly');
@@ -766,6 +831,42 @@
 
                 for (const record of recordsQueue) {
                     try {
+                        let uploadedCloudPublicUrlString = null;
+
+                        const base64Str = record.image_b64 || record.base64_image;
+                        if (base64Str && record.image_ext) {
+                            const blob = base64ToBlob(base64Str, record.mime_type);
+                            const storagePathUrlString = `evidence_${crypto.randomUUID()}.${record.image_ext}`;
+
+                            const storageUploadResponse = await fetch(`${SUPABASE_URL}/storage/v1/object/evidence-images/${storagePathUrlString}`, {
+                                method: 'POST',
+                                headers: {
+                                    'apikey': SUPABASE_ANON_KEY,
+                                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                                    'Content-Type': record.mime_type
+                                },
+                                body: blob
+                            });
+
+                            if (storageUploadResponse.ok) {
+                                uploadedCloudPublicUrlString = `${SUPABASE_URL}/storage/v1/object/public/evidence-images/${storagePathUrlString}`;
+                            }
+                        }
+
+                        const structuredPayloadObject = {
+                            id: record.id,
+                            title: record.title,
+                            type: record.type,
+                            description: record.description,
+                            submitterName: record.submitterName,
+                            submitterPhone: record.submitterPhone,
+                            village_name: record.village_name,
+                            entry_date: record.entry_date,
+                            entry_time: record.entry_time,
+                            timestamp: record.timestamp,
+                            image_url: uploadedCloudPublicUrlString
+                        };
+
                         const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore`, {
                             method: 'POST',
                             headers: {
@@ -774,7 +875,7 @@
                                 'Content-Type': 'application/json',
                                 'Prefer': 'return=minimal'
                             },
-                            body: JSON.stringify(record)
+                            body: JSON.stringify(structuredPayloadObject)
                         });
 
                         if (response.ok && indexedDatabase) {
@@ -798,10 +899,6 @@
                 method: 'GET',
                 headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
             });
-            
-            const contentType = response.headers.get("content-type");
-            if (!response.ok || !contentType || !contentType.includes("application/json")) return;
-
             const data = await response.json();
             if (data && data.length > 0 && indexedDatabase) {
                 const tx = indexedDatabase.transaction('cloudMirrorStore', 'readwrite');
@@ -829,7 +926,7 @@
                 }
                 list.forEach(obj => {
                     loggerConsole.innerHTML += `<div style="border-left:3px solid var(--cyber-cyan); padding-left:14px; margin-bottom:14px; font-family:'JetBrains Mono', monospace; font-size:12px; color:#cbd5e1; line-height: 1.6;">
-                        [IndexedDB Cache] ID: ${obj.id.substring(0,8)}... | Location: ${obj.village_name || 'Acquiring'} <br> Data: "${obj.reportData}"
+                        [IndexedDB Cache] ID: ${obj.id.substring(0,8)}... | Location: ${obj.village_name || 'Acquiring'} <br> Title: "${obj.title}" | Desc: "${obj.description}"
                     </div>`;
                 });
             };
@@ -858,20 +955,18 @@
         if (navigator.onLine === false) {
             if (titleNode) {
                 titleNode.style.color = "var(--cyber-orange)"; 
-                titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Offline)";
+                titleNode.textContent = "Local Offline-Mirrored Data State Ledger (Offline)";
             }
             if (refreshActionBtn) refreshActionBtn.style.display = "none"; 
-            if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Device decoupled from network channels. Injecting cloudMirrorStore persistence layers...</div>';
             loadLocalMirrorCacheFallback();
             return;
         }
 
         if (titleNode) {
             titleNode.style.color = "var(--cyber-emerald)";
-            titleNode.textContent = "☁️ Real-time Cloud Supabase Server Records Ledger";
+            titleNode.textContent = "Real-time Cloud Supabase Server Records Ledger";
         }
         if (refreshActionBtn) refreshActionBtn.style.display = "flex";
-        if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--cyber-cyan); font-family: \'JetBrains Mono\', monospace;">Establishing secure gateway link to Supabase Server Ledger REST API...</div>';
         
         try {
             const response = await fetch(`${SUPABASE_URL}/rest/v1/reportsStore?select=*`, {
@@ -879,12 +974,6 @@
                 cache: 'no-store',
                 headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
             });
-            
-            const contentType = response.headers.get("content-type");
-            if (!response.ok || !contentType || !contentType.includes("application/json")) {
-                throw new Error("Invalid Outage HTML Target Intercepted");
-            }
-
             const data = await response.json();
             if(data.length === 0) {
                 if (cloudServerLogger) cloudServerLogger.innerHTML = '<div style="color: var(--text-low); font-style: italic; text-align: center; padding-top: 40px;">Cloud server database store table is currently empty.</div>';
@@ -900,10 +989,9 @@
             }
             renderTableHTML(data, true);
         } catch(err) {
-            console.warn("Handshake blocked. Pulling mirrored disk backups safely...", err);
             if (titleNode) {
                 titleNode.style.color = "var(--cyber-orange)";
-                titleNode.textContent = "💾 Local Offline-Mirrored Data State Ledger (Server Congested)";
+                titleNode.textContent = "Local Offline-Mirrored Data State Ledger (Server Congested)";
             }
             loadLocalMirrorCacheFallback();
         }
@@ -930,10 +1018,13 @@
         let tableHTML = `<table class="cloud-table">
             <thead>
                 <tr>
-                    <th>📦 Infield Node Location</th>
-                    <th>📅 Entry Date</th>
-                    <th>🕒 Entry Time</th>
+                    <th>Infield Node Location</th>
+                    <th>Entry Date</th>
+                    <th>Entry Time</th>
+                    <th>Classification</th>
+                    <th>Title</th>
                     <th>Synchronized Payload Log</th>
+                    <th>Evidence Asset</th>
                     <th style="text-align:center;">Action</th>
                 </tr>
             </thead>
@@ -941,16 +1032,24 @@
 
         data.forEach(row => {
             const villageName = row.village_name || "Unknown Post";
-            const dateVal = row.entry_date || formatIsoStringToLocalSystemTime(row.timestamp).split(' ')[0];
-            const timeVal = row.entry_time || formatIsoStringToLocalSystemTime(row.timestamp).split(' ').slice(1).join(' ');
+            const dateVal = row.entry_date || "N/A";
+            const timeVal = row.entry_time || "N/A";
+            const typeVal = row.type || "General";
+            const titleVal = row.title || "Untitled";
+            const evidenceAction = row.image_url 
+                ? `<a href="${row.image_url}" target="_blank" class="active-link">View Asset</a>` 
+                : '<span style="color:#64748b; font-style:italic;">No Image</span>';
 
             tableHTML += `<tr>
                 <td style="font-weight:700; color: var(--cyber-cyan); font-size:13px;">📍 ${villageName}</td>
                 <td style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#cbd5e1;">${dateVal}</td>
                 <td style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#a5b4fc;">${timeVal}</td>
-                <td style="line-height: 1.5;">${row.reportData}</td>
+                <td>${typeVal}</td>
+                <td style="color:var(--cyber-rose); font-weight:600;">${titleVal}</td>
+                <td style="line-height: 1.5;">${row.description || row.reportData || "No narrative"}</td>
+                <td>${evidenceAction}</td>
                 <td style="text-align:center;">
-                    <button class="row-delete-btn" onclick="executeSecureLocationBoundErasure('${row.id}', '${villageName}', ${isOnlineContext})">🗑️ Erase</button>
+                    <button class="row-delete-btn" onclick="executeSecureLocationBoundErasure('${row.id}', '${villageName}', ${isOnlineContext})">Erase</button>
                 </td>
             </tr>`;
         });
@@ -964,7 +1063,7 @@
             alert(`Remote server entries erasure require server channel sovereignty. Action locked inside ${capturedVillageNameStr}.`);
             return;
         }
-        if (!confirm(`CRITICAL SECURITY WARNING:\n\nYou are executing a cloud ledger deletion sequence.\nOperation Source: 📍 ${capturedVillageNameStr}\nTarget Record Source: 📍 ${registeredVillage}\n\nAre you absolutely sure you want to wipe this ledger line from the server?`)) return;
+        if (!confirm(`CRITICAL SECURITY WARNING:\n\nYou are executing a cloud ledger deletion sequence.\nOperation Source: ${capturedVillageNameStr}\nTarget Record Source: ${registeredVillage}\n\nAre you absolutely sure you want to wipe this ledger line from the server?`)) return;
         
         deleteCloudRecordFromServer(recordId);
     }
@@ -982,8 +1081,8 @@
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('🚀 EdgeSync SW Registered Successfully!', reg.scope))
-                .catch(err => console.error('❌ EdgeSync SW Registration Failed:', err));
+                .then(reg => console.log('EdgeSync SW Registered Successfully!', reg.scope))
+                .catch(err => console.error('EdgeSync SW Registration Failed:', err));
         });
     }
 </script>
